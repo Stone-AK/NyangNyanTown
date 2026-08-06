@@ -2,6 +2,9 @@
 
 public class CatViewModel : DNViewModelBase
 {
+    private float _minSpeed = 1f;
+    private float _maxSpeed = 5f;
+
     // TODO(안우재/08.06) : 추후 데이터 부분 추가를 위해 대략적인 변수 선언
     // private (건물 클래스 타입) _targetBuilding;
     private float _catSpeed;
@@ -24,6 +27,6 @@ public class CatViewModel : DNViewModelBase
 
     public void InitRandomCatStat()
     {
-        _catSpeed = 5f;
+        _catSpeed = (float)(GameUtil.Random.NextDouble() * (_maxSpeed - _minSpeed) + _minSpeed);
     }
 }

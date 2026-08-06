@@ -4,21 +4,22 @@ public class CatView : MonoBehaviour
 {
     private CatViewModel _catViewModel;
 
-    // TODO(안우재/08.06) : 테스트 용도를 위한 Start부분
-    private void Start()
-    {
-        _catViewModel = new CatViewModel();
-        _catViewModel.InitRandomCatStat();
-    }
-
     private void FixedUpdate()
     {
         MoveCat();
     }
 
-
     private void MoveCat()
     {
-        transform.Translate(Vector3.left * _catViewModel.CatSpeed * Time.deltaTime);
+        if(_catViewModel == null)
+            return;
+
+        // TODO(안우재/08.06) : 목표 방향으로 갈 수 있도록 rotation 부분 추가 필요, Right 이동이 앞으로 개념
+        transform.Translate(Vector3.right * _catViewModel.CatSpeed * Time.deltaTime);
+    }
+
+    public void InitCatView(CatViewModel catViewModel)
+    {
+        _catViewModel = catViewModel;
     }
 }
