@@ -1,0 +1,29 @@
+﻿using UnityEngine;
+
+public class CatViewModel : DNViewModelBase
+{
+    // TODO(안우재/08.06) : 추후 데이터 부분 추가를 위해 대략적인 변수 선언
+    // private (건물 클래스 타입) _targetBuilding;
+    private float _catSpeed;
+    //private string _catMeshPrefabId;
+    //private string _catMeterialId;
+    //private string _catMeterialColorId;
+
+    public float CatSpeed
+    {
+        get => _catSpeed;
+        set
+        {
+            if (_catSpeed != value)
+            {
+                _catSpeed = value;
+                OnPropertyChanged(nameof(CatSpeed));
+            }
+        }
+    }
+
+    public void InitRandomCatStat()
+    {
+        _catSpeed = 5f;
+    }
+}
