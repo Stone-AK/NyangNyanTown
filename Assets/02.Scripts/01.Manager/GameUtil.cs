@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public static class GameUtil
 {
+    public static readonly System.Random Random = new System.Random();
     // 마지막으로 할당된 ID를 전역적으로 기록 (스레드 안전)
     private static long _lastId = 0;
 
