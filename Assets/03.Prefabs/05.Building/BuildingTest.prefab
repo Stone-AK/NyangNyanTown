@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6513778164446166414}
   m_Layer: 0
-  m_Name: Building_TestSlot
+  m_Name: BuildingSlotParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92f5ee3b22bd84345a877871d3fc16a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingView
-  BuildingInsideSlot: []
+  ParentBuildingInsideSlot: {fileID: 986932250985307684}
 --- !u!1001 &231755521642512604
 PrefabInstance:
   m_ObjectHideFlags: 0
