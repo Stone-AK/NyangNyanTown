@@ -1,5 +1,14 @@
 ﻿using UnityEngine;
 
+
+public enum CatState
+{
+    None = 0,
+    TargetMove,
+    Action,
+    EscapeMove
+}
+
 public class CatViewModel : DNViewModelBase
 {
     private float _minSpeed = 1f;

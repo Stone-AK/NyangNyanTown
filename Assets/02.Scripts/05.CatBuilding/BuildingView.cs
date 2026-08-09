@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuildingView : MonoBehaviour
 {
     [SerializeField] private GameObject ParentBuildingInsideSlot;
+    [SerializeField] private GameObject BuildingEntrance;
 
     private List<BuildingInsideSlotView> _buildingInsideSlotList = new();
     private float _filledSlotRate = 0f;
