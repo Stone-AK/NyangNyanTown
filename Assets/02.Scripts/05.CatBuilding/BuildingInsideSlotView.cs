@@ -2,7 +2,7 @@
 
 public class BuildingInsideSlotView : MonoBehaviour
 {
-    private BuildingInsideSlotViewModel _slotViewModel;
+    private BuildingInsideSlotViewModel _slotViewModel = new();
 
     public BuildingInsideSlotViewModel SlotViewModel{ get => _slotViewModel; }
 

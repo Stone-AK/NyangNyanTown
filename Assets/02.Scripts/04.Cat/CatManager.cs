@@ -11,7 +11,7 @@ public class CatManager : MonoBehaviour
     // TODO(안우재/08.06) : 추후 고양이 인구수가 할당되어야 함.
     // 게임 데이터의 고양이 인구수를 뷰모델의 데이터로 하여 변경 시 Poolling되는
     // 오브젝트 수 관리 및 소환 제한을 할 수 있도록 해야함.
-    public int PoolSize { get; private set; } = 10;
+    public int PoolSize { get; private set; } = 1;
     public List<CatView> CatPool = new();
     private int ActiveCatCount;
     public List<CatSpawner> CatSpanweList = new();

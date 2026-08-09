@@ -5,8 +5,9 @@ public enum CatState
 {
     None = 0,
     TargetMove,
-    Action,
-    EscapeMove
+    InBuildingAction,
+    EscapeMove,
+    EscapeAction
 }
 
 public class CatViewModel : DNViewModelBase
@@ -19,6 +20,7 @@ public class CatViewModel : DNViewModelBase
     //private string _catMeshPrefabId;
     //private string _catMeterialId;
     //private string _catMeterialColorId;
+    private CatState _catState;
 
     public float CatSpeed
     {
@@ -33,8 +35,22 @@ public class CatViewModel : DNViewModelBase
         }
     }
 
+    public CatState CatState 
+    {
+        get => _catState;
+        set
+        {
+            if (_catState != value)
+            {
+                _catState = value;
+                OnPropertyChanged(nameof(CatState));
+            }
+        }
+    }
+
     public void InitRandomCatStat()
     {
+        _catState = CatState.TargetMove;
         _catSpeed = (float)(GameUtil.Random.NextDouble() * (_maxSpeed - _minSpeed) + _minSpeed);
     }
 }

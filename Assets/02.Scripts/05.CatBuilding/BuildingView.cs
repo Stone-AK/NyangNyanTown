@@ -10,6 +10,12 @@ public class BuildingView : MonoBehaviour
     private List<BuildingInsideSlotView> _buildingInsideSlotList = new();
     private float _filledSlotRate = 0f;
 
+    // TODO(안우재/08.09) : 테스트 용도 start 메서드 
+    private void Start()
+    {
+        InitSlotList();
+    }
+
     private void InitSlotList()
     {
         if(ParentBuildingInsideSlot == null)
@@ -65,5 +71,23 @@ public class BuildingView : MonoBehaviour
             break;
 
         }
+    }
+
+    // TODO(안우재/08.09) : CatView에서 사용할 비어있는 Slot을 반환하는 함수 제작
+    public BuildingInsideSlotView GetEmptySlot()
+    {
+        foreach(var slot in _buildingInsideSlotList)
+        {
+            if (slot.SlotViewModel.IsSlotFilled == false)
+            {
+                return slot;
+            }
+        }
+        return null;
+    }
+
+    public GameObject GetEntrance()
+    {
+        return BuildingEntrance;
     }
 }
