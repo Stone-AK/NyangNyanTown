@@ -42,3 +42,8 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 .history/
 Assets/ThirdpartyAddressable
+Assets/Thirdparty/EasyColliderEditor.meta
+Assets/Thirdparty/HueFolders.meta
+ProjectSettings/HueFolders_Prefs.json
+Assets/Thirdparty/EasyColliderEditor
+Assets/Thirdparty/HueFolders
