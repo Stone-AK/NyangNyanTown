@@ -6,6 +6,7 @@ public class CatView : MonoBehaviour
 {
     private CatViewModel _catViewModel;
     private GameObject _targetObject;
+    private Vector3 _targetTransform;
 
     private void FixedUpdate()
     {
@@ -32,8 +33,11 @@ public class CatView : MonoBehaviour
                 {
                     if (_catViewModel.CatState == CatState.InBuildingAction)
                     {
-                        // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 아래는 Test 모션
-                        transform.Rotate(0f, 90f * Time.deltaTime, 0f);
+                        // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 
+                    }
+                    else if(_catViewModel.CatState == CatState.EscapeMove)
+                    {
+                        // TODO(안우재/09.09) : 가까운 Spawner 오브젝트를 찾고, _targetTransform에 위치 설정
                     }
                 }
                 break;
@@ -81,10 +85,34 @@ public class CatView : MonoBehaviour
         if (_targetObject == null)
             return;
 
+        SettingTargetPosition(_targetObject);
+
         Vector3 direction = (_targetObject.transform.position - transform.position).normalized;
         direction.y = 0f;
         direction.z = 0f;
         transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    private void SettingTargetPosition(GameObject targetObject)
+    {
+        if (targetObject == null)
+        {
+            Debug.Log("목표 오브젝트를 찾을 수 없습니다.");
+            return;
+        }
+
+        if (targetObject.TryGetComponent<BuildingView>(out BuildingView buildingObject))
+        {
+            _targetTransform = buildingObject.transform.position;
+            _targetTransform.y = 0f;
+            _targetTransform.z = 0f;
+        }
+        else if(targetObject.TryGetComponent<CatSpawner>(out CatSpawner spawner))
+        {
+            _targetTransform = spawner.transform.position;
+            _targetTransform.y = 0f;
+            _targetTransform.z = 0f;
+        }
     }
 
     private void CheckCatArriveTarget()
@@ -92,18 +120,12 @@ public class CatView : MonoBehaviour
         if (_targetObject == null)
             return;
 
-        // TODO(안우재/08.09) : 나중에 entrance위치 초기화 부분 따로 만들어 주기
-        if (_targetObject.TryGetComponent<BuildingView>(out BuildingView buildingView))
+        float remainingX = _targetTransform.x - transform.position.x;
+
+        if (remainingX * transform.forward.x <= 0f)
         {
-            Transform targetTransform = buildingView.GetEntrance().transform;
-
-            float remainingX = targetTransform.position.x - transform.position.x;
-
-            if (remainingX * transform.forward.x <= 0f)
-            {
-                ArriveBuildingEntrance();
-                return;
-            }
+            ArriveBuildingEntrance();
+            return;
         }
     }
 
