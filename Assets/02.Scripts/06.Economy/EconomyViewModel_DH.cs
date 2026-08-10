@@ -2,7 +2,7 @@ public class EconomyViewModel_DH : ViewModelBase
 {
     private int _catCount;
     private int _currentGold;
-    private int buildingCount;
+    private int _specialCatCount;
 
     public int CatCount
     {
@@ -30,15 +30,15 @@ public class EconomyViewModel_DH : ViewModelBase
         }
     }
 
-    public int BuildingCount
+    public int SpecialCatCount
     {
-        get => buildingCount;
+        get => _specialCatCount;
         set
         {
-            if (buildingCount != value)
+            if (_specialCatCount != value)
             {
-                buildingCount = value;
-                OnPropertyChanged(nameof(BuildingCount));
+                _specialCatCount = value;
+                OnPropertyChanged(nameof(SpecialCatCount));
             }
         }
     }

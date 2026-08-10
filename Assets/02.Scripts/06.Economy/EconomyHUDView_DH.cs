@@ -7,7 +7,7 @@ public class EconomyHUDView_DH : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI Text_catCount;
     [SerializeField] private TextMeshProUGUI Text_goldCount;
-    [SerializeField] private TextMeshProUGUI Text_BuildingCount;
+    [SerializeField] private TextMeshProUGUI Text_specialCatCount;
 
     private EconomyViewModel_DH _viewModel; // 뷰모델 선언
 
@@ -33,8 +33,8 @@ public class EconomyHUDView_DH : MonoBehaviour
             case nameof(EconomyViewModel_DH.CurrentGold):
                 if (Text_goldCount != null) Text_goldCount.text = _viewModel.CurrentGold.ToString();
                 break;
-            case nameof(EconomyViewModel_DH.BuildingCount):
-                if (Text_BuildingCount != null) Text_BuildingCount.text = _viewModel.BuildingCount.ToString();
+            case nameof(EconomyViewModel_DH.SpecialCatCount):
+                if (Text_specialCatCount != null) Text_specialCatCount.text = _viewModel.SpecialCatCount.ToString();
                 break;
         }
     }

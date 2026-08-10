@@ -45,11 +45,11 @@ public static class GameUtil
         return finalDamage;
     }
 
-    public static int CalcEconomyGold(int catCount, int incomeGoldBase, int incomeGoldBonus, float specialCatsMultiply)
+    public static int CalcEconomyGold(int catCount, int incomeGoldBase, int specialCatCount, float specialCatsMultiply)
     {
-        int nomalIncomeGold = (catCount * incomeGoldBase);
-        float bonusIncomeGold = nomalIncomeGold * (incomeGoldBonus + specialCatsMultiply);
-        int finalIncomeGold = Mathf.RoundToInt(incomeGoldBonus);
+        int nomalIncomeGold = catCount * incomeGoldBase;
+        float bonusIncomeGold = nomalIncomeGold * ( 1.0f + (specialCatCount * specialCatsMultiply));
+        int finalIncomeGold = Mathf.RoundToInt(bonusIncomeGold);
         return finalIncomeGold;
     }
 

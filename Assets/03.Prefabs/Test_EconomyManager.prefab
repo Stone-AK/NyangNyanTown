@@ -502,7 +502,7 @@ GameObject:
   - component: {fileID: 1294196032025935801}
   - component: {fileID: 5241620028172539705}
   m_Layer: 0
-  m_Name: AddBuilding
+  m_Name: AddSpecial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1126,11 +1126,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f11a9ef4d88fc345b88e7d8291d4aca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatManager_DH
-  _goldPerCat: 10
+  _incomeGoldBase: 10
+  _specialCatsCount: 0
+  _specialCatsMultiply: 0.1
   _goldInterval: 3
   View_CatHUD: {fileID: 3578107836668268525}
   Button_AddCat: {fileID: 351409727590556678}
-  Button_AddBuilding: {fileID: 5241620028172539705}
+  Button_AddSpecialCat: {fileID: 5241620028172539705}
 --- !u!1 &5531598604071767113
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1198,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: AddBuilding
+  m_text: AddSpecial
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1333,7 +1335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Building
+  m_text: Special
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1458,7 +1460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CatHUDView_DH
   Text_catCount: {fileID: 3353428459536203443}
   Text_goldCount: {fileID: 3176105233777283048}
-  Text_BuildingCount: {fileID: 2419929724275408312}
+  Text_specialCatCount: {fileID: 2419929724275408312}
 --- !u!1 &8147640753381469655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1712,7 +1714,7 @@ GameObject:
   - component: {fileID: 1362011792162141057}
   - component: {fileID: 5801257145278497480}
   m_Layer: 0
-  m_Name: Building
+  m_Name: Special
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
