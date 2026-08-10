@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class CatViewModel_DH : ViewModelBase
+public class EconomyViewModel_DH : ViewModelBase
 {
     private int _catCount;
     private int _currentGold;
