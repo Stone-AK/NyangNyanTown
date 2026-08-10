@@ -10,13 +10,13 @@ public class Building : MonoBehaviour
        
     }
 
-    public void InitaizeData(float rootX,Mesh mesh) 
+    public void InitaizeData(float rootX, BuildingData data) 
     {
         _renderer = GetComponentInChildren<Renderer>();
-        _buildingData.width = _renderer.bounds.size.x;
-        _buildingData.rootX = rootX;
+        _buildingData = data;
+        _buildingData.RootX = rootX;
         MapManager.Instance._currentBuildingList.Add( _buildingData );//추후에 빌딩 데이터가 생기면 매니저에서 등록
-        Debug.Log($"너비:{_buildingData.width}루트x{_buildingData.rootX}");
-        _meshFilter.sharedMesh = mesh;
+        Debug.Log($"너비:{_buildingData.Width}루트x{_buildingData.RootX}");
+        _meshFilter.sharedMesh = _buildingData.Mesh;
     }
 }

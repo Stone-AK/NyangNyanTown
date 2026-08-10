@@ -16,8 +16,8 @@ public class MapManager : MonoBehaviour
         float rightX = rootX + (width / 2f);
         foreach (BuildingData data in _currentBuildingList)
         {
-            float dataLeftX = data.rootX - (data.width / 2f);
-            float dataRightX = data.rootX + (data.width / 2f);
+            float dataLeftX = data.RootX - (data.Width / 2f);
+            float dataRightX = data.RootX + (data.Width / 2f);
             if (dataLeftX <= rightX && dataRightX >= leftX)
             {
                 return false;

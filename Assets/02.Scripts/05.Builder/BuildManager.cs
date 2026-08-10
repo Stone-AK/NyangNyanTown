@@ -1,27 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-public struct BuildingData 
+public struct BuildingData
 {
-   public float width;
-   public float rootX;
+    public float Width;
+    public float RootX;
+    public int Id;
+    public string Name;
+    public int Cost;
+    public Mesh Mesh;
 }
 public class BuildManager : MonoBehaviour
 {
     [SerializeField] GameObject _previewBuildingPrefab;
     [SerializeField] GameObject _realBuildingPrefab;
-    [SerializeField] List<Mesh> _meshList = new List<Mesh>();
     PreviewBuilding _previewBuilding;
-    private int _meshIndex = 0;
+ 
     private GameObject _currentPreviewBuilding;
     private GameObject _currentBuilding;
     private BuildingData _currentPreviewBuildingData;
-
+    public int TotalGold { get; set; } = 1000;//임시
 
     private Vector3 _worldPos;
     private bool _isBuilding = false;
     private float _currentGridX ;
-    
+
+    public event Action<int> OnTotalGoldChanged;
     public static BuildManager Instance { get; private set; }
     private void Awake()
     {
@@ -35,10 +41,6 @@ public class BuildManager : MonoBehaviour
         
         float newGridX = MapManager.Instance.GetGridX(_worldPos.x);
 
-        if (Keyboard.current.aKey.wasPressedThisFrame && !_isBuilding) 
-        {
-            StartBuild();
-        }
         if (_isBuilding && (_currentGridX != newGridX)) 
         {
             _currentGridX = newGridX;
@@ -46,7 +48,9 @@ public class BuildManager : MonoBehaviour
         }
         if (Mouse.current.leftButton.wasPressedThisFrame && _isBuilding)
         {
-            if (MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.width))
+            if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
+                return;
+            if (MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width))
             {
                 BuildBuilding(new Vector3(_currentGridX, 0f, 0f));
             }
@@ -67,14 +71,16 @@ public class BuildManager : MonoBehaviour
         //}
     
     }
-    private void StartBuild()//프리뷰 건물 생성후 초기화
+    public void StartBuild(BuildingData data)//프리뷰 건물 생성후 초기화
     {
+        Debug.Log("startbuildind 호출");
+        if (_isBuilding) { return;}
         _isBuilding = true;
         _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, 0, 0), Quaternion.identity);
         _previewBuilding= _currentPreviewBuilding.GetComponent<PreviewBuilding>();
-        _previewBuilding.Initialize(_meshList[_meshIndex]);
+        _previewBuilding.Initialize(data.Mesh);
         
-        _currentPreviewBuildingData.width =1f;
+        _currentPreviewBuildingData = data;
     }
     private void EndBuild() // 프리뷰 건물 삭제
     {
@@ -83,12 +89,13 @@ public class BuildManager : MonoBehaviour
     }
     private void BuildBuilding(Vector3 buildPositon) //건물설치
     {
+        if (!HasEnoughGold())
+            return;
         EndBuild();
         _currentBuilding = Instantiate(_realBuildingPrefab, buildPositon, Quaternion.identity);
         Building currentBuilding = _currentBuilding.GetComponent<Building>();
-        currentBuilding.InitaizeData(buildPositon.x, _meshList[_meshIndex]);
-        _meshIndex++;
-        _meshIndex = _meshIndex % _meshList.Count;
+        currentBuilding.InitaizeData(buildPositon.x, _currentPreviewBuildingData);
+        AddGold(- (_currentPreviewBuildingData.Cost));
     }
     private void OnGridChanged() //프리뷰 건물을 옮길때 마다
     {
@@ -96,7 +103,16 @@ public class BuildManager : MonoBehaviour
         {
           _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, 0f, 0f);
         }
-        bool canBuild = MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.width);
-        _previewBuilding.SetBuildable(canBuild);
+        bool canBuild = MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width);
+        _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());
+    }
+    private void AddGold(int addedGold) 
+    {
+        TotalGold += addedGold;
+        OnTotalGoldChanged?.Invoke(TotalGold);
+    }
+    private bool HasEnoughGold() 
+    {
+        return _currentPreviewBuildingData.Cost <= TotalGold; 
     }
 }
