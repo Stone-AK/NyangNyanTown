@@ -4,9 +4,10 @@
 public enum CatState
 {
     None = 0,
-    TargetMove,
+    MoveToTarget,
     InBuildingAction,
-    EscapeMove,
+    TargetMissing,
+    SearchTarget,
     EscapeAction
 }
 
@@ -50,7 +51,7 @@ public class CatViewModel : ViewModelBase
 
     public void InitRandomCatStat()
     {
-        _catState = CatState.TargetMove;
+        _catState = CatState.MoveToTarget;
         _catSpeed = (float)(GameUtil.Random.NextDouble() * (_maxSpeed - _minSpeed) + _minSpeed);
     }
 }
