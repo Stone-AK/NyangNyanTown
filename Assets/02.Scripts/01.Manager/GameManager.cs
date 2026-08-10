@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public static GameManager Instance { get; set; }
 
-    // Update is called once per frame
-    void Update()
+    public CurrencyService CurrencyService { get; private set; }
+
+    private void Awake()
     {
-        
+        Instance = this;
+        InitService();
+    }
+    
+    private void InitService()
+    {
+        CurrencyService = new CurrencyService();
     }
 }
