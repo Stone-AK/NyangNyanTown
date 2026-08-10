@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class BuildingSlotItemViewModel : DNViewModelBase
+public class BuildingSlotItemViewModel : ViewModelBase
 {
     public string Name { get; private set; }
     public int Cost { get; private set; }

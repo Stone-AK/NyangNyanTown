@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 
-public class BuildUIViewModel : DNViewModelBase
+public class BuildUIViewModel : ViewModelBase
 {
     public List<BuildingSlotItemViewModel> _itemSlots { get; } = new List<BuildingSlotItemViewModel>();
     public BuildUIViewModel()

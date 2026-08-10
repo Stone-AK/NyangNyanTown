@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CurrencyViewModel : DNViewModelBase
+public class CurrencyViewModel : ViewModelBase
 {
 
     public void InvokeOnceOnInit()
