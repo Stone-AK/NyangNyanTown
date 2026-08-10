@@ -10,7 +10,7 @@ public enum CatState
     EscapeAction
 }
 
-public class CatViewModel : DNViewModelBase
+public class CatViewModel : ViewModelBase
 {
     private float _minSpeed = 1f;
     private float _maxSpeed = 5f;

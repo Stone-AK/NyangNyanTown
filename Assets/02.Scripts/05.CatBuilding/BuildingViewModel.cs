@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BuildingViewModel : DNViewModelBase
+public class BuildingViewModel : ViewModelBase
 {
     
 }

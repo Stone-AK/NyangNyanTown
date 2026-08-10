@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameViewModel : DNViewModelBase
+public class GameViewModel : ViewModelBase
 {
     public void InvokeInitProperty()
     {

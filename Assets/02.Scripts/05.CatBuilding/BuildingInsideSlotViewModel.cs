@@ -1,5 +1,5 @@
 ﻿
-public class BuildingInsideSlotViewModel : DNViewModelBase
+public class BuildingInsideSlotViewModel : ViewModelBase
 {
     private bool _isSlotFilled = false;
 

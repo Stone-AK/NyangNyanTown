@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CatViewModel_DH : DNViewModelBase
+public class CatViewModel_DH : ViewModelBase
 {
     private int _catCount;
     private int _currentGold;
