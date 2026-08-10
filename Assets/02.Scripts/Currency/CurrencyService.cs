@@ -8,7 +8,7 @@ public class CurrencyService
     {
         if(CurrencyViewModel == null)
         {
-            CreateCurrencyViewModel();
+            CurrencyViewModel = CreateCurrencyViewModel();
         }
 
         return CurrencyViewModel;
@@ -21,6 +21,7 @@ public class CurrencyService
         currencyViewModel.Fish = 0;
         currencyViewModel.CatCurrentCount = 0;
         currencyViewModel.CatMaxCount = 0;
+        currencyViewModel.BuildingCount = 0;
 
         return currencyViewModel;
     }

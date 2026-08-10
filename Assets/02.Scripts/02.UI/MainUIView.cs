@@ -9,16 +9,21 @@ public class MainUIView : MonoBehaviour
     [SerializeField] private Button Button_CatList;
     [SerializeField] private TMP_Text GoldText;
     [SerializeField] private TMP_Text FishText;
-    [SerializeField] private TMP_Text CatCurrentText;
-    [SerializeField] private TMP_Text CatMaxText;
+    [SerializeField] private TMP_Text CatCountText;
 
 
     private CurrencyViewModel _vm;
 
+    public void BindViewModel(CurrencyViewModel vm)
+    {
+        _vm = vm;
+        _vm.PropertyChanged += OnPropChagned_View;
+        _vm.InvokeOnceOnInit();
 
+    }
     private void OnEnable()
     {
-        //var _vm = GameManager.Inst.CurrencyService.GetCurrencyViewModel();
+        var _vm = GameManager.Instance.CurrencyService.GetCurrencyViewModel();
         BindViewModel(_vm);
 
         if (Button_Building != null) 
@@ -31,11 +36,7 @@ public class MainUIView : MonoBehaviour
         }
     }
 
-    public void BindViewModel(CurrencyViewModel vm)
-    {
-        _vm = vm;
-        _vm.PropertyChanged += OnPropChagned_View;
-    }
+   
     private void OnDisable()
     {
         Button_Building.onClick.RemoveListener(OnButtonClickedBuilding);
@@ -50,9 +51,15 @@ public class MainUIView : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
     private void OnButtonClickedBuilding()
     {
         Debug.Log("Button_Building");
+        GameManager.Instance.CurrencyService.AddGoldCurrency(1);
     }
     private void OnButtonClickedCatList()
     {
@@ -76,12 +83,12 @@ public class MainUIView : MonoBehaviour
                 }
             case nameof(CurrencyViewModel.CatCurrentCount):
                 {
-                    CatCurrentText.text = _vm.CatCurrentCount.ToString();
+                    CatCountText.text = $"{_vm.CatCurrentCount.ToString()} / {_vm.CatMaxCount.ToString()}";
                     break;
                 }
             case nameof(CurrencyViewModel.CatMaxCount):
                 {
-                    CatMaxText.text = _vm.CatMaxCount.ToString();
+                    CatCountText.text = $"{_vm.CatCurrentCount.ToString()} / {_vm.CatMaxCount.ToString()}";
                     break;
                 }
 

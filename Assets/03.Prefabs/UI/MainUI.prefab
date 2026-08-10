@@ -1007,9 +1007,8 @@ MonoBehaviour:
   Button_Building: {fileID: 7874814713843603137}
   Button_CatList: {fileID: 4574481361265635316}
   GoldText: {fileID: 3509380509076223599}
-  FishText: {fileID: 0}
-  CatCurrentText: {fileID: 0}
-  CatMaxText: {fileID: 0}
+  FishText: {fileID: 6994106398258515547}
+  CatCountText: {fileID: 6368242686514881632}
 --- !u!1 &5806508439391048404
 GameObject:
   m_ObjectHideFlags: 0

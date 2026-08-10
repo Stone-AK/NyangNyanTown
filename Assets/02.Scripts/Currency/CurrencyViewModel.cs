@@ -3,11 +3,13 @@ using UnityEngine;
 public class CurrencyViewModel : DNViewModelBase
 {
 
-    private void InvokeOnceOnInit()
+    public void InvokeOnceOnInit()
     {
         OnPropertyChanged(nameof(Gold));
         OnPropertyChanged(nameof(Fish));
         OnPropertyChanged(nameof(CatCurrentCount));
+        OnPropertyChanged(nameof(CatMaxCount));
+        OnPropertyChanged(nameof(BuildingCount));
     }
 
     private int _gold;
@@ -65,4 +67,19 @@ public class CurrencyViewModel : DNViewModelBase
             }
         }
     }
+
+    private int _buildingCount;
+    public int BuildingCount
+    {
+        get => _buildingCount;
+        set
+        {
+            if (_buildingCount != value)
+            {
+                _buildingCount = value;
+                OnPropertyChanged(nameof(BuildingCount));
+            }
+        }
+    }
+
 }
