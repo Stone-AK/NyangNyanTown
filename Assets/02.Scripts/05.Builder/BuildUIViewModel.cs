@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 public class BuildUIViewModel : ViewModelBase
@@ -6,10 +7,12 @@ public class BuildUIViewModel : ViewModelBase
     public List<BuildingSlotItemViewModel> _itemSlots { get; } = new List<BuildingSlotItemViewModel>();
     public BuildUIViewModel()
     {
-        foreach (var data in TestBuildingDatabase.Instance.BuildingDatas) 
+        Debug.Log($"GameDataManager: {GameDataManager.Instance}");
+        Debug.Log($"BuildManager: {BuildManager.Instance}");
+        foreach (var data in GameDataManager.Instance._buildingDataModelList) 
         {
             var newSlot = new BuildingSlotItemViewModel();
-            newSlot.Initialize(data,BuildManager.Instance.TotalGold);
+            newSlot.Initialize(data.Value,BuildManager.Instance.TotalGold);
             _itemSlots.Add(newSlot);
             newSlot.OnBuildingSlotButtonClicked += StartBuild;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,11 +28,8 @@ public class GameDataManager : MonoBehaviour
     // ---------------------------------------------------
 
     // public Dictionary<string, DNCharacterData> CharacterDataList { get; private set; } = new Dictionary<string, DNCharacterData>();
-
-    //private Dictionary<string, DNItemData> GetItemDataList()
-    //{
-    //    return ItemDataList;
-    //}
+    public Dictionary<string, BuildingData> _buildingDataModelList { get; private set; } = new Dictionary<string, BuildingData>();
+    
 
     private Dictionary<string, T> LoadData<T>(string tableName) where T : GameDataBase
     {
@@ -71,7 +69,16 @@ public class GameDataManager : MonoBehaviour
 
         return new Dictionary<string, T>();
     }
+  public BuildingData GetBuildingDataModel(string id)
+    {
+        if (_buildingDataModelList == null || string.IsNullOrEmpty(id)) return null;
 
+        return _buildingDataModelList.TryGetValue(id, out var item) ? item : null;
+    }
+    public void LoadBuildingDataModel(string jsonPath)
+    {
+        _buildingDataModelList = LoadData<BuildingData>(jsonPath);
+    }
     //public void LoadDNDialogueData()
     //{
     //    DialogueGroupDataList = LoadData<DNDialogueGroupData>("DNDialogueGroup");
@@ -88,11 +95,6 @@ public class GameDataManager : MonoBehaviour
     // [아래는 사용을 위한 부분들을 메서드 정의] =========================================================================================
     // Get과 Find이름을 꼭 구별 하자!
 
-    //public DNCharacterData GetCharacterData(string id)
-    //{
-    //    if (CharacterDataList == null || string.IsNullOrEmpty(id)) return null;
 
-    //    return CharacterDataList.TryGetValue(id, out var item) ? item : null;
-    //}
 
 }

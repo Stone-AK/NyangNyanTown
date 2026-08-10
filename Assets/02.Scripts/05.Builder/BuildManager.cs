@@ -3,15 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-public struct BuildingData
-{
-    public float Width;
-    public float RootX;
-    public int Id;
-    public string Name;
-    public int Cost;
-    public Mesh Mesh;
-}
+
 public class BuildManager : MonoBehaviour
 {
     [SerializeField] GameObject _previewBuildingPrefab;
@@ -78,7 +70,7 @@ public class BuildManager : MonoBehaviour
         _isBuilding = true;
         _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, 0, 0), Quaternion.identity);
         _previewBuilding= _currentPreviewBuilding.GetComponent<PreviewBuilding>();
-        _previewBuilding.Initialize(data.Mesh);
+        _previewBuilding.Initialize(data);
         
         _currentPreviewBuildingData = data;
     }

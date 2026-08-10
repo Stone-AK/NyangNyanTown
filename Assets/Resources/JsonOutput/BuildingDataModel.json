@@ -1,0 +1,56 @@
+[
+  {
+    "Id": "Building_01_House",
+    "Name": "House",
+    "Cost": 10,
+    "ScaleX": 1,
+    "ScaleY": 1,
+    "Width": 1,
+    "CatCapacity": 1
+  },
+  {
+    "Id": "Building_02_Shop",
+    "Name": "Shop",
+    "Cost": 15,
+    "ScaleX": 1,
+    "ScaleY": 2,
+    "Width": 1,
+    "CatCapacity": 3
+  },
+  {
+    "Id": "Building_03_Museum",
+    "Name": "Museum",
+    "Cost": 20,
+    "ScaleX": 2,
+    "ScaleY": 2,
+    "Width": 2,
+    "CatCapacity": 5
+  },
+  {
+    "Id": "Building_04_Fitness_Center",
+    "Name": "Fitness_Center",
+    "Cost": 30,
+    "ScaleX": 3,
+    "ScaleY": 2,
+    "Width": 3,
+    "CatCapacity": 8
+  },
+  {
+    "Id": "Building_05_Theater",
+    "Name": "Theater",
+    "Cost": 50,
+    "ScaleX": 4,
+    "ScaleY": 3,
+    "Width": 4,
+    "CatCapacity": 15
+  },
+  {
+    "Id": "Building_06_Department_Store",
+    "Name": "Department_Store",
+    "Cost": 100,
+    "ScaleX": 5,
+    "ScaleY": 6,
+    "Width": 5,
+    "CatCapacity": 40
+  }
+]
