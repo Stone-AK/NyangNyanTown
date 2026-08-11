@@ -1,4 +1,4 @@
 {
   "InputPath": "./ExcelFiles",
-  "OutputPath": "../Assets/Resources/JsonOutput"
+  "OutputPath": "../Assets/04.Data"
 }

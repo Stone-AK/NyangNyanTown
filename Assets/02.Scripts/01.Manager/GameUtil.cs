@@ -20,6 +20,22 @@ public static class GameUtil
 
     }
 
+    public static int CalcCharacterFinalDamage(int curCharacterLevel, int levelPerDamage, bool isCritical)
+    {
+        int damagePerLevel = (curCharacterLevel + levelPerDamage);
+        int finalDamage = isCritical ? (damagePerLevel * 2) : damagePerLevel;
+        return finalDamage;
+    }
+
+    public static void ValidateReference(UnityEngine.Object target, string className, string fieldName)
+    {
+        if (target != null)
+        {
+            return;
+        }
+
+        Debug.LogError($"[{nameof(GameUtil)}:{nameof(ValidateReference)}] '{className}' 클래스의 '{fieldName}' 필드가 할당되지 않았습니다.");
+    }
     public static Sprite LoadSpriteCanBeNull(string spriteName)
     {
         // 1. Resources/ 경로에서 이름으로 스프라이트 로드

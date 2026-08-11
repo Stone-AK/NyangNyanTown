@@ -1,169 +1,81 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 using UnityEngine;
 
 public enum UIRootType
 {
     None = 0,
-    MainUI,
-    PopupUI,
-    VeryFrontUI
+    Main,
+    Popup,
+    VeryFront
 }
 
 public enum UIType
 {
     //DNSimplePopup,
-
+    MainUI,
+    OverlayUI
 }
 
-public class UIBase : MonoBehaviour
+public class BaseUI : MonoBehaviour
 {
 }
 
 public static class UIManagerExtension
 {
-    public static string GetUIPath(this UIManager uiManager, UIRootType uiRootType, UIType uiType)
+    public static async UniTask OpenMainUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
     {
-        string path = string.Empty; // "" == string.Empty
+        await uiManager.OpenMainRootAsync(UIType.MainUI, cancellationToken);
 
-        // 신규UI추가 2) Resources.Load를 할 경로를 직접 명시한다
-        // 해당 경로는 프로젝트창에서 Resources/Prefabs/UI폴더 내에 있는 RootType 폴더명과 UIType 프리팹 이름과 동일해야 한다! (ex. ContentUI/DNMyProfilePopup)
-        path = $"Prefabs/UI/{uiRootType}/{uiType}";
-        return path;
+
+        //await uiManager.OpenVeryFrontRootAsync(원하는 UI타입, cancellationToken);
+        // Main 레이어에 UI를 소환하고 싶을 때
+
+        // await uiManager.OpenPopupRootAsync(원하는 UI타입, cancellationToken);
+        // Popup 레이어에 UI를 소환하고 싶을 때
+
+        //await uiManager.OpenVeryFrontRootAsync(원하는 UI타입, cancellationToken);
+        // VeryFront 레이어에 UI를 소환하고 싶을 때
+
     }
 
-    //public static void ShowStartupUIOnGameStart(this UIManager uiManager)
-    //{
-    //    uiManager.OpenLoadingUI();
-    //    uiManager.OpenContentUI(UIType.DNRobbyUI);
-    //    // uiManager.OpenUI(UIRootType.ContentUI, UIType.DNRobbyUI); // 위랑 똑같은 원리
-    //    uiManager.OpenUI(UIRootType.MainUI, UIType.DNHudUI);
-    //    uiManager.OpenUI(UIRootType.MainUI, UIType.DNMainUI);
-    //    // 게임 로비 UI를 여기서 오픈해주자 -> uiManager.
-    //    // MainUI도
-    //}
-
-    //public static void OpenSimplePopup(this UIManager uiManager, string msg)
-    //{
-    //    var uiBase = uiManager.OpenPopupUI(UIType.DNSimplePopup);
-    //    if (uiBase == null)
-    //    {
-    //        Debug.LogWarning($"UI가 생성되지 않았습니다");
-    //        return;
-    //    }
-
-    //    if (uiBase is DaniTech_SimplePopup simplePopup)
-    //    {
-    //        simplePopup.SetUI(msg);
-    //    }
-    //}
-
-    //// 신규UI추가 3) 이렇게 어떤 팝업을 열고, 열때 전달해야하는 파라미터가 있다면 이렇게 전달한다.
-    //// 추가하기 편하게 그냥 빼둔 확장 메서드이므로, uiManager과 this는 우선 넘어가자
-    //public static void OpenMyProfilePopup(this UIManager uiManager, string characterDataId)
-    //{
-    //    // 신규UI추가 4) 이렇게 UI 타입을 던져서 UI 생성을 요청한다
-    //    var uiBase = uiManager.OpenPopupUI(UIType.DNMyProfilePopup);
-    //    if (uiBase == null)
-    //    {
-    //        Debug.LogWarning($"UI가 생성되지 않았습니다");
-    //        return;
-    //    }
-
-    //    if (uiBase is DaniTech_MyProfilePopup myProfilePopup)
-    //    {
-    //        myProfilePopup.RefreshCharacterUI(characterDataId);
-    //    }
-    //}
-
-    //public static void OpenInventoryPopup(this UIManager uiManger)
-    //{
-    //    var uiBase = uiManger.OpenContentUI(UIType.DNInventory);
-    //    if (uiBase == null)
-    //    {
-    //        Debug.LogWarning($"UI가 생성되지 않았습니다");
-    //        return;
-    //    }
-    //}
-
-    //public static void OpenLoadingUI(this UIManager uiManager)
-    //{
-    //    var uiBase = uiManager.OpenUI(UIRootType.VeryFrontUI, UIType.DNLoadingUI);
-    //    if (uiBase == null)
-    //    {
-    //        Debug.LogWarning($"UI가 생성되지 않았습니다");
-    //        return;
-    //    }
-    //}
-
-    //public static void CloseLoadingUI(this UIManager uiManager)
-    //{
-    //    uiManager.CloseUI(UIRootType.VeryFrontUI, UIType.DNLoadingUI);
-    //}
-
-    //public static void OpenDialogueUI(this UIManager uiManager, string startDialogueId)
-    //{
-    //    var uiBase = uiManager.OpenContentUI(UIType.DNDialogueUI);
-    //    if (uiBase == null)
-    //    {
-    //        Debug.LogWarning($"UI가 생성되지 않았습니다");
-    //        return;
-    //    }
-
-    //    if (uiBase is DaniTech_DialogueUI dialogueUi)
-    //    {
-    //        dialogueUi.StartDialogue(startDialogueId);
-    //    }
-    //}
-
-    //public static void AddHudSlot(this UIManager uiManager, int instanceId, Transform targetTransform)
-    //{
-    //    var uiBase = uiManager.GetOpenedUI(UIRootType.MainUI, UIType.DNHudUI);
-    //    if (uiBase == null) return;
-
-    //    // 기존에 GetComponent를 하던 부분이 클래스 형변환을 해도 되도록 개선되었다 (UIBase를 상속받기 때문)
-    //    if (uiBase is DaniTech_HudUI hudUi)
-    //    {
-    //        // 그 대상이 생성됬을 때 호출
-    //        // 몬스터 동적생성이 선행적으로 구조가 잘 잡혀있으므로 그걸 이용할 수 있다
-    //        hudUi.AddHudSlot(instanceId, targetTransform);
-    //    }
-    //}
-
-    //// 그 대상이 죽었을때 호출
-    //public static void RemoveHudSlot(this UIManager uiManager, int instanceId)
-    //{
-    //    var uiBase = uiManager.GetOpenedUI(UIRootType.MainUI, UIType.DNHudUI);
-    //    if (uiBase == null) return;
-
-    //    // 기존에 GetComponent를 하던 부분이 클래스 형변환을 해도 되도록 개선되었다 (UIBase를 상속받기 때문)
-    //    if (uiBase is DaniTech_HudUI hudUi)
-    //    {
-    //        // 그 대상이 생성됬을 때 호출
-    //        // 몬스터 동적생성이 선행적으로 구조가 잘 잡혀있으므로 그걸 이용할 수 있다
-    //        hudUi.RemoveHudSlot(instanceId);
-    //    }
-    //}
+    public static void CloseMain(this UIManager uiManager)
+    {
+        uiManager.Close(UIType.MainUI);
+    }
 
 
-    //public static void AddInteractionSlot(this UIManager uiManager, int instanceId, string interactionKey, string interactionTitle, Transform targetTransform, Action<string> onClickCallback = null)
-    //{
-    //    var uiBase = uiManager.GetOpenedUI(UIRootType.MainUI, UIType.DNHudUI);
-    //    if (uiBase == null) return;
+    public static async UniTask OpenOverlayAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    {
+        await uiManager.OpenVeryFrontRootAsync(UIType.OverlayUI, cancellationToken);
+    }
 
-    //    if (uiBase is DaniTech_HudUI hudUi)
-    //    {
-    //        hudUi.AddInteractionSlot(instanceId, interactionKey, interactionTitle, targetTransform, onClickCallback);
-    //    }
-    //}
+    public static void CloseOverlay(this UIManager uiManager)
+    {
+        uiManager.Close(UIType.OverlayUI);
+    }
 
-    //public static void RemoveInteractionSlot(this UIManager uiManager, int instanceId)
-    //{
-    //    var uiBase = uiManager.GetOpenedUI(UIRootType.MainUI, UIType.DNHudUI);
-    //    if (uiBase == null) return;
+    
 
-    //    if (uiBase is DaniTech_HudUI hudUi)
-    //    {
-    //        hudUi.RemoveIteractionSlot(instanceId);
-    //    }
-    //}
+
+
+
+
+    //UI를 생성하고 View를 가져오고 싶을 때 사용
+    private static T GetView<T>(BaseUI baseUI, UIType uiType) where T : BaseUI
+    {
+        if (baseUI == null)
+        {
+            return null;
+        }
+
+        if (baseUI is not T view)
+        {
+            return null;
+        }
+
+        return view;
+    }
 }
+
