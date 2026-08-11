@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+ï»¿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : BaseManager<GameManager>
@@ -8,8 +8,10 @@ public class GameManager : BaseManager<GameManager>
     public GameDataManager DataManager { get; private set; }
     public UIManager UIManager { get; private set; }
     public ObjectManager ObjectManager { get; private set; }
+    public BuildManager BuildManager { get; private set; }
+    public MapManager MapManager { get; private set; }
 
-    
+
 
 
     public CurrencyService CurrencyService { get; private set; }
@@ -45,6 +47,8 @@ public class GameManager : BaseManager<GameManager>
         await DataManager.InitializeAsync();
         await ObjectManager.InitializeAsync();
         await UIManager.InitializeAsync();
+        await BuildManager.InitializeAsync();
+        await MapManager.InitializeAsync();
 
     }
     public override UniTask InitializeAsync()
@@ -55,7 +59,7 @@ public class GameManager : BaseManager<GameManager>
     {
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning($"[{nameof(GameManager)}:{nameof(EnsureSingleton)}] Áßº¹µÈ ÀÎ½ºÅÏ½º°¡ ¹ß°ßµÇ¾î {gameObject.name} ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÕ´Ï´Ù.");
+            Debug.LogWarning($"[{nameof(GameManager)}:{nameof(EnsureSingleton)}] ì¤‘ë³µëœ ì¸ìŠ¤í„´ìŠ¤ê°€ ë°œê²¬ë˜ì–´ {gameObject.name} ì˜¤ë¸Œì íŠ¸ë¥¼ íŒŒê´´í•©ë‹ˆë‹¤.");
             Destroy(gameObject);
             return;
         }
@@ -69,6 +73,8 @@ public class GameManager : BaseManager<GameManager>
         DataManager = this.GetComponent<GameDataManager>();
         UIManager = this.GetComponent<UIManager>();
         ObjectManager = this.GetComponent<ObjectManager>();
-      
+        BuildManager = this.GetComponent<BuildManager>(); 
+        MapManager = this.GetComponent<MapManager>();
+
     }
 }

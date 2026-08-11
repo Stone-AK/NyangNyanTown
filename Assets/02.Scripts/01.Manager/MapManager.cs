@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 public struct PlacedBuildingData
 {
@@ -6,16 +7,15 @@ public struct PlacedBuildingData
     public float RootX;
     public float Width;
 }
-public class MapManager : MonoBehaviour
+public class MapManager : BaseManager<GameManager>
 {
     private const float GRID_WIDTH = 0.1f;
     //public List<BuildingData> _currentBuildingList = new List<BuildingData>();
     public List<PlacedBuildingData> _currentBuildingList = new List<PlacedBuildingData>();
 
-    public static MapManager Instance { get; private set; }
-    private void Awake()
+    public override UniTask InitializeAsync()
     {
-        Instance = this;
+        return UniTask.CompletedTask;
     }
     public bool CanBuildOnThisPlace(float rootX, float width) //좌표를 주면 해당위치에 설치할 수 있는지 반환
     {

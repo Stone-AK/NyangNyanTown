@@ -13,16 +13,16 @@ public class BuildUIViewModel : ViewModelBase
             {
                 var newSlot = new BuildingSlotItemViewModel();
 
-                newSlot.Initialize(data.Value, BuildManager.Instance.TotalGold);
+                newSlot.Initialize(data.Value, GameManager.Instance.BuildManager.TotalGold);
                 _itemSlots.Add(newSlot);
                 newSlot.OnBuildingSlotButtonClicked += StartBuild;
             }
-            BuildManager.Instance.OnTotalGoldChanged += OnTotalGoldChanged;
+            GameManager.Instance.BuildManager.OnTotalGoldChanged += OnTotalGoldChanged;
         }
     }
     public void StartBuild(BuildingData data) 
     {
-        BuildManager.Instance.StartBuild(data);
+        GameManager.Instance.BuildManager.StartBuild(data);
     }
     private void OnTotalGoldChanged(int currentGold) 
     {

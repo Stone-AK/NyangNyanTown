@@ -26,7 +26,7 @@ public class Building : MonoBehaviour
     {
        // _renderer = GetComponentInChildren<Renderer>();
         _buildingData = data;
-        MapManager.Instance.AddToList(data, rootX);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+        GameManager.Instance.MapManager.AddToList(data, rootX);//추후에 빌딩 데이터가 생기면 매니저에서 등록
         Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
         _visual.localScale = scale;
         CreateCatPoints(scale);

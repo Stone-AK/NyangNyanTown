@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class BuildManager : MonoBehaviour
+public class BuildManager : BaseManager<GameManager>
 {
     [SerializeField] GameObject _previewBuildingPrefab;
     [SerializeField] GameObject _realBuildingPrefab;
@@ -14,16 +15,16 @@ public class BuildManager : MonoBehaviour
     private GameObject _currentBuilding;
     private BuildingData _currentPreviewBuildingData;
     public int TotalGold { get; set; } = 1000;//임시
+    private const float GRUOND_Y = 1.5f;//임시 보정
 
     private Vector3 _worldPos;
     private bool _isBuilding = false;
     private float _currentGridX ;
 
     public event Action<int> OnTotalGoldChanged;
-    public static BuildManager Instance { get; private set; }
-    private void Awake()
+    public override UniTask InitializeAsync()
     {
-        Instance = this;
+        return UniTask.CompletedTask;
     }
     private void Update()
     {
@@ -31,7 +32,7 @@ public class BuildManager : MonoBehaviour
 
         _worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, 0));
         
-        float newGridX = MapManager.Instance.GetGridX(_worldPos.x);
+        float newGridX = GameManager.Instance.MapManager.GetGridX(_worldPos.x);
 
         if (_isBuilding && (_currentGridX != newGridX)) 
         {
@@ -42,9 +43,9 @@ public class BuildManager : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
                 return;
-            if (MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width))
+            if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width))
             {
-                BuildBuilding(new Vector3(_currentGridX, _currentPreviewBuildingData.ScaleY / 2f, 0f));
+                BuildBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f));
             }
             else 
             {
@@ -69,7 +70,7 @@ public class BuildManager : MonoBehaviour
         if (_isBuilding) { return;}
         _isBuilding = true; 
         _currentPreviewBuildingData = data;
-        _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, _currentPreviewBuildingData.ScaleY / 2f, 0), Quaternion.identity);
+        _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, (_currentPreviewBuildingData.ScaleY / 2f)- GRUOND_Y, 0), Quaternion.identity);
         Debug.Log($"프리뷰{data.ScaleY / 2f}");
         _previewBuilding= _currentPreviewBuilding.GetComponent<PreviewBuilding>();
         _previewBuilding.Initialize(data);
@@ -96,9 +97,9 @@ public class BuildManager : MonoBehaviour
     {
         if (_currentPreviewBuilding != null)
         {
-          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, _currentPreviewBuildingData.ScaleY / 2f, 0f);
+          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f);
         }
-        bool canBuild = MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width);
+        bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width);
         _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());
     }
     private void AddGold(int addedGold) 
