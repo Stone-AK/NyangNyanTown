@@ -1,0 +1,38 @@
+[
+  {
+    "Id": "character_hellena_01",
+    "Name": "헬레나"
+  },
+  {
+    "Id": "character_victor_01",
+    "Name": "빅토르"
+  },
+  {
+    "Id": "character_daniel_01",
+    "Name": "다니엘"
+  },
+  {
+    "Id": "character_ozma_01",
+    "Name": "오즈마"
+  },
+  {
+    "Id": "character_sapicrow_01",
+    "Name": "사피크로우"
+  },
+  {
+    "Id": "character_machinacor_01",
+    "Name": "마키나코르"
+  },
+  {
+    "Id": "character_valentileaon_01",
+    "Name": "발렌티레온"
+  },
+  {
+    "Id": "character_dorothvia_01",
+    "Name": "도로트비아"
+  },
+  {
+    "Id": "character_ozbasic_01",
+    "Name": "방문자"
+  }
+]
