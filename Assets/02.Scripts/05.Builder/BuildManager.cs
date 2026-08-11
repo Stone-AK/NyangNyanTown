@@ -44,7 +44,7 @@ public class BuildManager : MonoBehaviour
                 return;
             if (MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width))
             {
-                BuildBuilding(new Vector3(_currentGridX, 0f, 0f));
+                BuildBuilding(new Vector3(_currentGridX, _currentPreviewBuildingData.ScaleY / 2f, 0f));
             }
             else 
             {
@@ -67,12 +67,14 @@ public class BuildManager : MonoBehaviour
     {
         Debug.Log("startbuildind 호출");
         if (_isBuilding) { return;}
-        _isBuilding = true;
-        _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, 0, 0), Quaternion.identity);
+        _isBuilding = true; 
+        _currentPreviewBuildingData = data;
+        _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, _currentPreviewBuildingData.ScaleY / 2f, 0), Quaternion.identity);
+        Debug.Log($"프리뷰{data.ScaleY / 2f}");
         _previewBuilding= _currentPreviewBuilding.GetComponent<PreviewBuilding>();
         _previewBuilding.Initialize(data);
         
-        _currentPreviewBuildingData = data;
+       
     }
     private void EndBuild() // 프리뷰 건물 삭제
     {
@@ -85,6 +87,7 @@ public class BuildManager : MonoBehaviour
             return;
         EndBuild();
         _currentBuilding = Instantiate(_realBuildingPrefab, buildPositon, Quaternion.identity);
+        Debug.Log($"본{buildPositon.y}");
         Building currentBuilding = _currentBuilding.GetComponent<Building>();
         currentBuilding.InitaizeData(buildPositon.x, _currentPreviewBuildingData);
         AddGold(- (_currentPreviewBuildingData.Cost));
@@ -93,7 +96,7 @@ public class BuildManager : MonoBehaviour
     {
         if (_currentPreviewBuilding != null)
         {
-          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, 0f, 0f);
+          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, _currentPreviewBuildingData.ScaleY / 2f, 0f);
         }
         bool canBuild = MapManager.Instance.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width);
         _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());

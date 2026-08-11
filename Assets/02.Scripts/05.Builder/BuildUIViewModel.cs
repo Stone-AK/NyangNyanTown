@@ -9,6 +9,7 @@ public class BuildUIViewModel : ViewModelBase
     {
         Debug.Log($"GameDataManager: {GameDataManager.Instance}");
         Debug.Log($"BuildManager: {BuildManager.Instance}");
+
         foreach (var data in GameDataManager.Instance._buildingDataModelList) 
         {
             var newSlot = new BuildingSlotItemViewModel();

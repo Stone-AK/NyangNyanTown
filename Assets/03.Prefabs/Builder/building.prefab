@@ -125,4 +125,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f8f0811cb9a9d4a8875a8801b25f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Building
+  _buildingData:
+    Id: 
+    Name: 
+    Cost: 0
+    ScaleX: 0
+    ScaleY: 0
+    Width: 0
+    CatCapacity: 0
   _meshFilter: {fileID: 6590997675377547289}
