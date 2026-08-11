@@ -111,4 +111,12 @@ public class BuildManager : BaseManager<GameManager>
     {
         return _currentPreviewBuildingData.Cost <= TotalGold; 
     }
+    public void DestroyBuilding(Building building) 
+    {
+        if (building == null)
+            return;
+
+        GameManager.Instance.MapManager.DeleteBuilding(building.InstanceId);
+        Destroy(building.gameObject);
+    }
 }

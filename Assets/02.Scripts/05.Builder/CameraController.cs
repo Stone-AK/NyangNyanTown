@@ -54,7 +54,33 @@ public class CameraController : MonoBehaviour
     {
         HandleDrag();
         HandleZoom();
-    }  
+        Buildingtest();
+
+    }
+    private void Buildingtest() {
+        if (Mouse.current == null)
+            return;
+
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        Ray ray = _camera.ScreenPointToRay(mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Debug.Log($"클릭한 오브젝트: {hit.collider.name}");
+
+            Building building = hit.collider.GetComponentInParent<Building>();
+
+            if (building != null)
+            {
+                Debug.Log($"건물 클릭 성공 ID: {building.InstanceId}");
+                GameManager.Instance.BuildManager.DestroyBuilding(building);
+            }
+        }
+    }
     private void HandleZoom()
     {
         if (Mouse.current == null)

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 public class Building : MonoBehaviour
 {
@@ -11,6 +13,9 @@ public class Building : MonoBehaviour
     [SerializeField] private MeshFilter _meshFilter;
     [SerializeField] private Transform _visual;
     private Transform _entrancePoint;
+
+    //private string _instanceId;
+    public string InstanceId { get; private set; }
     // 현재 비어 있는 입주 자리
     private Queue<Transform> _availableCatPoints = new Queue<Transform>();
     // 생성된 모든 입주 자리
@@ -26,7 +31,8 @@ public class Building : MonoBehaviour
     {
        // _renderer = GetComponentInChildren<Renderer>();
         _buildingData = data;
-        GameManager.Instance.MapManager.AddToList(data, rootX);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+        InstanceId = Guid.NewGuid().ToString();
+        GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId);//추후에 빌딩 데이터가 생기면 매니저에서 등록
         Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
         _visual.localScale = scale;
         CreateCatPoints(scale);
@@ -155,4 +161,5 @@ public class Building : MonoBehaviour
     {
         return _entrancePoint;
     }
+    
 }
