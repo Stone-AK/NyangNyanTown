@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,6 +50,23 @@ public static class GameUtil
 
         Debug.LogError($"에셋을 찾을 수 없습니다: {spriteName}");
         return null;
+    }
+
+
+
+    public static int CalcCharacterFinalDamage(int curCharacterLevel, int levelPerDamage, bool isCritical)
+    {
+        int damagePerLevel = (curCharacterLevel + levelPerDamage);
+        int finalDamage = isCritical ? (damagePerLevel * 2) : damagePerLevel;
+        return finalDamage;
+    }
+
+    public static int CalcEconomyGold(int catCount, int incomeGoldBase, int specialCatCount, float specialCatsMultiply)
+    {
+        int nomalIncomeGold = catCount * incomeGoldBase;
+        float bonusIncomeGold = nomalIncomeGold * ( 1.0f + (specialCatCount * specialCatsMultiply));
+        int finalIncomeGold = Mathf.RoundToInt(bonusIncomeGold);
+        return finalIncomeGold;
     }
 
     //public static async UniTask<Sprite> LoadAndSetSpriteImage(Image targetImage, string spritePath)

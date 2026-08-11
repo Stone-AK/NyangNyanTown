@@ -3,7 +3,7 @@
 //using UnityEngine.UI;
 
 
-//public class Test_CatManager : MonoBehaviour
+//public class Test_EconomyManager : MonoBehaviour
 //// 고양이 수의 체크는 건물이 늘고 줄때 계산식 돌려서 체크, 현재는 버튼을 하나 만들어서 고양이 수를 강제적으로 늘리는 방식을 써보자
 //// 골드 수 체크는 일정 간격으로 돌아가는 업데이트로 고양이 수에 계산식 돌려서 체크
 //// 계산식은 나중에 static 클래스로 관리
