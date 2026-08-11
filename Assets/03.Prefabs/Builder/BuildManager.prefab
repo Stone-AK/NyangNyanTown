@@ -45,8 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildManager
   _previewBuildingPrefab: {fileID: 929048737933534321, guid: 365ebeeae53c28948a8b44e5637811e0, type: 3}
-  _realBuildingPrefab: {fileID: 8913582845665940299, guid: bfa18106f87f0ad4b9945e8e7597c596, type: 3}
-  _meshList:
-  - {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  _realBuildingPrefab: {fileID: 2476168248220090656, guid: 3239f6df532d3cd41995aab57c21343c, type: 3}

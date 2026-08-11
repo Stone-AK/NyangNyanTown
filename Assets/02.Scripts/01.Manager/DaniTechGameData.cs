@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class GameDataBase
-{
-    public string Id;
-}
+//[System.Serializable]
+//public class GameDataBase
+//{
+//    public string Id;
+//}
 
 // C# 때와 약간 달라진 점
     // Syste.Text.Json대신 유니티 내장 JsonUtility를 사용
