@@ -3,14 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainUIView : MonoBehaviour
+public class MainUIView : BaseUI
 {
     [SerializeField] private Button Button_Building;
     [SerializeField] private Button Button_CatList;
     [SerializeField] private TMP_Text GoldText;
     [SerializeField] private TMP_Text FishText;
     [SerializeField] private TMP_Text CatCountText;
-
 
     private CurrencyViewModel _vm;
 
@@ -36,6 +35,7 @@ public class MainUIView : MonoBehaviour
         }
     }
 
+
    
     private void OnDisable()
     {
@@ -51,15 +51,11 @@ public class MainUIView : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
+    
 
     private void OnButtonClickedBuilding()
     {
         Debug.Log("Button_Building");
-        GameManager.Instance.CurrencyService.AddGoldCurrency(1);
     }
     private void OnButtonClickedCatList()
     {

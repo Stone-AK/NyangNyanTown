@@ -1,98 +1,183 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Threading;
 using UnityEngine;
 
-public class GameDataManager : MonoBehaviour
+public class GameDataManager : BaseManager<GameDataManager>
 {
-    public static GameDataManager Instance { get; set; }
+    private readonly Dictionary<Type, object> _dataTables = new Dictionary<Type, object>();
 
-    private void Awake()
+    private const int LoadingTransitionDelay = 1000;
+
+    public override async UniTask InitializeAsync()
     {
-        Instance = this;
+        _dataTables.Clear();
+        await PreloadDataAsync();
+        await LoadRuntimeDataAsync();
 
-        // +++ C# 콘솔때와 다르게 이제 Main()함수가 아닌
-        // 모노의 메서드에서 호출될 수 있으므로, 데이터 매니저가 활성화되면 바로 모든 데이터를 한번 받아오자
-        // 이처리는 원하는 시점이 있다면 이전해도 된다
-        GameUtil.LoadFullData();
     }
 
-    // --- JsonUtility의 한계를 극복하기 위한 Wrapper 클래스 ---
-    [Serializable]
-    private class SerializationWrapper<T>
+    public async UniTask PreloadDataAsync(IProgress<LoadingProgress> progress = null)
     {
-        public List<T> items; // JSON 파일의 루트 키 이름이 "items"여야 함
+        await UniTask.Delay(1);
     }
-    // ---------------------------------------------------
 
-    // public Dictionary<string, DNCharacterData> CharacterDataList { get; private set; } = new Dictionary<string, DNCharacterData>();
-
-    //private Dictionary<string, DNItemData> GetItemDataList()
-    //{
-    //    return ItemDataList;
-    //}
-
-    private Dictionary<string, T> LoadData<T>(string tableName) where T : GameDataBase
+    public async UniTask LoadRuntimeDataAsync(IProgress<LoadingProgress> progress = null)
     {
-        // 1. 경로 설정 (확장자 .json 제외!)
-        // Resources/JsonOutput 폴더
-        string resourcePath = $"JsonOutput/{tableName}";
+        List<LoadingTask> loadingTasks = CreateLoadingTasks();
 
-        // 2. 리소스 로드
-        TextAsset textAsset = Resources.Load<TextAsset>(resourcePath);
+        ReportLoadingProgress(progress, 0f, LoadingStep.Initialize);
 
-        // 3. 파일 존재 여부 체크
-        if (textAsset == null)
+        await UniTask.Delay(LoadingTransitionDelay);
+
+        float progressStep = 1f / loadingTasks.Count;
+
+        for (int index = 0; index < loadingTasks.Count; index++)
         {
-            Debug.LogError($"[Error] 리소스를 찾을 수 없습니다: Resources/{resourcePath}");
-            return new Dictionary<string, T>();
+            LoadingTask loadingTask = loadingTasks[index];
+
+            await loadingTask.Execute(loadingTask.Key, destroyCancellationToken);
+
+            float progressValue = progressStep * (index + 1);
+
+            ReportLoadingProgress(progress, progressValue, loadingTask.Step);
+        }
+
+        ReportLoadingProgress(progress, 1f, LoadingStep.Complete);
+
+        await UniTask.Delay(LoadingTransitionDelay);
+    }
+
+    private List<LoadingTask> CreateLoadingTasks()
+    {
+        List<LoadingTask> jobs = new List<LoadingTask>
+        {
+            new LoadingTask(LoadingStep.LoadTestData, AddressableKey.GetDataKey(DataType.TestData), LoadDataAsync<TestData>),
+            
+        };
+
+        return jobs;
+    }
+
+    private void ReportLoadingProgress(IProgress<LoadingProgress> progress, float value, LoadingStep step)
+    {
+        if (progress == null)
+        {
+            return;
+        }
+
+        progress.Report(new LoadingProgress(value, step));
+    }
+
+    public bool TryGetDataTable<T>(out Dictionary<string, T> dataTable) where T : BaseData
+    {
+        dataTable = null;
+
+        if (!_dataTables.TryGetValue(typeof(T), out object loadedDataTable))
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(TryGetDataTable)}] '{typeof(T).Name}' 데이터 테이블이 로드되어 있지 않습니다.");
+            return false;
+        }
+
+        if (loadedDataTable is not Dictionary<string, T> typeCastDataTable)
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(TryGetDataTable)}] '{typeof(T).Name}' 로드된 데이터 테이블과 타입이 일치하지 않습니다.");
+            return false;
+        }
+
+        dataTable = typeCastDataTable;
+        return true;
+    }
+
+    public bool TryGetData<T>(string dataId, out T data) where T : BaseData
+    {
+        data = null;
+
+        if (string.IsNullOrWhiteSpace(dataId))
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(TryGetData)}] 전달된 DataId가 null이거나 빈 문자열 또는 공백 문자열입니다.");
+            return false;
+        }
+
+        if (!TryGetDataTable(out Dictionary<string, T> dataTable))
+        {
+            return false;
+        }
+
+        if (!dataTable.TryGetValue(dataId, out data))
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(TryGetData)}] '{typeof(T).Name}' 데이터 테이블에서 DataId '{dataId}'를 찾을 수 없습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private async UniTask LoadDataAsync<T>(string key, CancellationToken cancellationToken) where T : BaseData
+    {
+        Dictionary<string, T> loadedDataTable = await LoadDataTableAsync<T>(key, cancellationToken);
+
+        if (loadedDataTable == null)
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(LoadDataAsync)}] '{key}' 데이터 테이블을 로드하지 못했습니다.");
+            return;
+        }
+
+        _dataTables[typeof(T)] = loadedDataTable;
+    }
+
+    private async UniTask<Dictionary<string, T>> LoadDataTableAsync<T>(string key, CancellationToken cancellationToken) where T : BaseData
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(LoadDataTableAsync)}] 전달된 key가 null이거나 빈 문자열 또는 공백 문자열입니다.");
+            return null;
         }
 
         try
         {
-            string jsonString = textAsset.text;
+            TextAsset jsonTextAsset = await GameManager.Instance.ResourceManager.LoadAssetAsync<TextAsset>(key, cancellationToken);
 
-            // 4. JsonUtility용 Wrapper 트릭 적용
-            string wrappedJson = "{\"items\":" + jsonString + "}";
-            SerializationWrapper<T> wrapper = JsonUtility.FromJson<SerializationWrapper<T>>(wrappedJson);
-
-            if (wrapper != null && wrapper.items != null)
+            if (jsonTextAsset == null)
             {
-                Debug.Log($"{typeof(T).Name} 데이터를 {wrapper.items.Count}개 로드했습니다.");
-                // ToDictionary를 사용하려면 각 클래스(T)에 Id 필드가 있어야 합니다.
-                return wrapper.items.ToDictionary(item => item.Id.ToString());
+                throw new InvalidOperationException($"'{key}' 데이터 TextAsset 로드에 실패했습니다.");
             }
+
+            List<T> items = JsonConvert.DeserializeObject<List<T>>(jsonTextAsset.text);
+
+            if (items == null)
+            {
+                throw new InvalidOperationException($"'{key}' JSON 역직렬화 결과가 null입니다.");
+            }
+
+            Dictionary<string, T> dataTable = new();
+
+            foreach (T item in items)
+            {
+                if (string.IsNullOrWhiteSpace(item.Id))
+                {
+                    throw new FormatException($"'{key}' DataId가 없는 데이터가 존재합니다.");
+                }
+
+                if (!dataTable.TryAdd(item.Id, item))
+                {
+                    throw new FormatException($"'{key}' 중복된 DataId '{item.Id}'가 존재합니다.");
+                }
+            }
+
+            return dataTable;
         }
-        catch (Exception ex)
+        catch (JsonException exception)
         {
-            Debug.LogError($"[{typeof(T).Name} JSON 로드 오류] {ex.Message}");
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(LoadDataTableAsync)}] JSON 파싱에 실패했습니다.\n{exception}");
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError($"[{nameof(GameDataManager)}:{nameof(LoadDataTableAsync)}] 데이터 테이블 로드 중 오류가 발생했습니다.\n{exception}");
         }
 
-        return new Dictionary<string, T>();
+        return null;
     }
-
-    //public void LoadDNDialogueData()
-    //{
-    //    DialogueGroupDataList = LoadData<DNDialogueGroupData>("DNDialogueGroup");
-    //    DialogueDataList = LoadData<DNDialogueData>("DNDialogue");
-    //}
-
-    //public void LoadAll()
-    //{
-    //    FieldObjectDataList = LoadData<DNFieldObjectData>("DNFieldObject");
-    //    MonsterDataList = LoadData<DNMonsterData>("DNMonster");
-    //}
-
-
-    // [아래는 사용을 위한 부분들을 메서드 정의] =========================================================================================
-    // Get과 Find이름을 꼭 구별 하자!
-
-    //public DNCharacterData GetCharacterData(string id)
-    //{
-    //    if (CharacterDataList == null || string.IsNullOrEmpty(id)) return null;
-
-    //    return CharacterDataList.TryGetValue(id, out var item) ? item : null;
-    //}
-
 }
