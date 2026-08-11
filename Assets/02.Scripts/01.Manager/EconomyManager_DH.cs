@@ -20,7 +20,11 @@ public class EconomyManager_DH : MonoBehaviour
     // 버튼들 방식을 나중에 2D 프로젝트때 처럼 바꿀 필요성이 있음
 
     private EconomyViewModel_DH _catViewModel; // 뷰모델 선언
+    public EconomyViewModel_DH CatViewModel => _catViewModel; // 접근 가능하도록 프로퍼티 선언
+
     private float _timer = 0.0f;
+
+
 
     public void Start()
     {
