@@ -7,17 +7,18 @@ public class BuildUIViewModel : ViewModelBase
     public List<BuildingSlotItemViewModel> _itemSlots { get; } = new List<BuildingSlotItemViewModel>();
     public BuildUIViewModel()
     {
-        Debug.Log($"GameDataManager: {GameDataManager.Instance}");
-        Debug.Log($"BuildManager: {BuildManager.Instance}");
-
-        foreach (var data in GameDataManager.Instance._buildingDataModelList) 
+        if (GameManager.Instance.DataManager.TryGetDataTable<BuildingData>(out var dataTable))
         {
-            var newSlot = new BuildingSlotItemViewModel();
-            newSlot.Initialize(data.Value,BuildManager.Instance.TotalGold);
-            _itemSlots.Add(newSlot);
-            newSlot.OnBuildingSlotButtonClicked += StartBuild;
+            foreach (var data in dataTable)
+            {
+                var newSlot = new BuildingSlotItemViewModel();
+
+                newSlot.Initialize(data.Value, BuildManager.Instance.TotalGold);
+                _itemSlots.Add(newSlot);
+                newSlot.OnBuildingSlotButtonClicked += StartBuild;
+            }
+            BuildManager.Instance.OnTotalGoldChanged += OnTotalGoldChanged;
         }
-        BuildManager.Instance.OnTotalGoldChanged += OnTotalGoldChanged;
     }
     public void StartBuild(BuildingData data) 
     {

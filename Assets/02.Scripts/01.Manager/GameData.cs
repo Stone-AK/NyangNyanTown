@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class GameDataBase
+public abstract class BaseData
 {
-    public string Id;
+    public string Id { get; set; }
 }
 [System.Serializable]
-public class BuildingData : GameDataBase
+public class BuildingData : BaseData
 {
     public string Name;
     public int Cost;
