@@ -868,7 +868,10 @@ PrefabInstance:
       value: WJPrefab
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6918224414138709358, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
+    - {fileID: 7580398808060439853, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
+    - {fileID: 9184147426521267161, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
