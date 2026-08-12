@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,20 +12,6 @@ public static class GameUtil
     public static readonly System.Random Random = new System.Random();
     // 마지막으로 할당된 ID를 전역적으로 기록 (스레드 안전)
     private static long _lastId = 0;
-
-    //public static void LoadFullData()
-    //{
-    //    // 게임 로딩할 때 불러올 데이터는 여기서! 
-    //    GameDataManager.Instance.LoadBuildingDataModel("BuildingData");
-
-    //}
-
-    public static int CalcCharacterFinalDamage(int curCharacterLevel, int levelPerDamage, bool isCritical)
-    {
-        int damagePerLevel = (curCharacterLevel + levelPerDamage);
-        int finalDamage = isCritical ? (damagePerLevel * 2) : damagePerLevel;
-        return finalDamage;
-    }
 
     public static void ValidateReference(UnityEngine.Object target, string className, string fieldName)
     {
@@ -51,15 +37,6 @@ public static class GameUtil
         Debug.LogError($"에셋을 찾을 수 없습니다: {spriteName}");
         return null;
     }
-
-
-
-    //public static int CalcCharacterFinalDamage(int curCharacterLevel, int levelPerDamage, bool isCritical)
-    //{
-    //    int damagePerLevel = (curCharacterLevel + levelPerDamage);
-    //    int finalDamage = isCritical ? (damagePerLevel * 2) : damagePerLevel;
-    //    return finalDamage;
-    //}
 
     public static int CalcEconomyGold(int catCount, int incomeGoldBase, int specialCatCount, float specialCatsMultiply)
     {
