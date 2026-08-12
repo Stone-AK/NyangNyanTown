@@ -38,7 +38,7 @@ public class CatManager : BaseManager<CatManager>
         return returnCatObj;
     }
 
-    public void DspawnCat(GameObject targetDspawnObject)
+    public void DespawnCat(GameObject targetDspawnObject)
     {
         if(targetDspawnObject == null) 
             return;
