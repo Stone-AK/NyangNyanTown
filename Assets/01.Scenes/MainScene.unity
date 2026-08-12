@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &365280300 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3734869819494058110, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
-  m_PrefabInstance: {fileID: 8226885954789597236}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &382382164
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,11 +151,6 @@ Transform:
   - {fileID: 685842481}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &664527765 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1610918809001708098, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
-  m_PrefabInstance: {fileID: 8599297144133355520}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &685842480
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,16 +606,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1543150512 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7126173186867751710, guid: 8d5622b0accd2fe4688e953f37877925, type: 3}
-  m_PrefabInstance: {fileID: 4370732815290097412}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1809466907 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1494218356166472488, guid: 993d8b1bf2a41974c8e70f12a6f383e8, type: 3}
-  m_PrefabInstance: {fileID: 2693323171484038670}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2693323171484038670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -678,10 +658,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: JDPrefab
       objectReference: {fileID: 0}
-    - target: {fileID: 1494218356166472488, guid: 993d8b1bf2a41974c8e70f12a6f383e8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -695,10 +671,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3424445486053383381, guid: 8d5622b0accd2fe4688e953f37877925, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6970486369223912711, guid: 8d5622b0accd2fe4688e953f37877925, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.42096
@@ -742,10 +714,6 @@ PrefabInstance:
     - target: {fileID: 7126173186867751710, guid: 8d5622b0accd2fe4688e953f37877925, type: 3}
       propertyPath: m_Name
       value: DHPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 7126173186867751710, guid: 8d5622b0accd2fe4688e953f37877925, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -804,22 +772,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
-      propertyPath: DHPrefab
-      value: 
-      objectReference: {fileID: 1543150512}
-    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
-      propertyPath: GHPrefab
-      value: 
-      objectReference: {fileID: 664527765}
-    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
-      propertyPath: JDPrefab
-      value: 
-      objectReference: {fileID: 1809466907}
-    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
-      propertyPath: WJPrefab
-      value: 
-      objectReference: {fileID: 365280300}
     m_RemovedComponents:
     - {fileID: 1819424535904066944, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
     m_RemovedGameObjects: []
@@ -915,10 +867,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: WJPrefab
       objectReference: {fileID: 0}
-    - target: {fileID: 3734869819494058110, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6918224414138709358, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
@@ -938,10 +886,6 @@ PrefabInstance:
     - target: {fileID: 1610918809001708098, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
       propertyPath: m_Name
       value: GHPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 1610918809001708098, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7864551301902476177, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
       propertyPath: m_LocalPosition.x
