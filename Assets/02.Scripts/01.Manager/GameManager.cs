@@ -15,20 +15,28 @@ public class GameManager : BaseManager<GameManager>
 
 
 
-    public CurrencyService CurrencyService { get; private set; }
+    public EconomyService_DH EconomyService_DH { get; private set; }
+
+
+
+    [SerializeField] private GameObject WJPrefab;
+    [SerializeField] private GameObject DHPrefab;
+    [SerializeField] private GameObject JDPrefab;
+    [SerializeField] private GameObject GHPrefab;
+    //임시로 등록. 나중에 어드레서블로 변경해야 함
 
 
     private void Awake()
     {
         EnsureSingleton();
         SetupManagers();
-
         InitService();
     }
 
     private void InitService()
     {
-        CurrencyService = new CurrencyService();
+        //서비스를 등록하려면 여기에 추가!
+        EconomyService_DH = new EconomyService_DH();
     }
 
 
@@ -39,6 +47,14 @@ public class GameManager : BaseManager<GameManager>
         await InitializeManagersAsync();
 
         await GameManager.Instance.UIManager.OpenMainUIAsync();
+
+        if (WJPrefab != null) {
+            WJPrefab.SetActive(true);
+            DHPrefab.SetActive(true);
+            JDPrefab.SetActive(true);
+            GHPrefab.SetActive(true);
+        }
+        
     }
 
     public async UniTask InitializeManagersAsync()
