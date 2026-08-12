@@ -13,7 +13,7 @@ public class EconomyHUDView_DH : MonoBehaviour
 
     public void BindViewModel(EconomyViewModel_DH viewModel)
     {
-        if (_viewModel != null)
+        if (viewModel == null)
         {
             Debug.LogError("[CatHUDView_DH] 전달받은 ViewModel이 null입니다.");
             return;
@@ -21,14 +21,21 @@ public class EconomyHUDView_DH : MonoBehaviour
 
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged; // 이벤트 감시
+        viewModel.InvokeOnceOnInit();
+    }
+
+    private void OnEnable()
+    {
+        var vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
+        BindViewModel(vm);
     }
 
     private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
-            case nameof(EconomyViewModel_DH.CatCount):
-                if (Text_catCount != null) Text_catCount.text = _viewModel.CatCount.ToString();
+            case nameof(EconomyViewModel_DH.CatCurrentCount):
+                if (Text_catCount != null) Text_catCount.text = _viewModel.CatCurrentCount.ToString();
                 break;
             case nameof(EconomyViewModel_DH.CurrentGold):
                 if (Text_goldCount != null) Text_goldCount.text = _viewModel.CurrentGold.ToString();
