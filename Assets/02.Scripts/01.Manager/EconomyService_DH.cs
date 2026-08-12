@@ -6,11 +6,7 @@ public class EconomyService_DH
 // 골드 수 체크는 일정 간격으로 돌아가는 업데이트로 고양이 수에 계산식 돌려서 체크
 // 계산식은 나중에 static 클래스로 관리
 {
-    [Header("Economy Calculation Settings")]
-     private int _incomeGoldBase = 10;
-     private int _specialCatCount = 0;
-     private float _specialCatsMultiply = 0.1f;
-     private float _goldInterval = 2.0f;
+
 
     private EconomyViewModel_DH _economyViewModel; // 뷰모델 선언
 
@@ -34,35 +30,6 @@ public class EconomyService_DH
         economyViewModel.BuildingCount = 0;
 
         return economyViewModel;
-    }
-
-    private float _timer = 0.0f;
-
-    
-
-    public void Update()
-    {
-        if (_economyViewModel == null) return;
-
-        _timer += Time.deltaTime;
-
-        if (_timer >= _goldInterval) // UI를 직접 수정하는 것이 아닌, 뷰모델 데이터만 변경
-        {
-            _timer -= _goldInterval;
-            var addGold = GameManager.Instance.EconomyService_DH.GetIncomeCurrentGOld(_incomeGoldBase);
-            GameManager.Instance.EconomyService_DH.AddCurrentGold(addGold);
-            Debug.Log($"자동 골드 {addGold}");
-        }
-
-        //현재 EconomyService_DH 는 GameManager 안에서만 보관하고 씬에서는 살아있지 않아서 Update가 안도는 중!
-        //나중에 Update 안에 있는 구문을 옮겨서 다른 곳에서도 작동하게 해야 함
-    }
-
-    public int GetIncomeCurrentGOld(int incomeGoldBase)
-    {
-        int IncomeGold = GameUtil.CalcEconomyGold(_economyViewModel.CatCurrentCount, incomeGoldBase, _economyViewModel.SpecialCatCount, _specialCatsMultiply);
-
-        return IncomeGold;
     }
 
     public void AddCurrentGold(int Gold)
