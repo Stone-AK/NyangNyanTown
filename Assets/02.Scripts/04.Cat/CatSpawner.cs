@@ -21,26 +21,26 @@ public class CatSpawner : MonoBehaviour
 
     private void Start()
     {
-        AutoSpawnCatINWhile().Forget();
+        AutoSpawnCatInWhile().Forget();
     }
 
     private void CreateCatSpawner()
     {
-        if(CatManager.Instance == null)
+        if(GameManager.Instance.CatManager == null)
             return;
 
-        CatManager.Instance.CatSpanweList.Add(this);
+        GameManager.Instance.CatManager.CatSpanweList.Add(this);
     }
 
     private void RemoveCatSpawner()
     {
-        if (CatManager.Instance == null)
+        if (GameManager.Instance.CatManager == null)
             return;
 
-        CatManager.Instance.CatSpanweList.Remove(this);
+        GameManager.Instance.CatManager.CatSpanweList.Remove(this);
     }
 
-    private async UniTask AutoSpawnCatINWhile()
+    private async UniTask AutoSpawnCatInWhile()
     {
         while(true)
         {
@@ -51,18 +51,13 @@ public class CatSpawner : MonoBehaviour
                 cancellationToken: this.GetCancellationTokenOnDestroy()
             );
 
-            if (CatManager.Instance == null)
+            if (GameManager.Instance.CatManager == null)
                 return;
 
-            if (CatManager.Instance.IsCatSpawnAvailable() == false)
+            if (GameManager.Instance.CatManager.IsCatSpawnAvailable() == false)
                 continue;
 
-            CatView cat = CatManager.Instance.GetCatFromPool();
-            if (cat == null)
-                continue;
-
-            cat.gameObject.transform.position = this.transform.position;
-            cat.gameObject.SetActive(true);
+            await GameManager.Instance.CatManager.SpawnCat(this.gameObject.transform);
         }
     }
 }

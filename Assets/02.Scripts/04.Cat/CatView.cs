@@ -106,9 +106,9 @@ public class CatView : MonoBehaviour
             return;
         }
 
-        if (targetObject.TryGetComponent<BuildingView>(out BuildingView buildingObject))
+        if (targetObject.TryGetComponent<Building>(out Building buildingObject))
         {
-            _targetTransform = buildingObject.GetEntrance().transform.position;
+            _targetTransform = buildingObject.GetEntrancePoint().transform.position;
             _targetTransform.y = 0f;
             _targetTransform.z = 0f;
         }
@@ -138,9 +138,9 @@ public class CatView : MonoBehaviour
                 return;
             }
 
-            if (_targetObject.TryGetComponent<BuildingView>(out BuildingView buildingObject))
+            if (_targetObject.TryGetComponent<Building>(out Building buildingObject))
             {
-                if(transform.position.x == buildingObject.GetEntrance().transform.position.x)
+                if(transform.position.x == buildingObject.GetEntrancePoint().transform.position.x)
                 {
                     ArriveBuildingEntrance(buildingObject);
                 }
@@ -169,16 +169,19 @@ public class CatView : MonoBehaviour
         return true;
     }
 
-    private void ArriveBuildingEntrance(BuildingView building)
+    private void ArriveBuildingEntrance(Building building)
     {
-        BuildingInsideSlotView emptySlot = building.GetEmptySlot();
-        if (emptySlot == null)
+        if(building == null)
+            return;
+
+        if(building.GetAvailableCatPointCount() == 0)
         {
-            Debug.Log("빈 Slot이 없습니다.");
+            Debug.Log("해당 건물은 빈 자리가 없습니다.");
+            // 대기 모션 출력 관련 메서드
             return;
         }
 
-        this.gameObject.transform.position = emptySlot.gameObject.transform.position;
+        this.gameObject.transform.position = building.GetAvailableCatPoint().position;
         _catViewModel.CatState = CatState.InBuildingAction;
     }
 

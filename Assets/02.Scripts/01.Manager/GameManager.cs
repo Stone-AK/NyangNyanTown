@@ -10,6 +10,7 @@ public class GameManager : BaseManager<GameManager>
     public ObjectManager ObjectManager { get; private set; }
     public BuildManager BuildManager { get; private set; }
     public MapManager MapManager { get; private set; }
+    public CatManager CatManager { get; private set; }
 
 
 
@@ -49,7 +50,7 @@ public class GameManager : BaseManager<GameManager>
         await UIManager.InitializeAsync();
         await BuildManager.InitializeAsync();
         await MapManager.InitializeAsync();
-
+        await CatManager.InitializeAsync();
     }
     public override UniTask InitializeAsync()
     {
