@@ -192,4 +192,13 @@ public class UIManager : BaseManager<UIManager>
             uiObject.transform.SetParent(rectTransform);
         }
     }
+    public async UniTask OpenBuildingPopupAsync(Building building,CancellationToken cancellationToken = default)
+    {
+        BaseUI baseUI = await OpenPopupRootAsync(UIType.BuildingPopUpUI, cancellationToken);
+
+        if (baseUI is BuildingPopUpUIView popup)
+        {
+            popup.Initialize(building);
+        }
+    }
 }

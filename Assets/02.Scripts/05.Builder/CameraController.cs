@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
@@ -64,6 +66,9 @@ public class CameraController : MonoBehaviour
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
 
         Ray ray = _camera.ScreenPointToRay(mousePosition);
@@ -77,7 +82,7 @@ public class CameraController : MonoBehaviour
             if (building != null)
             {
                 Debug.Log($"건물 클릭 성공 ID: {building.InstanceId}");
-                GameManager.Instance.BuildManager.DestroyBuilding(building);
+                GameManager.Instance.UIManager.OpenBuildingPopupAsync(building) .Forget();
             }
         }
     }
@@ -185,4 +190,5 @@ public class CameraController : MonoBehaviour
             _isDragging = false;
         }
     }
+   
 }

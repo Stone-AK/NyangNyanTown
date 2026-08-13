@@ -26,6 +26,11 @@ public enum PrefabType
     AudioView,
     ObjectPoolRoot,
 }
-
+public enum BuildingType
+{
+    Normal,
+    TownHall,
+    Spawner
+}
 
 

@@ -22,25 +22,23 @@ public class Building : MonoBehaviour
     private List<Transform> _allCatPoints = new List<Transform>();
 
     private const float CELL_SIZE = 1f;
-    private void Start()
-    {
-       
-    }
-
+    
     public void InitaizeData(float rootX, BuildingData data) 
     {
        // _renderer = GetComponentInChildren<Renderer>();
         _buildingData = data;
         InstanceId = Guid.NewGuid().ToString();
+
         GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+
         Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
-        _visual.localScale = scale;
+        _visual.localScale = scale;//건물 매쉬 조절
+
         CreateCatPoints(scale);
         CreateEntrancePoint(scale);
-        //Debug.Log($"너비:{_buildingData.Width}루트x{rootX}");
-       // _meshFilter.sharedMesh = _buildingData.Mesh; 건물 외형 초기화
+        //AddBuildingComponent();
     }
-   
+
 
     /// <summary>
     /// 건물의 Scale을 기준으로 입주 가능한 위치를 생성한다.
@@ -161,5 +159,23 @@ public class Building : MonoBehaviour
     {
         return _entrancePoint;
     }
-    
+
+    //private void AddBuildingComponent() //건물 별 별도 컴포넌트 추가(특수경우에만)
+    //{
+    //    switch (data.Type)
+    //    {
+    //        case BuildingType.TownHall:
+    //            building.gameObject.AddComponent<TownHall>();
+    //            break;
+
+    //        case BuildingType.spanwer:
+    //            building.gameObject.AddComponent<Spanwer>();
+    //            break;
+    //    }
+    //}
+    public void MoveBuilding(Vector3 movePosition) 
+    {
+        transform.position = movePosition;
+        GameManager.Instance.MapManager.ModifyBuildingData(InstanceId, movePosition.x);
+    }
 }
