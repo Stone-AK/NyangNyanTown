@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
 using System.Threading;
 using UnityEngine;
 
@@ -15,7 +14,9 @@ public enum UIType
 {
     //DNSimplePopup,
     MainUI,
-    OverlayUI
+    OverlayUI,
+    GachaPopupUI,
+    MainMenuUI
 }
 
 public class BaseUI : MonoBehaviour
@@ -56,11 +57,27 @@ public static class UIManagerExtension
         uiManager.Close(UIType.OverlayUI);
     }
 
-    
+    public static async UniTask OpenGachaUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    {
+        await uiManager.OpenPopupRootAsync(UIType.GachaPopupUI, cancellationToken);
+    }
+
+    public static void CloseGacha(this UIManager uiManager)
+    {
+        uiManager.Close(UIType.GachaPopupUI);
+    }
 
 
 
+    public static async UniTask OpenMainMenuUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    {
+        await uiManager.OpenVeryFrontRootAsync(UIType.MainMenuUI, cancellationToken);
+    }
 
+    public static void CloseMainMenuUI(this UIManager uiManager)
+    {
+        uiManager.Close(UIType.MainMenuUI);
+    }
 
     //UI를 생성하고 View를 가져오고 싶을 때 사용
     private static T GetView<T>(BaseUI baseUI, UIType uiType) where T : BaseUI
