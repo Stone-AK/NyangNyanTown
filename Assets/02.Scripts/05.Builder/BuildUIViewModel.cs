@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
-
 
 public class BuildUIViewModel : ViewModelBase
 {
@@ -22,7 +20,7 @@ public class BuildUIViewModel : ViewModelBase
     }
     public void StartBuild(BuildingData data) 
     {
-        GameManager.Instance.BuildManager.StartBuild(data);
+        GameManager.Instance.BuildManager.StartBuild(data, BuildMode.Build);
     }
     private void OnTotalGoldChanged(int currentGold) 
     {

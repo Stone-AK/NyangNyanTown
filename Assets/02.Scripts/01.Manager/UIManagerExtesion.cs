@@ -15,6 +15,7 @@ public enum UIType
     //DNSimplePopup,
     MainUI,
     OverlayUI,
+    BuildingPopUpUI,
     GachaPopupUI,
     MainMenuUI
 }
@@ -45,8 +46,11 @@ public static class UIManagerExtension
     {
         uiManager.Close(UIType.MainUI);
     }
-
-
+    //public static async UniTask OpenBuildingPopUpUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    //{
+    //    await uiManager.OpenPopupRootAsync(UIType.BuildingPopUpUI, cancellationToken);
+    //}
+    
     public static async UniTask OpenOverlayAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
     {
         await uiManager.OpenVeryFrontRootAsync(UIType.OverlayUI, cancellationToken);
