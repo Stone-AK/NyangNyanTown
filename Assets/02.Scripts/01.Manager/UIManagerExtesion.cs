@@ -30,7 +30,7 @@ public static class UIManagerExtension
         await uiManager.OpenMainRootAsync(UIType.MainUI, cancellationToken);
 
 
-        //await uiManager.OpenVeryFrontRootAsync(원하는 UI타입, cancellationToken);
+        //await uiManager.OpenMainRootAsync(원하는 UI타입, cancellationToken);
         // Main 레이어에 UI를 소환하고 싶을 때
 
         // await uiManager.OpenPopupRootAsync(원하는 UI타입, cancellationToken);
