@@ -5,7 +5,6 @@ public class EconomyViewModel_DH : ViewModelBase
     public void InvokeOnceOnInit()
     {
         OnPropertyChanged(nameof(CatCurrentCount));
-        OnPropertyChanged(nameof(CatMaxCount));
         OnPropertyChanged(nameof(CurrentGold));
         OnPropertyChanged(nameof(CurrentFish));
         OnPropertyChanged(nameof(SpecialCatCount));
@@ -27,19 +26,7 @@ public class EconomyViewModel_DH : ViewModelBase
         }
     }
 
-    private int _catMaxCount;
-    public int CatMaxCount
-    {
-        get => _catMaxCount;
-        set
-        {
-            if (_catMaxCount != value)
-            {
-                _catMaxCount = value;
-                OnPropertyChanged(nameof(CatMaxCount));
-            }
-        }
-    }
+    
     private int _currentGold;
 
     public int CurrentGold

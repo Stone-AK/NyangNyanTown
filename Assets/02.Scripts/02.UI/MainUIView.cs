@@ -78,7 +78,6 @@ public class MainUIView : BaseUI
     private void OnClickCatCheatButton()
     {
         GameManager.Instance.EconomyService_DH.AddCatCurrentCount(1);
-        GameManager.Instance.EconomyService_DH.AddCatMaxCount(1);
 
 
     }
@@ -105,14 +104,10 @@ public class MainUIView : BaseUI
                 }
             case nameof(EconomyViewModel_DH.CatCurrentCount):
                 {
-                    CatCountText.text = $"{_vm.CatCurrentCount.ToString()} / {_vm.CatMaxCount.ToString()}";
+                    CatCountText.text = $"{_vm.CatCurrentCount.ToString()}";
                     break;
                 }
-            case nameof(EconomyViewModel_DH.CatMaxCount):
-                {
-                    CatCountText.text = $"{_vm.CatCurrentCount.ToString()} / {_vm.CatMaxCount.ToString()}";
-                    break;
-                }
+           
 
 
         }
