@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 327916136940741925}
   - component: {fileID: 2028729271132727218}
   m_Layer: 0
-  m_Name: GachaUI
+  m_Name: GachaPopupUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
