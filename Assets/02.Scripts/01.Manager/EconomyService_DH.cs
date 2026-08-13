@@ -31,6 +31,8 @@ public class EconomyService_DH
         return economyViewModel;
     }
 
+
+
     public void AddCurrentGold(int Gold)
     {
         if (_economyViewModel != null)
@@ -47,6 +49,8 @@ public class EconomyService_DH
         }
     }
 
+
+
     public void AddCurrentFish(int Fish)
     {
         if (_economyViewModel != null)
@@ -62,6 +66,8 @@ public class EconomyService_DH
             _economyViewModel.CurrentFish -= Fish;
         }
     }
+
+
 
     public void AddCatCurrentCount(int CatCurrentCount)
     {
@@ -80,6 +86,7 @@ public class EconomyService_DH
     }
 
 
+
     public void AddCatFromBuilding(int addAmount)
     {
         if (_economyViewModel != null)
@@ -90,7 +97,7 @@ public class EconomyService_DH
     }
 
 
-    public void DeleteCatFromBuilding(int removeAmount)
+    public void RemoveCatFromBuilding(int removeAmount)
     {
         if (_economyViewModel != null)
         {
@@ -100,4 +107,9 @@ public class EconomyService_DH
     }
 
 
+
+    //public void AddSpecialCat(SepcialCatType catType) // 추후 특수 고양이 추가에 따른 계산식 변경을 담당할 메서드
+    //{
+
+    //}
 }
