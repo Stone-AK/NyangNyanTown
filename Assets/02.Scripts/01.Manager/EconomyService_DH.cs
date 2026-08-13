@@ -90,4 +90,14 @@ public class EconomyService_DH
     }
 
 
+    public void DeleteCatFromBuilding(int removeAmount)
+    {
+        if (_economyViewModel != null)
+        {
+            _economyViewModel.CatCurrentCount -= removeAmount;
+            _economyViewModel.BuildingCount -= 1;
+        }
+    }
+
+
 }
