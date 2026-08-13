@@ -25,7 +25,7 @@ public class IncomeGoldCalcView : MonoBehaviour
         viewModel.InvokeOnceOnInit();
     }
 
-    private void OnEnable()
+    private void Start()
     {
         var vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
         BindViewModel(vm);
