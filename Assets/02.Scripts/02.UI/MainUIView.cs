@@ -9,6 +9,7 @@ public class MainUIView : BaseUI
     [SerializeField] private Button Button_CatList;
     [SerializeField] private Button Button_CatCheat;
     [SerializeField] private Button Button_FishCheat;
+    [SerializeField] private Button Button_Gacha;
 
     [SerializeField] private TMP_Text GoldText;
     [SerializeField] private TMP_Text FishText;
@@ -45,6 +46,12 @@ public class MainUIView : BaseUI
         {
             Button_FishCheat.onClick.AddListener(OnClickFishCheatButton);
         }
+
+        if (Button_Gacha != null)
+        {
+            Button_Gacha.onClick.AddListener(OnClickGachaButton);
+        }
+        
     }
 
 
@@ -53,6 +60,11 @@ public class MainUIView : BaseUI
     {
         Button_Building.onClick.RemoveListener(OnClickBuildingButton);
         Button_CatList.onClick.RemoveListener(OnClickCatListButton);
+        Button_CatCheat.onClick.RemoveListener(OnClickCatCheatButton);
+        Button_FishCheat.onClick.RemoveListener(OnClickFishCheatButton);
+        Button_Gacha.onClick.RemoveListener(OnClickGachaButton);
+
+
     }
 
     private void OnDestroy()
@@ -74,20 +86,18 @@ public class MainUIView : BaseUI
         Debug.Log("Button_CatList");
 
     }
-
     private void OnClickCatCheatButton()
     {
         GameManager.Instance.EconomyService_DH.AddCatCurrentCount(1);
-
-
     }
-
     private void OnClickFishCheatButton()
     {
         GameManager.Instance.EconomyService_DH.AddCurrentFish(1);
-
     }
-
+    private async void OnClickGachaButton()
+    {
+        await GameManager.Instance.UIManager.OpenGachaUIAsync();
+    }
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
