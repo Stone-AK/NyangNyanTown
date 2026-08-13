@@ -31,8 +31,10 @@ public class Building : MonoBehaviour
         _visual.localScale = scale;
         CreateCatPoints(scale);
         CreateEntrancePoint(scale);
+        // 건물 타입 지정(제대로 작성 시 주석 제거)
+        SetBuildType(_buildingData.BuildingType);
         //Debug.Log($"너비:{_buildingData.Width}루트x{rootX}");
-       // _meshFilter.sharedMesh = _buildingData.Mesh; 건물 외형 초기화
+        // _meshFilter.sharedMesh = _buildingData.Mesh; 건물 외형 초기화
     }
    
 
@@ -40,6 +42,25 @@ public class Building : MonoBehaviour
     /// 건물의 Scale을 기준으로 입주 가능한 위치를 생성한다.
     /// 예: Scale (3, 2, 1) → 3 x 2 = 6개의 자리
     /// </summary>
+
+    private void SetBuildType(int buildType)
+    {
+        switch((BuildingType)buildType)
+        {
+            case BuildingType.Normal:
+
+                break;
+            case BuildingType.TownHall:
+
+                break;
+            case BuildingType.Spawner:
+                this.gameObject.AddComponent<CatSpawner>();
+                break;
+            default:
+                Debug.LogError("매칭되는 건물 타입이 존재하지 않습니다.");
+                break;
+        }
+    }
 
     private void CreateCatPoints(Vector3 scale)
     {

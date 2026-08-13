@@ -11,13 +11,15 @@ public enum LoadingStep
     Initialize,
     LoadTestData,
     LoadBuildingData,
+    LoadCatInfoData,
     Complete
 }
 
 public enum DataType
 {
     TestData,
-    BuildingData
+    BuildingData,
+    CatInfoData
 }
 
 public enum PrefabType
@@ -27,5 +29,10 @@ public enum PrefabType
     ObjectPoolRoot,
 }
 
-
+public enum BuildingType
+{
+    Normal = 0,
+    TownHall = 1,
+    Spawner = 2
+}
 

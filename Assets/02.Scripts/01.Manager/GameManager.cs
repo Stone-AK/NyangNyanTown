@@ -92,6 +92,6 @@ public class GameManager : BaseManager<GameManager>
         ObjectManager = this.GetComponent<ObjectManager>();
         BuildManager = this.GetComponent<BuildManager>(); 
         MapManager = this.GetComponent<MapManager>();
-
+        CatManager = this.GetComponent<CatManager>();
     }
 }

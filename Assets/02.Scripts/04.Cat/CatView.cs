@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
@@ -10,7 +12,11 @@ public class CatView : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // TODO(안우재/08.09) : 추후 CatState에 따라 이동, 행동, Spawner로 이동 구현
+        if(_targetObject == null)
+        {
+            SearchDespawnPoint();
+        }
+
         if (_catViewModel.CatState == CatState.MoveToTarget)
         {
             MoveCatOnFixedUpdate();
@@ -31,18 +37,7 @@ public class CatView : MonoBehaviour
         {
             case nameof(CatViewModel.CatState):
                 {
-                    if (_catViewModel.CatState == CatState.InBuildingAction)
-                    {
-                        // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 
-                    }
-                    else if(_catViewModel.CatState == CatState.TargetMissing)
-                    {
-                        // TODO(안우재/08.10) : Missing애니메이션 출력 구현, 애니메이션 후 상태 SearchTarget으로 변경
-                    }
-                    else if (_catViewModel.CatState == CatState.SearchTarget)
-                    {
-                        // TODO(안우재/08.10) : 가까운 Spawner 오브젝트를 찾고, _targetTransform에 위치 설정
-                    }
+                    ActionFromStatus();
                 }
                 break;
         }
@@ -129,8 +124,6 @@ public class CatView : MonoBehaviour
 
         if (remainingX * transform.forward.x <= 0f)
         {
-            // 도착 시 실제 타겟이 있는지 검사하는 메서드 필요
-            // Entrance 또는 Spawner 존재 확인
             if(!CheckTargetExistenceORChanged())
             {
                 // 목표지점이 옮겨지거나 철거된 상태
@@ -144,7 +137,6 @@ public class CatView : MonoBehaviour
                 {
                     ArriveBuildingEntrance(buildingObject);
                 }
-
             }
             else if(_targetObject.GetComponent<CatSpawner>())
             {
@@ -188,6 +180,68 @@ public class CatView : MonoBehaviour
     private void ArriveSpanwPositionAndEscape()
     {
         // TODO(안우재/08.09) : 가까운 Spawn지역에 도착 시 탈출하는 모션 출력 필요.
+        GameManager.Instance.ObjectManager.Despawn(this.gameObject);
+    }
 
+    private async void ActionFromStatus()
+    {
+        if(_catViewModel == null)
+            return;
+
+        if (_catViewModel.CatState == CatState.InBuildingAction)
+        {
+            // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 
+            // 현재는 4초 가만히로 설정
+            await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
+            _catViewModel.CatState = CatState.SearchTarget;
+        }
+        else if (_catViewModel.CatState == CatState.TargetMissing)
+        {
+            // TODO(안우재/08.10) : Missing애니메이션 출력 구현, 애니메이션 후 상태 SearchTarget으로 변경
+            // 지금은 타겟을 못찾아서 두리번 거리는 애니메이션 2초로 가정하여 구현
+            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: this.GetCancellationTokenOnDestroy());
+            _catViewModel.CatState = CatState.SearchTarget;
+        }
+        else if (_catViewModel.CatState == CatState.SearchTarget)
+        {
+            // TODO(안우재/08.10) : 가까운 Spawner 오브젝트를 찾고, _targetTransform에 위치 설정
+            SearchDespawnPoint();
+        }
+    }
+
+    public void SearchDespawnPoint()
+    {
+        if (_targetObject != null)
+        {
+            this.gameObject.transform.position = _targetTransform;
+
+        }
+
+        if (GameManager.Instance.CatManager.CatSpanweList.Count == 0)
+        {
+            // 고양이가 필드에 있지만 Despawn될 Spawn 지역이 없는 상태 현재는 그냥 바로 Despawn
+            GameManager.Instance.CatManager.DespawnCat(this.gameObject);
+        }
+
+        CatSpawner targetSpawner = null;
+        float nearDistance = float.MaxValue;
+        for(int i = 0; i < GameManager.Instance.CatManager.CatSpanweList.Count; i++)
+        {
+            CatSpawner spawner = GameManager.Instance.CatManager.CatSpanweList[i];
+
+            if (spawner == null || !spawner.gameObject.activeInHierarchy)
+                continue;
+
+            float distance = Mathf.Abs(
+                spawner.transform.position.x - transform.position.x
+            );
+
+            if (distance < nearDistance)
+            {
+                nearDistance = distance;
+                targetSpawner = spawner;
+            }
+            _catViewModel.CatState = CatState.MoveToTarget;
+        }
     }
 }
