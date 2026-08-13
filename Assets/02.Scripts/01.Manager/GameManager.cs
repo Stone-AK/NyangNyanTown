@@ -41,19 +41,27 @@ public class GameManager : BaseManager<GameManager>
 
 
     
-    public async UniTask StartGame()
+    public async UniTask FirstGameLoadingAsync()
     {
         await InitializeManagersAsync();
 
+        await GameManager.Instance.UIManager.OpenMainMenuUIAsync();
+
+        
+    }
+
+    public async UniTask GameStartAsync()
+    {
+
         await GameManager.Instance.UIManager.OpenMainUIAsync();
 
-        if (WJPrefab != null) {
+        if (WJPrefab != null)
+        {
             WJPrefab.SetActive(true);
             DHPrefab.SetActive(true);
             JDPrefab.SetActive(true);
             GHPrefab.SetActive(true);
         }
-        
     }
 
     public async UniTask InitializeManagersAsync()
