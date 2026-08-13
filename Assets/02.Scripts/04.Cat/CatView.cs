@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 
 public class CatView : MonoBehaviour
@@ -60,59 +61,80 @@ public class CatView : MonoBehaviour
 
     private void CatDetectTarget()
     {
-        // TODO(안우재/08.09) : 테스트 초기화. 나중에 건물 짓기에서 건물 오브젝트 매니저 생길 시 
-        // 오브젝트 매니저에서 건물리스트 가져와서 처리 해야함(완전 Test코드)
-        // 처음에는 건물(Building)을 목표, Building에서 Action 후 에는 Spawner로 위치 변경 필요
-        //=====================================================
-        GameObject[] objects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
-        List<GameObject> testPositions = new();
+        // TODO(안우재/08.13) : MapManager의 _currentBuildingList<PlacedBuildingData>에서 Building과 Spawner검사해서
+        // 건물 갈때와 철수 할때를 구분해서 해당 위치로 가도록 설정 필요
+        if (GameManager.Instance.MapManager._currentBuildingList == null)
+            return;
 
-        foreach (GameObject obj in objects)
+        if (GameManager.Instance.MapManager._currentBuildingList.Count == 0)
         {
-            if (obj.name.Contains("BuildingTest"))
-            {
-                testPositions.Add(obj);
-            }
+            Debug.Log("지어진 건물이 없습니다.");
+            // 추후 건물이 없어도 고양이가 생성되어야 한다면 해당 위치에 정의 필요
+            return;
         }
 
-        if (testPositions.Count == 0)
-            return;
+        _targetObject = SearchTargetBuildingObject();
 
-        int randomIndex = GameUtil.Random.Next(0, testPositions.Count);
-        _targetObject = testPositions[randomIndex];
-        //=====================================================
-
+        // 아무 알맞은 건물을 못찾은 상태, 0으로 가도록 함
         if (_targetObject == null)
+        {
+            Vector3 temporaryDirection = new Vector3(0, 0, 0);
+            transform.rotation = Quaternion.LookRotation(temporaryDirection);
             return;
+        }
 
-        SettingTargetPosition(_targetObject);
-
-        Vector3 direction = (_targetObject.transform.position - transform.position).normalized;
-        direction.y = 0f;
-        direction.z = 0f;
-        transform.rotation = Quaternion.LookRotation(direction);
+        SettingTargetPosition();
     }
 
-    private void SettingTargetPosition(GameObject targetObject)
+    private GameObject SearchTargetBuildingObject()
     {
-        if (targetObject == null)
+        Building candidateTargetBuilding = null;
+        float nowSpaceOccupancyRate = 0f;
+        float newSpaceOccupancyRate = 0f;
+        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingList)
+        {
+            Vector3 searchTargetPosition = new Vector3(placeBuildingData.RootX, 0, 0);
+            Collider[] buildingChildCollider = Physics.OverlapSphere(searchTargetPosition, 0.01f);
+
+            foreach (var buildingChild in buildingChildCollider)
+            {
+                if (buildingChild == null) continue;
+                if(buildingChild.GetComponentInParent<Building>() == null) continue;
+
+                newSpaceOccupancyRate = buildingChild.GetComponentInParent<Building>().GetAvailableSpaceRate();
+
+                if (nowSpaceOccupancyRate < newSpaceOccupancyRate)
+                {
+                    nowSpaceOccupancyRate = newSpaceOccupancyRate;
+                    candidateTargetBuilding = buildingChild.GetComponentInParent<Building>();
+                }
+            }
+        }
+        if (candidateTargetBuilding == null)
+            return null;
+
+        return candidateTargetBuilding.gameObject;
+    }
+
+    private void SettingTargetPosition()
+    {
+        if (_targetObject == null)
         {
             Debug.Log("목표 오브젝트를 찾을 수 없습니다.");
             return;
         }
 
-        if (targetObject.TryGetComponent<Building>(out Building buildingObject))
+        if (_targetObject.TryGetComponent<Building>(out Building buildingObject))
         {
             _targetTransform = buildingObject.GetEntrancePoint().transform.position;
             _targetTransform.y = 0f;
             _targetTransform.z = 0f;
         }
-        else if(targetObject.TryGetComponent<CatSpawner>(out CatSpawner spawner))
-        {
-            _targetTransform = spawner.transform.position;
-            _targetTransform.y = 0f;
-            _targetTransform.z = 0f;
-        }
+
+        Vector3 direction = (_targetObject.transform.position - transform.position).normalized;
+        direction.y = 0f;
+        direction.z = 0f;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private void CheckCatArriveTarget()
@@ -124,7 +146,7 @@ public class CatView : MonoBehaviour
 
         if (remainingX * transform.forward.x <= 0f)
         {
-            if(!CheckTargetExistenceORChanged())
+            if(CheckTargetExistenceORChanged())
             {
                 // 목표지점이 옮겨지거나 철거된 상태
                 _catViewModel.CatState = CatState.TargetMissing;
@@ -153,12 +175,12 @@ public class CatView : MonoBehaviour
     private bool CheckTargetExistenceORChanged()
     {
         if(_targetObject == null || _targetObject.activeInHierarchy)
-            return false;
+            return true;
 
         if(_targetObject.transform.position.x == _targetTransform.x)
-            return false;
+            return true;
 
-        return true;
+        return false;
     }
 
     private void ArriveBuildingEntrance(Building building)
@@ -213,8 +235,8 @@ public class CatView : MonoBehaviour
     {
         if (_targetObject != null)
         {
-            this.gameObject.transform.position = _targetTransform;
-
+            if(_targetObject.GetComponent<CatSpawner>() == null)
+                this.gameObject.transform.position = _targetObject.GetComponent<Building>().GetEntrancePoint().position;
         }
 
         if (GameManager.Instance.CatManager.CatSpanweList.Count == 0)
@@ -241,7 +263,9 @@ public class CatView : MonoBehaviour
                 nearDistance = distance;
                 targetSpawner = spawner;
             }
-            _catViewModel.CatState = CatState.MoveToTarget;
         }
+        _targetObject = targetSpawner.gameObject;
+        SettingTargetPosition();
+        _catViewModel.CatState = CatState.MoveToTarget;
     }
 }

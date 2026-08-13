@@ -176,4 +176,12 @@ public class Building : MonoBehaviour
     {
         return _entrancePoint;
     }
+
+    public float GetAvailableSpaceRate()
+    {
+        if (_allCatPoints.Count == 0)
+            return 0f;
+
+        return (float)_availableCatPoints.Count / _allCatPoints.Count;
+    }
 }

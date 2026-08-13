@@ -57,7 +57,8 @@ public class CatSpawner : MonoBehaviour
             if (GameManager.Instance.CatManager.IsCatSpawnAvailable() == false)
                 continue;
 
-            await GameManager.Instance.CatManager.SpawnCat(this.gameObject.transform);
+            Transform spawnTransform = this.gameObject.GetComponent<Building>().GetEntrancePoint();
+            await GameManager.Instance.CatManager.SpawnCat(spawnTransform);
         }
     }
 }
