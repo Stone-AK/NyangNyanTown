@@ -25,7 +25,6 @@ public class EconomyService_DH
         var economyViewModel = new EconomyViewModel_DH();
         economyViewModel.CurrentGold = 0;
         economyViewModel.CatCurrentCount = 0;
-        economyViewModel.CatMaxCount = 0;
         economyViewModel.SpecialCatCount = 0;
         economyViewModel.BuildingCount = 0;
 
@@ -80,20 +79,6 @@ public class EconomyService_DH
         }
     }
 
-    public void AddCatMaxCount(int CatMaxCount)
-    {
-        if (_economyViewModel != null)
-        {
-            _economyViewModel.CatMaxCount += CatMaxCount;
-        }
-    }
-
-    public void RemoveCatMaxCount(int CatMaxCount)
-    {
-        if (_economyViewModel != null)
-        {
-            _economyViewModel.CatMaxCount -= CatMaxCount;
-        }
-    }
+   
 
 }

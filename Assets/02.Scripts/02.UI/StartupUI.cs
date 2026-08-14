@@ -8,7 +8,7 @@ public class OverlayUI : BaseUI
     private async void Start()
     {
         gameObject.SetActive(true);
-        await GameManager.Instance.StartGame();
+        await GameManager.Instance.FirstGameLoadingAsync();
         Destroy(StartupCanvas);
     }
 }

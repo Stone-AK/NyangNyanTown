@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 public class Building : MonoBehaviour
 {
@@ -11,56 +13,37 @@ public class Building : MonoBehaviour
     [SerializeField] private MeshFilter _meshFilter;
     [SerializeField] private Transform _visual;
     private Transform _entrancePoint;
+
+    //private string _instanceId;
+    public string InstanceId { get; private set; }
     // 현재 비어 있는 입주 자리
     private Queue<Transform> _availableCatPoints = new Queue<Transform>();
     // 생성된 모든 입주 자리
     private List<Transform> _allCatPoints = new List<Transform>();
 
     private const float CELL_SIZE = 1f;
-    private void Start()
-    {
-       
-    }
-
+    
     public void InitaizeData(float rootX, BuildingData data) 
     {
        // _renderer = GetComponentInChildren<Renderer>();
         _buildingData = data;
-        GameManager.Instance.MapManager.AddToList(data, rootX);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+        InstanceId = Guid.NewGuid().ToString();
+
+        GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+
         Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
-        _visual.localScale = scale;
+        _visual.localScale = scale;//건물 매쉬 조절
+
         CreateCatPoints(scale);
         CreateEntrancePoint(scale);
-        // 건물 타입 지정(제대로 작성 시 주석 제거)
-        SetBuildType(_buildingData.BuildingType);
-        //Debug.Log($"너비:{_buildingData.Width}루트x{rootX}");
-        // _meshFilter.sharedMesh = _buildingData.Mesh; 건물 외형 초기화
+        //AddBuildingComponent();
     }
-   
+
 
     /// <summary>
     /// 건물의 Scale을 기준으로 입주 가능한 위치를 생성한다.
     /// 예: Scale (3, 2, 1) → 3 x 2 = 6개의 자리
     /// </summary>
-
-    private void SetBuildType(int buildType)
-    {
-        switch((BuildingType)buildType)
-        {
-            case BuildingType.Normal:
-
-                break;
-            case BuildingType.TownHall:
-
-                break;
-            case BuildingType.Spawner:
-                this.gameObject.AddComponent<CatSpawner>();
-                break;
-            default:
-                Debug.LogError("매칭되는 건물 타입이 존재하지 않습니다.");
-                break;
-        }
-    }
 
     private void CreateCatPoints(Vector3 scale)
     {
@@ -177,11 +160,22 @@ public class Building : MonoBehaviour
         return _entrancePoint;
     }
 
-    public float GetAvailableSpaceRate()
-    {
-        if (_allCatPoints.Count == 0)
-            return 0f;
+    //private void AddBuildingComponent() //건물 별 별도 컴포넌트 추가(특수경우에만)
+    //{
+    //    switch (data.Type)
+    //    {
+    //        case BuildingType.TownHall:
+    //            building.gameObject.AddComponent<TownHall>();
+    //            break;
 
-        return (float)_availableCatPoints.Count / _allCatPoints.Count;
+    //        case BuildingType.spanwer:
+    //            building.gameObject.AddComponent<Spanwer>();
+    //            break;
+    //    }
+    //}
+    public void MoveBuilding(Vector3 movePosition) 
+    {
+        transform.position = movePosition;
+        GameManager.Instance.MapManager.ModifyBuildingData(InstanceId, movePosition.x);
     }
 }
