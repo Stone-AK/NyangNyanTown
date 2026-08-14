@@ -68,5 +68,15 @@
     "Width": 1,
     "CatCapacity": 0,
     "BuildingType": 2
+  },
+  {
+    "Id": "Building_08_TownHall",
+    "Name": "TownHall",
+    "Cost": 0,
+    "ScaleX": 4,
+    "ScaleY": 4,
+    "Width": 4,
+    "CatCapacity": 0,
+    "BuildingType": 1
   }
 ]
