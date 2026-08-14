@@ -63,10 +63,10 @@ public class CatView : MonoBehaviour
     {
         // TODO(안우재/08.13) : MapManager의 _currentBuildingList<PlacedBuildingData>에서 Building과 Spawner검사해서
         // 건물 갈때와 철수 할때를 구분해서 해당 위치로 가도록 설정 필요
-        if (GameManager.Instance.MapManager._currentBuildingList == null)
+        if (GameManager.Instance.MapManager._currentBuildingLDic == null)
             return;
 
-        if (GameManager.Instance.MapManager._currentBuildingList.Count == 0)
+        if (GameManager.Instance.MapManager._currentBuildingLDic.Count == 0)
         {
             Debug.Log("지어진 건물이 없습니다.");
             // 추후 건물이 없어도 고양이가 생성되어야 한다면 해당 위치에 정의 필요
@@ -91,9 +91,9 @@ public class CatView : MonoBehaviour
         Building candidateTargetBuilding = null;
         float nowSpaceOccupancyRate = 0f;
         float newSpaceOccupancyRate = 0f;
-        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingList)
+        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
         {
-            Vector3 searchTargetPosition = new Vector3(placeBuildingData.RootX, 0, 0);
+            Vector3 searchTargetPosition = new Vector3(placeBuildingData.Value.RootX, 0, 0);
             Collider[] buildingChildCollider = Physics.OverlapSphere(searchTargetPosition, 0.01f);
 
             foreach (var buildingChild in buildingChildCollider)

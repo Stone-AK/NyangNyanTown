@@ -11,13 +11,15 @@ public enum LoadingStep
     Initialize,
     LoadTestData,
     LoadBuildingData,
+    LoadCatInfoData,
     Complete
 }
 
 public enum DataType
 {
     TestData,
-    BuildingData
+    BuildingData,
+    CatInfoData
 }
 
 public enum PrefabType

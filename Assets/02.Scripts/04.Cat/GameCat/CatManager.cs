@@ -46,7 +46,7 @@ public class CatManager : BaseManager<CatManager>
 
     public bool IsCatSpawnAvailable()
     {
-        if(_activeCatCount < GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CatMaxCount)
+        if(_activeCatCount < GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CatCurrentCount)
             return true;
 
         return false;

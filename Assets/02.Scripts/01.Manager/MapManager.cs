@@ -79,6 +79,5 @@ public class MapManager : BaseManager<MapManager>
         {
             _currentBuildingLDic.Remove(instanceId);
         }
-    
     }
 }
