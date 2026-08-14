@@ -275,7 +275,6 @@ GameObject:
   - component: {fileID: 1196302857}
   - component: {fileID: 1196302856}
   - component: {fileID: 1196302859}
-  - component: {fileID: 1196302860}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -401,23 +400,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &1196302860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1196302855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 273854ced772e1b43811aaa3804f7d43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  _camera: {fileID: 1196302857}
-  _moveSpeed: 10
-  _zoomSpeed: 20
-  _minZoom: 3
-  _maxZoom: 10
 --- !u!1 &1302342904
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,10 +657,6 @@ PrefabInstance:
     - target: {fileID: 1494218356166472488, guid: 993d8b1bf2a41974c8e70f12a6f383e8, type: 3}
       propertyPath: m_Name
       value: JDPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 1856327942390046534, guid: 993d8b1bf2a41974c8e70f12a6f383e8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

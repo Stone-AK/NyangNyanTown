@@ -1,0 +1,17 @@
+[
+  {
+    "Id": "Cat_Normal_01",
+    "Name": "일반 고양이",
+    "Description": "일반 고양이다"
+  },
+  {
+    "Id": "Cat_Special_01",
+    "Name": "특별 고양이1",
+    "Description": "특별 고양이 1"
+  },
+  {
+    "Id": "Cat_Special_02",
+    "Name": "특별 고냥이2",
+    "Description": "특별 고냥이 2"
+  }
+]
