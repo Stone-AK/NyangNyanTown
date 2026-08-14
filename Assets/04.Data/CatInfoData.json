@@ -5,7 +5,7 @@
     "Description": "일반 고양이다",
     "CatEffect": null,
     "EffectValue": null,
-    "CatIconImgPath": null
+    "CatIconImgPath": "UI/CatIcon/TestIcon"
   },
   {
     "Id": "Cat_Special_01",
@@ -13,7 +13,7 @@
     "Description": "특별 고양이 1",
     "CatEffect": null,
     "EffectValue": null,
-    "CatIconImgPath": null
+    "CatIconImgPath": "UI/CatIcon/TestIcon2"
   },
   {
     "Id": "Cat_Special_02",
@@ -21,6 +21,6 @@
     "Description": "특별 고냥이 2",
     "CatEffect": null,
     "EffectValue": null,
-    "CatIconImgPath": null
+    "CatIconImgPath": "UI/CatIcon/TestIcon3"
   }
 ]
