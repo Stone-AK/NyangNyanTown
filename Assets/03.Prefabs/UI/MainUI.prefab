@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainUIView
   Button_Building: {fileID: 7874814713843603137}
-  Button_CatList: {fileID: 4574481361265635316}
+  Button_CatBook: {fileID: 4574481361265635316}
   Button_CatCheat: {fileID: 34125021662529703}
   Button_FishCheat: {fileID: 7215081514717666725}
   Button_Gacha: {fileID: 7624750985326773107}
@@ -2454,7 +2454,7 @@ GameObject:
   - component: {fileID: 8189317410688013665}
   - component: {fileID: 4574481361265635316}
   m_Layer: 5
-  m_Name: CatListButton
+  m_Name: CatBookButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

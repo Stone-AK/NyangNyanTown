@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 1232787160063972772}
   - component: {fileID: 4196706397714638061}
   - component: {fileID: 2243438234393527810}
+  - component: {fileID: 1766776662002773876}
+  - component: {fileID: 8335901017142003193}
   m_Layer: 0
   m_Name: ManagerContainer
   m_TagString: Untagged
@@ -114,3 +116,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatManager
   CatSpanweList: []
+--- !u!114 &1766776662002773876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269918965854432291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2afd7d03cfd44fc4092cf683f4cbefb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapManager
+--- !u!114 &8335901017142003193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269918965854432291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083c46eeb2fa76d44b75e08025bc9f7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildManager
+  _previewBuildingPrefab: {fileID: 929048737933534321, guid: 365ebeeae53c28948a8b44e5637811e0, type: 3}
+  _realBuildingPrefab: {fileID: 2476168248220090656, guid: 3239f6df532d3cd41995aab57c21343c, type: 3}

@@ -11,14 +11,25 @@ public class MainMenuUIView : BaseUI
     {
         if (Button_Start != null) 
         {
-            Button_Start.onClick.RemoveAllListeners();
             Button_Start.onClick.AddListener(OnClickStartButtonAsync);
         }
 
         if (Button_Exit != null)
         {
-            Button_Exit.onClick.RemoveAllListeners();
             Button_Exit.onClick.AddListener(OnClickExitButton);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (Button_Start != null)
+        {
+            Button_Start.onClick.RemoveListener(OnClickStartButtonAsync);
+        }
+
+        if (Button_Exit != null)
+        {
+            Button_Exit.onClick.RemoveListener(OnClickStartButtonAsync);
         }
     }
 
@@ -26,7 +37,6 @@ public class MainMenuUIView : BaseUI
     private async void OnClickStartButtonAsync()
     {
         await GameManager.Instance.GameStartAsync();
-
         GameManager.Instance.UIManager.CloseMainMenuUI();
     }
 

@@ -4,7 +4,6 @@ using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class UIManager : BaseManager<UIManager>
 {

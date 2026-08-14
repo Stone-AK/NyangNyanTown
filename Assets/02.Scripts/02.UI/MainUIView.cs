@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 public class MainUIView : BaseUI
 {
     [SerializeField] private Button Button_Building;
-    [SerializeField] private Button Button_CatList;
+    [SerializeField] private Button Button_CatBook;
     [SerializeField] private Button Button_CatCheat;
     [SerializeField] private Button Button_FishCheat;
     [SerializeField] private Button Button_Gacha;
@@ -33,9 +34,10 @@ public class MainUIView : BaseUI
         {
             Button_Building.onClick.AddListener(OnClickBuildingButton);
         }
-        if (Button_CatList != null)
+
+        if (Button_CatBook != null)
         {
-            Button_CatList.onClick.AddListener(OnClickCatListButton);
+            Button_CatBook.onClick.AddListener(OnClickCatBookButton);
         }
 
         if (Button_CatCheat != null)
@@ -59,7 +61,7 @@ public class MainUIView : BaseUI
     private void OnDisable()
     {
         Button_Building.onClick.RemoveListener(OnClickBuildingButton);
-        Button_CatList.onClick.RemoveListener(OnClickCatListButton);
+        Button_CatBook.onClick.RemoveListener(OnClickCatBookButton);
         Button_CatCheat.onClick.RemoveListener(OnClickCatCheatButton);
         Button_FishCheat.onClick.RemoveListener(OnClickFishCheatButton);
         Button_Gacha.onClick.RemoveListener(OnClickGachaButton);
@@ -81,9 +83,9 @@ public class MainUIView : BaseUI
     {
         Debug.Log("Button_Building");
     }
-    private void OnClickCatListButton()
+    private void OnClickCatBookButton()
     {
-        Debug.Log("Button_CatList");
+        Debug.Log("Button_CatBook");
 
     }
     private void OnClickCatCheatButton()
