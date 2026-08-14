@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
@@ -17,6 +18,7 @@ public class CatEncyclopediaPopUp : BaseUI
     private List<CatEncyclopediaViewModel> _catEncyclopediaList = new();
     private Dictionary<string, CatEncyclopediaSlotBtn> _catListDictionary = new();
     private bool _isInitialized = false;
+
 
     private void BindCatEncyclopedViewModel(CatEncyclopediaViewModel catEncyclopedVM)
     {
@@ -75,6 +77,7 @@ public class CatEncyclopediaPopUp : BaseUI
         {
             catSlot = Instantiate(CatSlotBtnPrefab, SlotContent);
 
+            catSlot.BindOnClickSlotButton(() => RenewalText(catId));
             _catListDictionary.Add(catId, catSlot);
         }
 
@@ -87,5 +90,35 @@ public class CatEncyclopediaPopUp : BaseUI
     public void ClosePopUp()
     {
         GameManager.Instance.UIManager.Close(UIType.CatEncyclopediaPopUp);
+    }
+
+    private void RenewalText(string dataId)
+    {
+        CatEncyclopediaViewModel catViewModel = null;
+
+        foreach(var catVM in _catEncyclopediaList)
+        {
+            if (catVM.CatInfoDataId == dataId)
+            {
+                catViewModel = catVM;
+                break;
+            }
+        }
+
+        if (catViewModel == null)
+            return;
+
+        if (catViewModel.IsCollected == false)
+        {
+            CatNameText.text = "???";
+            CatDescriptionText.text = "수집되지 않았습니다.";
+            return;
+        }
+
+        if (GameManager.Instance.DataManager.TryGetData(dataId, out CatInfoData catInfoData))
+        {
+            CatNameText.text = catInfoData.Name;
+            CatDescriptionText.text = catInfoData.Description;
+        }
     }
 }
