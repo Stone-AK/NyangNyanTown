@@ -18,4 +18,5 @@ public class BuildingData : BaseData
 
     public float Width;
     public int CatCapacity;
+    public int BuildingType;
 }
