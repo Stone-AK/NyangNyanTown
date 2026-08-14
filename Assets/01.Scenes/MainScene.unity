@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &379024426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1610918809001708098, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
+  m_PrefabInstance: {fileID: 8599297144133355520}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &382382164
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,6 +423,11 @@ MonoBehaviour:
   _zoomSpeed: 20
   _minZoom: 3
   _maxZoom: 10
+--- !u!1 &1258631159 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7126173186867751710, guid: 8d5622b0accd2fe4688e953f37877925, type: 3}
+  m_PrefabInstance: {fileID: 4370732815290097412}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1302342904
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,6 +634,16 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1575067141 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3734869819494058110, guid: f6be760958d5d42428dc95b890d04cf1, type: 3}
+  m_PrefabInstance: {fileID: 8226885954789597236}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1660751857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1494218356166472488, guid: 993d8b1bf2a41974c8e70f12a6f383e8, type: 3}
+  m_PrefabInstance: {fileID: 2693323171484038670}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2693323171484038670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -790,6 +810,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
+      propertyPath: DHPrefab
+      value: 
+      objectReference: {fileID: 1258631159}
+    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
+      propertyPath: GHPrefab
+      value: 
+      objectReference: {fileID: 379024426}
+    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
+      propertyPath: JDPrefab
+      value: 
+      objectReference: {fileID: 1660751857}
+    - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
+      propertyPath: WJPrefab
+      value: 
+      objectReference: {fileID: 1575067141}
     m_RemovedComponents:
     - {fileID: 1819424535904066944, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
     m_RemovedGameObjects: []
