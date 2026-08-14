@@ -178,4 +178,9 @@ public class Building : MonoBehaviour
         transform.position = movePosition;
         GameManager.Instance.MapManager.ModifyBuildingData(InstanceId, movePosition.x);
     }
+
+    public float GetAvailableSpaceRate()
+    {
+        return (float)_availableCatPoints.Count / _allCatPoints.Count;
+    }
 }

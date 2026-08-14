@@ -115,8 +115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e18a62b93e59f45945dbe384538713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatManager
-  CatPrefab: {fileID: 1956710623746123219, guid: 41a3b06fa6fb0ef418c74e9cd891d530, type: 3}
-  CatPool: []
   CatSpanweList: []
 --- !u!114 &1766776662002773876
 MonoBehaviour:

@@ -16,6 +16,9 @@ public class CameraController : MonoBehaviour
     [Header("Move Range")]
     [SerializeField] private const float MOVE_MIN_Y = -1f;
     [SerializeField] private const float MOVE_MAX_Y = 3f;
+    [SerializeField] private const float DEFAULT_MOVE_MIN_X = -20f;
+    [SerializeField] private const float DEFAULT_MOVE_MAX_X = 20f;
+
     [Header("Zoom")]
     [SerializeField] private float _zoomSpeed = 20f;
     [SerializeField] private float _minZoom = 3f;
@@ -31,7 +34,7 @@ public class CameraController : MonoBehaviour
     public float MoveMinY { get; private set; }
     public float MoveMaxY { get; private set; }
     public float CurrentZoom => _camera.orthographicSize;
-
+    private bool _isLandViewModelConnected;
     // 시야가 변경되었을 때 알림
     public event Action<float, float> OnVisibleRangeChanged;
 
@@ -44,6 +47,7 @@ public class CameraController : MonoBehaviour
 
         if (_camera == null)
             _camera = Camera.main;
+       
     }
 
     private void Start()
@@ -54,6 +58,16 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        if (!_isLandViewModelConnected)
+        {
+            var landVM = GameManager.Instance?.MapManager?._lvm;
+
+            if (landVM != null)
+            {
+                landVM.OnLandLevelUp += AddCameraRange;
+                _isLandViewModelConnected = true;
+            }
+        }
         HandleDrag();
         HandleZoom();
         Buildingtest();
@@ -110,7 +124,7 @@ public class CameraController : MonoBehaviour
     private void UpdateMoveRange()
     {
         //  GameManager.Instance.MapManager.GetCameraBounds();
-        Vector2 bounds = new Vector2(-20f, 20f);
+        Vector2 bounds = new Vector2(DEFAULT_MOVE_MIN_X, DEFAULT_MOVE_MAX_X);
 
         MoveMinX = bounds.x;
         MoveMaxX = bounds.y;
@@ -118,6 +132,7 @@ public class CameraController : MonoBehaviour
         MoveMinY = MOVE_MIN_Y;
         MoveMaxY = MOVE_MAX_Y;
     }
+
 
     private void UpdateVisibleRange()
     {
@@ -190,5 +205,20 @@ public class CameraController : MonoBehaviour
             _isDragging = false;
         }
     }
-   
+    private void AddCameraRange(int landLv) 
+    {
+        float boundFactor = landLv * 10f;
+
+        Vector2 bounds = new Vector2(DEFAULT_MOVE_MIN_X - boundFactor, DEFAULT_MOVE_MAX_X + boundFactor);
+
+        MoveMinX = bounds.x;
+        MoveMaxX = bounds.y;
+    }
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null && GameManager.Instance.MapManager._lvm != null)
+        {
+            GameManager.Instance.MapManager._lvm.OnLandLevelUp -= AddCameraRange;
+        }
+    }
 }

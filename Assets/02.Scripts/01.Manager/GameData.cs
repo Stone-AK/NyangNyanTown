@@ -18,4 +18,14 @@ public class BuildingData : BaseData
 
     public float Width;
     public int CatCapacity;
+    public int BuildingType;
+}
+
+public class CatInfoData : BaseData
+{
+    public string Name;
+    public string Description;
+    //public string CatEffect;
+    //public float EffectValue;
+    public string CatIconImgPath;
 }

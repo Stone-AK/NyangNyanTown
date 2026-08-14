@@ -12,18 +12,29 @@ public struct PlacedBuildingData
 public class MapManager : BaseManager<MapManager>
 {
     private const float GRID_WIDTH = 0.1f;
-    //public List<BuildingData> _currentBuildingList = new List<BuildingData>();
-    //public List<PlacedBuildingData> _currentBuildingList = new List<PlacedBuildingData>();
+    private const float DEFAULT_LAND_RANGE = 20f;
+    private float CurrentLandRange { get; set; } = DEFAULT_LAND_RANGE;
+
+
     public Dictionary<string, PlacedBuildingData> _currentBuildingLDic = new Dictionary<string, PlacedBuildingData>();
+
+    public LandViewModel _lvm;
 
     public override UniTask InitializeAsync()
     {
+        _lvm = new LandViewModel();
+        _lvm.OnLandLevelUp += OnLandLevelUp;
         return UniTask.CompletedTask;
     }
     public bool CanBuildOnThisPlace(float rootX, float width, string ignoreInstanceId = null) //좌표를 주면 해당위치에 설치할 수 있는지 반환
     {
         float leftX = rootX - (width / 2f);
         float rightX = rootX + (width / 2f);
+
+        if (leftX < -CurrentLandRange ||  rightX > CurrentLandRange)
+        {
+            return false;
+        }
         foreach (PlacedBuildingData data in _currentBuildingLDic.Values)
         {
             if (data.InstanceId == ignoreInstanceId)
@@ -38,7 +49,7 @@ public class MapManager : BaseManager<MapManager>
             {
                 return false;
             }
-
+           
         }
         return true;
     }
@@ -79,6 +90,10 @@ public class MapManager : BaseManager<MapManager>
         {
             _currentBuildingLDic.Remove(instanceId);
         }
+    }
     
+    private void OnLandLevelUp(int level) 
+    {
+        CurrentLandRange = DEFAULT_LAND_RANGE + (level * 5f);
     }
 }
