@@ -18,6 +18,7 @@ public class CatViewModel : ViewModelBase
 
     // TODO(안우재/08.06) : 추후 데이터 부분 추가를 위해 대략적인 변수 선언
     private float _catSpeed;
+    private string _catId;
     //private string _catMeshPrefabId;
     //private string _catMeterialId;
     //private string _catMeterialColorId;

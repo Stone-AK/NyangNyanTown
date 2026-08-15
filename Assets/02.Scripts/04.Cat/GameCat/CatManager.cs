@@ -6,23 +6,97 @@ public class CatManager : BaseManager<CatManager>
 {
     private int _activeCatCount;
     public List<CatSpawner> CatSpanweList = new();
+    private Dictionary<string, int> _catSpawnWeightList = new();
+    private int _totalWeight = 0;
 
     public override UniTask InitializeAsync()
     {
         _activeCatCount = 0;
+        ChangedCatSpawnWeight();
         return UniTask.CompletedTask;
     }
 
-    private CatViewModel InitRandomCatStat()
+    // 나중에 가중치 값 변경 시 호출 되어야함
+    public void ChangedCatSpawnWeight()
     {
+        if(_catSpawnWeightList.Count == 0)
+        {
+            if (GameManager.Instance.DataManager.TryGetDataTable<CatInfoData>(out var catDataTable))
+            {
+                foreach (var catData in catDataTable)
+                {
+                    _catSpawnWeightList.Add(catData.Key, catData.Value.CatAppearanceWeight);
+                }
+            }
+        }
+
+        _totalWeight = 0;
+        foreach (var catWeight in _catSpawnWeightList.Values)
+        {
+            _totalWeight += catWeight;
+        }
+    }
+
+    private CatViewModel InitCatStat(string spawnedCatId)
+    {
+        if(spawnedCatId == null)
+            return null;
+
         CatViewModel catViewModel = new CatViewModel();
+
+        if (spawnedCatId == "Cat_Normal_01")
+        {
+            catViewModel.InitRandomCatStat();
+            return catViewModel;
+        }
+
+        // TODO(08.15) 안우재 : 특별 고양이 스탯 지정 부분 추가 할당 필요 아래는 임시지정
         catViewModel.InitRandomCatStat();
+        // ============================================================
         return catViewModel;
     }
 
+    private string SelectRandomCatIdByWeight()
+    {
+        if (_catSpawnWeightList == null)
+            return null;
+
+        if(_totalWeight == 0) 
+            return null;
+
+        int selectedNum = GameUtil.Random.Next(_totalWeight);
+        int cumulative = 0;
+
+        foreach(var catWeightData in _catSpawnWeightList)
+        {
+            cumulative += catWeightData.Value;
+
+            if(selectedNum <= cumulative)
+                return catWeightData.Key;
+        }
+
+        return null;
+    }
+
+    // TODO(08.15) 안우재 : 고양이 가중치 변경 관련한 메서드 추후 제작필요
+    /*
+    public void ChangeTheSpawnWeight(string changedCatId, int upDownValue)
+    {
+
+    }
+    */
     public async UniTask<GameObject> SpawnCat(Transform spawnTransform)
     {
-        CatViewModel spawnCatVM = InitRandomCatStat();
+        string spawnedCatId = SelectRandomCatIdByWeight();
+
+        if (spawnedCatId == null)
+        {
+            Debug.LogError("고양이 추첨 방식에 심각한 로직 실패 발생. 즉시 CatManager의 SelectRandomCatIdByWeight()메서드 수정 필요");
+            return null;
+        }
+
+        CatViewModel spawnCatVM = InitCatStat(spawnedCatId);
+        
         GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnTransform);
 
         if (returnCatObj == null)

@@ -202,7 +202,7 @@ public class CatView : MonoBehaviour
     private void ArriveSpanwPositionAndEscape()
     {
         // TODO(안우재/08.09) : 가까운 Spawn지역에 도착 시 탈출하는 모션 출력 필요.
-        GameManager.Instance.ObjectManager.Despawn(this.gameObject);
+        GameManager.Instance.CatManager.DespawnCat(this.gameObject);
     }
 
     private async void ActionFromStatus()
