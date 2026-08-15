@@ -61,7 +61,7 @@ public class CatManager : BaseManager<CatManager>
         if (_catSpawnWeightList == null)
             return null;
 
-        if(_totalWeight == 0) 
+        if(_totalWeight <= 0) 
             return null;
 
         int selectedNum = GameUtil.Random.Next(_totalWeight);
@@ -71,22 +71,34 @@ public class CatManager : BaseManager<CatManager>
         {
             cumulative += catWeightData.Value;
 
-            if(selectedNum <= cumulative)
+            if(selectedNum < cumulative)
                 return catWeightData.Key;
         }
 
         return null;
     }
 
-    // TODO(08.15) 안우재 : 고양이 가중치 변경 관련한 메서드 추후 제작필요
-    /*
-    public void ChangeTheSpawnWeight(string changedCatId, int upDownValue)
+    public bool TryChangeSpawnWeight(string changedCatId, int upDownValue)
     {
+        if (!_catSpawnWeightList.TryGetValue(changedCatId, out int currentWeight))
+        {
+            Debug.LogWarning($"가중치를 변경할 고양이가 없습니다. CatId: {changedCatId}");
+            return false;
+        }
 
+        int newWeight = Mathf.Max(0, currentWeight + upDownValue);
+
+        _catSpawnWeightList[changedCatId] = newWeight;
+        _totalWeight += newWeight - currentWeight;
+
+        return true;
     }
-    */
+
     public async UniTask<GameObject> SpawnCat(Transform spawnTransform)
     {
+        if (!IsCatSpawnAvailable())
+            return null;
+
         string spawnedCatId = SelectRandomCatIdByWeight();
 
         if (spawnedCatId == null)
@@ -96,16 +108,20 @@ public class CatManager : BaseManager<CatManager>
         }
 
         CatViewModel spawnCatVM = InitCatStat(spawnedCatId);
-        
+
+        _activeCatCount++;
+
         GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnTransform);
 
         if (returnCatObj == null)
+        {
+            _activeCatCount--;
             return null;
+        }
 
-        if(returnCatObj.TryGetComponent<CatView>(out var catView))
+        if (returnCatObj.TryGetComponent<CatView>(out var catView))
             catView.InitCatView(spawnCatVM);
 
-        _activeCatCount++;
         return returnCatObj;
     }
 

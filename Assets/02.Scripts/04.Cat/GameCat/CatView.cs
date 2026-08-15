@@ -1,8 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using TMPro;
 using UnityEngine;
 
 public class CatView : MonoBehaviour
@@ -98,15 +96,22 @@ public class CatView : MonoBehaviour
 
             foreach (var buildingChild in buildingChildCollider)
             {
-                if (buildingChild == null) continue;
-                if(buildingChild.GetComponentInParent<Building>() == null) continue;
+                if (buildingChild == null) 
+                    continue;
 
-                newSpaceOccupancyRate = buildingChild.GetComponentInParent<Building>().GetAvailableSpaceRate();
+                Building building = buildingChild.GetComponentInParent<Building>();
+                if (building == null)
+                    continue;
+
+                if (building.GetComponent<CatSpawner>() != null)
+                    continue;
+
+                newSpaceOccupancyRate = building.GetAvailableSpaceRate();
 
                 if (nowSpaceOccupancyRate < newSpaceOccupancyRate)
                 {
                     nowSpaceOccupancyRate = newSpaceOccupancyRate;
-                    candidateTargetBuilding = buildingChild.GetComponentInParent<Building>();
+                    candidateTargetBuilding = building;
                 }
             }
         }
@@ -153,19 +158,13 @@ public class CatView : MonoBehaviour
                 return;
             }
 
-            if (_targetObject.TryGetComponent<Building>(out Building buildingObject))
+            if (_targetObject.GetComponent<CatSpawner>())
             {
-                if(transform.position.x == buildingObject.GetEntrancePoint().transform.position.x)
-                {
-                    ArriveBuildingEntrance(buildingObject);
-                }
+                ArriveSpanwPositionAndEscape();
             }
-            else if(_targetObject.GetComponent<CatSpawner>())
+            else if (_targetObject.TryGetComponent<Building>(out Building buildingObject))
             {
-                if(transform.position.x == _targetObject.transform.position.x)
-                {
-                    ArriveSpanwPositionAndEscape();
-                }
+                ArriveBuildingEntrance(buildingObject);
             }
 
             return;
@@ -174,11 +173,13 @@ public class CatView : MonoBehaviour
 
     private bool CheckTargetExistenceORChanged()
     {
-        if(_targetObject == null || _targetObject.activeInHierarchy)
+        if(_targetObject == null || !_targetObject.activeInHierarchy)
             return true;
 
-        if(_targetObject.transform.position.x == _targetTransform.x)
+        if (!Mathf.Approximately(_targetObject.transform.position.x, _targetTransform.x))
+        {
             return true;
+        }
 
         return false;
     }
@@ -191,6 +192,7 @@ public class CatView : MonoBehaviour
         if(building.GetAvailableCatPointCount() == 0)
         {
             Debug.Log("해당 건물은 빈 자리가 없습니다.");
+            _catViewModel.CatState = CatState.TargetMissing;
             // 대기 모션 출력 관련 메서드
             return;
         }
@@ -207,27 +209,34 @@ public class CatView : MonoBehaviour
 
     private async void ActionFromStatus()
     {
-        if(_catViewModel == null)
-            return;
+        try
+        {
+            if (_catViewModel == null)
+                return;
 
-        if (_catViewModel.CatState == CatState.InBuildingAction)
-        {
-            // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 
-            // 현재는 4초 가만히로 설정
-            await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
-            _catViewModel.CatState = CatState.SearchTarget;
+            if (_catViewModel.CatState == CatState.InBuildingAction)
+            {
+                // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 
+                // 현재는 4초 가만히로 설정
+                await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
+                _catViewModel.CatState = CatState.SearchTarget;
+            }
+            else if (_catViewModel.CatState == CatState.TargetMissing)
+            {
+                // TODO(안우재/08.10) : Missing애니메이션 출력 구현, 애니메이션 후 상태 SearchTarget으로 변경
+                // 지금은 타겟을 못찾아서 두리번 거리는 애니메이션 2초로 가정하여 구현
+                await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: this.GetCancellationTokenOnDestroy());
+                _catViewModel.CatState = CatState.SearchTarget;
+            }
+            else if (_catViewModel.CatState == CatState.SearchTarget)
+            {
+                // TODO(안우재/08.10) : 가까운 Spawner 오브젝트를 찾고, _targetTransform에 위치 설정
+                SearchDespawnPoint();
+            }
         }
-        else if (_catViewModel.CatState == CatState.TargetMissing)
-        {
-            // TODO(안우재/08.10) : Missing애니메이션 출력 구현, 애니메이션 후 상태 SearchTarget으로 변경
-            // 지금은 타겟을 못찾아서 두리번 거리는 애니메이션 2초로 가정하여 구현
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: this.GetCancellationTokenOnDestroy());
-            _catViewModel.CatState = CatState.SearchTarget;
-        }
-        else if (_catViewModel.CatState == CatState.SearchTarget)
-        {
-            // TODO(안우재/08.10) : 가까운 Spawner 오브젝트를 찾고, _targetTransform에 위치 설정
-            SearchDespawnPoint();
+        catch(OperationCanceledException) 
+        { 
+
         }
     }
 
@@ -243,6 +252,7 @@ public class CatView : MonoBehaviour
         {
             // 고양이가 필드에 있지만 Despawn될 Spawn 지역이 없는 상태 현재는 그냥 바로 Despawn
             GameManager.Instance.CatManager.DespawnCat(this.gameObject);
+            return;
         }
 
         CatSpawner targetSpawner = null;

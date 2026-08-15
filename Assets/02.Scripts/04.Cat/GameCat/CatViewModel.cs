@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-
+﻿
 public enum CatState
 {
     None = 0,
