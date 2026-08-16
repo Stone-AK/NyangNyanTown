@@ -8,6 +8,9 @@ public class CatView : MonoBehaviour
     private CatViewModel _catViewModel;
     private GameObject _targetObject;
     private Vector3 _targetTransform;
+    [SerializeField] private SkinnedMeshRenderer _bodyRenderer;
+    [SerializeField] private SkinnedMeshRenderer _eyeRenderer;
+    [SerializeField] private SkinnedMeshRenderer _mouthRenderer;
 
     private void FixedUpdate()
     {
