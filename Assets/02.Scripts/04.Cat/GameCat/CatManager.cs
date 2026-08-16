@@ -8,12 +8,46 @@ public class CatManager : BaseManager<CatManager>
     public List<CatSpawner> CatSpanweList = new();
     private Dictionary<string, int> _catSpawnWeightList = new();
     private int _totalWeight = 0;
+    private List<CatBodySkinData> _catBodyDataList = new();
+    private List<CatEyeSkinData> _catEyeDataList = new();
+    private List<CatMouthSkinData> _catMouthDataList = new();
+    public List<CatBodySkinData> CatBodySkinDatas {get => _catBodyDataList;}
+    public List<CatEyeSkinData> CatEyeSkinDatas {get => _catEyeDataList; }
+    public List<CatMouthSkinData> CatMouthSkinDatas {get => _catMouthDataList; }
 
     public override UniTask InitializeAsync()
     {
         _activeCatCount = 0;
         ChangedCatSpawnWeight();
+        InitCatMaterialList();
         return UniTask.CompletedTask;
+    }
+
+    private void InitCatMaterialList()
+    {
+        if (GameManager.Instance.DataManager.TryGetDataTable<CatBodySkinData>(out var bodySkinDataTable))
+        {
+            foreach (var addData in bodySkinDataTable.Values)
+            {
+                _catBodyDataList.Add(addData);
+            }
+        }
+
+        if (GameManager.Instance.DataManager.TryGetDataTable<CatEyeSkinData>(out var eyeSkinDataTable))
+        {
+            foreach (var addData in eyeSkinDataTable.Values)
+            {
+                _catEyeDataList.Add(addData);
+            }
+        }
+
+        if (GameManager.Instance.DataManager.TryGetDataTable<CatMouthSkinData>(out var mouthSkinDataTable))
+        {
+            foreach (var addData in mouthSkinDataTable.Values)
+            {
+                _catMouthDataList.Add(addData);
+            }
+        }
     }
 
     // 나중에 가중치 값 변경 시 호출 되어야함

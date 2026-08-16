@@ -12,6 +12,9 @@ public enum LoadingStep
     LoadTestData,
     LoadBuildingData,
     LoadCatInfoData,
+    LoadCatBodySkin,
+    LoadCatEyeSkin,
+    LoadCatMouthSkin,
     Complete
 }
 
@@ -19,7 +22,10 @@ public enum DataType
 {
     TestData,
     BuildingData,
-    CatInfoData
+    CatInfoData,
+    CatBodySkinData,
+    CatEyeSkinData,
+    CatMouthSkinData
 }
 
 public enum PrefabType

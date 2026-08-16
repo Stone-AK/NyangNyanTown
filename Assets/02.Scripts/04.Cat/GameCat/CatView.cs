@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class CatView : MonoBehaviour
     private CatViewModel _catViewModel;
     private GameObject _targetObject;
     private Vector3 _targetTransform;
+
     [SerializeField] private SkinnedMeshRenderer _bodyRenderer;
     [SerializeField] private SkinnedMeshRenderer _eyeRenderer;
     [SerializeField] private SkinnedMeshRenderer _mouthRenderer;
@@ -57,7 +59,41 @@ public class CatView : MonoBehaviour
     {
         _catViewModel = catViewModel;
         BindSlotViewMdoel(_catViewModel);
+        SettingMaterial(catViewModel);
         CatDetectTarget();
+    }
+
+    private async void SettingMaterial(CatViewModel catViewModel)
+    {
+        Material bodyMaterial =
+            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                GameManager.Instance.CatManager.CatBodySkinDatas[catViewModel.CatBodyAddressableNum].AddressableString,
+                destroyCancellationToken);
+
+        if (bodyMaterial != null)
+        {
+            _bodyRenderer.sharedMaterial = bodyMaterial;
+        }
+
+        Material eyeMaterial =
+            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                GameManager.Instance.CatManager.CatEyeSkinDatas[catViewModel.CatEyeAddressableNum].AddressableString,
+                destroyCancellationToken);
+
+        if (eyeMaterial != null)
+        {
+            _eyeRenderer.sharedMaterial = eyeMaterial;
+        }
+
+        Material mouthMaterial =
+            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                GameManager.Instance.CatManager.CatMouthSkinDatas[catViewModel.CatMouthAddressableNum].AddressableString,
+                destroyCancellationToken);
+
+        if (mouthMaterial != null)
+        {
+            _mouthRenderer.sharedMaterial = mouthMaterial;
+        }
     }
 
     private void CatDetectTarget()
