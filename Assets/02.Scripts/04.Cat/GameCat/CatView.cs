@@ -13,6 +13,7 @@ public class CatView : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer _bodyRenderer;
     [SerializeField] private SkinnedMeshRenderer _eyeRenderer;
     [SerializeField] private SkinnedMeshRenderer _mouthRenderer;
+    [SerializeField] private CatAnimationControl _catAnimationControl;
 
     private void FixedUpdate()
     {
@@ -51,7 +52,7 @@ public class CatView : MonoBehaviour
     {
         if(_catViewModel == null)
             return;
-
+        _catAnimationControl.PlayMoveToTarget(_catViewModel.CatSpeed);
         transform.Translate(Vector3.forward * _catViewModel.CatSpeed * Time.deltaTime);
     }
 
@@ -255,15 +256,13 @@ public class CatView : MonoBehaviour
 
             if (_catViewModel.CatState == CatState.InBuildingAction)
             {
-                // TODO(안우재/08.09) : slot에 이동 후 애니메이션 출력 구현 필요. 
-                // 현재는 4초 가만히로 설정
+                _catAnimationControl.PlayAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
                 _catViewModel.CatState = CatState.SearchTarget;
             }
             else if (_catViewModel.CatState == CatState.TargetMissing)
             {
-                // TODO(안우재/08.10) : Missing애니메이션 출력 구현, 애니메이션 후 상태 SearchTarget으로 변경
-                // 지금은 타겟을 못찾아서 두리번 거리는 애니메이션 2초로 가정하여 구현
+                _catAnimationControl.PlayTargetMissingAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: this.GetCancellationTokenOnDestroy());
                 _catViewModel.CatState = CatState.SearchTarget;
             }

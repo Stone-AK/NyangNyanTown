@@ -1035,6 +1035,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5327270256277105476}
   - component: {fileID: 1956710623746123219}
+  - component: {fileID: 5652922558298936437}
   - component: {fileID: 4858222940921909156}
   m_Layer: 0
   m_Name: Cat_Prefab
@@ -1074,6 +1075,20 @@ MonoBehaviour:
   _bodyRenderer: {fileID: 2409306137799253827}
   _eyeRenderer: {fileID: 9183653764990480276}
   _mouthRenderer: {fileID: 4372853321680639684}
+  _catAnimationControl: {fileID: 5652922558298936437}
+--- !u!114 &5652922558298936437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3702225678904907211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8652f0dd852ceb419912c10d2dc3c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CatAnimationControl
+  _catAnimation: {fileID: 7396240859899314048}
 --- !u!136 &4858222940921909156
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1335,7 +1350,7 @@ Animator:
   m_GameObject: {fileID: 4255696692433305408}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 3805a467cce5643f5b4c26e4d447db8c, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 285cd18dcdd434e4ca78082c3d04e5f5, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

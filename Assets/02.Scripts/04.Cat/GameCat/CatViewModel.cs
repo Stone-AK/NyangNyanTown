@@ -54,6 +54,7 @@ public class CatViewModel : ViewModelBase
 
     public void InitRandomCatStat()
     {
+        _catId = "Cat_Normal_01";
         _catState = CatState.MoveToTarget;
         _catSpeed = (float)(GameUtil.Random.NextDouble() * (_maxSpeed - _minSpeed) + _minSpeed);
         
