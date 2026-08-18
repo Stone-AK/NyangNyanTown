@@ -22,6 +22,7 @@ public class CatViewModel : ViewModelBase
     private int _catMouthAddressableNum;
     private CatState _catState;
 
+    public string CatId { get => _catId; }
     public int CatBodyAddressableNum { get => _catBodyAddressableNum; }
     public int CatEyeAddressableNum { get => _catEyeAddressableNum; }
     public int CatMouthAddressableNum { get => _catMouthAddressableNum; }

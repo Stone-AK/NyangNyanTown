@@ -7,17 +7,20 @@ using UnityEngine;
 public class CatView : MonoBehaviour
 {
     private CatViewModel _catViewModel;
-    private GameObject _targetObject;
+    private Building _targetBuilding;
     private Vector3 _targetTransform;
+    private Transform _pointInBuilding;
 
     [SerializeField] private SkinnedMeshRenderer _bodyRenderer;
     [SerializeField] private SkinnedMeshRenderer _eyeRenderer;
     [SerializeField] private SkinnedMeshRenderer _mouthRenderer;
     [SerializeField] private CatAnimationControl _catAnimationControl;
 
+    public CatViewModel CatViewModelProp { get => _catViewModel; }
+
     private void FixedUpdate()
     {
-        if(_targetObject == null)
+        if(_targetBuilding == null)
         {
             SearchDespawnPoint();
         }
@@ -40,7 +43,7 @@ public class CatView : MonoBehaviour
     {
         switch (e.PropertyName)
         {
-            case nameof(CatViewModel.CatState):
+            case nameof(CatViewModelProp.CatState):
                 {
                     ActionFromStatus();
                 }
@@ -111,10 +114,10 @@ public class CatView : MonoBehaviour
             return;
         }
 
-        _targetObject = SearchTargetBuildingObject();
+        _targetBuilding = SearchTargetBuilding();
 
         // 아무 알맞은 건물을 못찾은 상태, 0으로 가도록 함
-        if (_targetObject == null)
+        if (_targetBuilding == null)
         {
             Vector3 temporaryDirection = new Vector3(0, 0, 0);
             transform.rotation = Quaternion.LookRotation(temporaryDirection);
@@ -124,7 +127,7 @@ public class CatView : MonoBehaviour
         SettingTargetPosition();
     }
 
-    private GameObject SearchTargetBuildingObject()
+    private Building SearchTargetBuilding()
     {
         Building candidateTargetBuilding = null;
         float nowSpaceOccupancyRate = 0f;
@@ -158,25 +161,25 @@ public class CatView : MonoBehaviour
         if (candidateTargetBuilding == null)
             return null;
 
-        return candidateTargetBuilding.gameObject;
+        return candidateTargetBuilding;
     }
 
     private void SettingTargetPosition()
     {
-        if (_targetObject == null)
+        if (_targetBuilding == null)
         {
             Debug.Log("목표 오브젝트를 찾을 수 없습니다.");
             return;
         }
 
-        if (_targetObject.TryGetComponent<Building>(out Building buildingObject))
+        if (_targetBuilding.TryGetComponent<Building>(out Building buildingObject))
         {
             _targetTransform = buildingObject.GetEntrancePoint().transform.position;
             _targetTransform.y = 0f;
             _targetTransform.z = 0f;
         }
 
-        Vector3 direction = (_targetObject.transform.position - transform.position).normalized;
+        Vector3 direction = (_targetBuilding.transform.position - transform.position).normalized;
         direction.y = 0f;
         direction.z = 0f;
         transform.rotation = Quaternion.LookRotation(direction);
@@ -184,7 +187,7 @@ public class CatView : MonoBehaviour
 
     private void CheckCatArriveTarget()
     {
-        if (_targetObject == null)
+        if (_targetBuilding == null)
             return;
 
         float remainingX = _targetTransform.x - transform.position.x;
@@ -198,11 +201,11 @@ public class CatView : MonoBehaviour
                 return;
             }
 
-            if (_targetObject.GetComponent<CatSpawner>())
+            if (_targetBuilding.GetComponent<CatSpawner>())
             {
                 ArriveSpanwPositionAndEscape();
             }
-            else if (_targetObject.TryGetComponent<Building>(out Building buildingObject))
+            else if (_targetBuilding.TryGetComponent<Building>(out Building buildingObject))
             {
                 ArriveBuildingEntrance(buildingObject);
             }
@@ -213,10 +216,10 @@ public class CatView : MonoBehaviour
 
     private bool CheckTargetExistenceORChanged()
     {
-        if(_targetObject == null || !_targetObject.activeInHierarchy)
+        if(_targetBuilding == null || !_targetBuilding.gameObject.activeInHierarchy)
             return true;
 
-        if (!Mathf.Approximately(_targetObject.transform.position.x, _targetTransform.x))
+        if (!Mathf.Approximately(_targetBuilding.transform.position.x, _targetTransform.x))
         {
             return true;
         }
@@ -237,7 +240,8 @@ public class CatView : MonoBehaviour
             return;
         }
 
-        this.gameObject.transform.position = building.GetAvailableCatPoint().position;
+        _pointInBuilding = building.GetAvailableCatPoint();
+        this.gameObject.transform.position = _pointInBuilding.position;
         _catViewModel.CatState = CatState.InBuildingAction;
     }
 
@@ -280,10 +284,16 @@ public class CatView : MonoBehaviour
 
     public void SearchDespawnPoint()
     {
-        if (_targetObject != null)
+        if (_pointInBuilding != null && _targetBuilding != null)
         {
-            if(_targetObject.GetComponent<CatSpawner>() == null)
-                this.gameObject.transform.position = _targetObject.GetComponent<Building>().GetEntrancePoint().position;
+            _targetBuilding.ReturnCatPoint(_pointInBuilding);
+            _pointInBuilding = null;
+        }
+
+        if (_targetBuilding != null)
+        {
+            if(_targetBuilding.GetComponent<CatSpawner>() == null)
+                this.gameObject.transform.position = _targetBuilding.GetComponent<Building>().GetEntrancePoint().position;
         }
 
         if (GameManager.Instance.CatManager.CatSpanweList.Count == 0)
@@ -312,7 +322,14 @@ public class CatView : MonoBehaviour
                 targetSpawner = spawner;
             }
         }
-        _targetObject = targetSpawner.gameObject;
+
+        if (targetSpawner == null)
+        {
+            GameManager.Instance.CatManager.DespawnCat(gameObject);
+            return;
+        }
+
+        _targetBuilding = targetSpawner.gameObject.GetComponent<Building>();
         SettingTargetPosition();
         _catViewModel.CatState = CatState.MoveToTarget;
     }

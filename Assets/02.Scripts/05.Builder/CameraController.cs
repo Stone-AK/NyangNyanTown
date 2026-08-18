@@ -70,10 +70,9 @@ public class CameraController : MonoBehaviour
         }
         HandleDrag();
         HandleZoom();
-        Buildingtest();
-
+        TouchObject();
     }
-    private void Buildingtest() {
+    private void TouchObject() {
         if (Mouse.current == null)
             return;
 
@@ -91,6 +90,15 @@ public class CameraController : MonoBehaviour
         {
             Debug.Log($"클릭한 오브젝트: {hit.collider.name}");
 
+            CatView catView = hit.collider.GetComponent<CatView>();
+
+            if (catView != null)
+            {
+                Debug.Log("고양이 클릭");
+                GameManager.Instance.UIManager.OpenCatInfoPopupAsync(catView).Forget();
+                return;
+            }
+
             Building building = hit.collider.GetComponentInParent<Building>();
 
             if (building != null)
@@ -100,6 +108,7 @@ public class CameraController : MonoBehaviour
             }
         }
     }
+
     private void HandleZoom()
     {
         if (Mouse.current == null)
