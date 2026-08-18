@@ -17,6 +17,7 @@ public enum UIType
     OverlayUI,
     BuildingPopUpUI,
     GachaPopupUI,
+    CatEncyclopediaPopUp,
     MainMenuUI
 }
 

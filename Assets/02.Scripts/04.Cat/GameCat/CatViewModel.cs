@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-
+﻿
 public enum CatState
 {
     None = 0,
@@ -18,10 +16,15 @@ public class CatViewModel : ViewModelBase
 
     // TODO(안우재/08.06) : 추후 데이터 부분 추가를 위해 대략적인 변수 선언
     private float _catSpeed;
-    //private string _catMeshPrefabId;
-    //private string _catMeterialId;
-    //private string _catMeterialColorId;
+    private string _catId;
+    private int _catBodyAddressableNum;
+    private int _catEyeAddressableNum;
+    private int _catMouthAddressableNum;
     private CatState _catState;
+
+    public int CatBodyAddressableNum { get => _catBodyAddressableNum; }
+    public int CatEyeAddressableNum { get => _catEyeAddressableNum; }
+    public int CatMouthAddressableNum { get => _catMouthAddressableNum; }
 
     public float CatSpeed
     {
@@ -51,7 +54,17 @@ public class CatViewModel : ViewModelBase
 
     public void InitRandomCatStat()
     {
+        _catId = "Cat_Normal_01";
         _catState = CatState.MoveToTarget;
         _catSpeed = (float)(GameUtil.Random.NextDouble() * (_maxSpeed - _minSpeed) + _minSpeed);
+        
+        if(GameManager.Instance.DataManager.TryGetDataTable<CatBodySkinData>(out var bodySkinDataTable))
+            _catBodyAddressableNum = GameUtil.Random.Next(bodySkinDataTable.Count);
+
+        if (GameManager.Instance.DataManager.TryGetDataTable<CatEyeSkinData>(out var eyeSkinDataTable))
+            _catEyeAddressableNum = GameUtil.Random.Next(eyeSkinDataTable.Count);
+
+        if (GameManager.Instance.DataManager.TryGetDataTable<CatMouthSkinData>(out var mouthSkinDataTable))
+            _catMouthAddressableNum = GameUtil.Random.Next(mouthSkinDataTable.Count);
     }
 }

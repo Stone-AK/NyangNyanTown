@@ -1,3 +1,4 @@
+﻿using System.Buffers.Text;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using TMPro;
@@ -83,10 +84,14 @@ public class MainUIView : BaseUI
     {
         Debug.Log("Button_Building");
     }
-    private void OnClickCatBookButton()
+    private async void OnClickCatBookButton()
     {
-        Debug.Log("Button_CatBook");
+        BaseUI baseUI = await GameManager.Instance.UIManager.OpenPopupRootAsync(UIType.CatEncyclopediaPopUp);
 
+        if (baseUI is CatEncyclopediaPopUp catEncyclopediaPopUp)
+        {
+            catEncyclopediaPopUp.InitiCatEncyclopediaPopUp();
+        }
     }
     private void OnClickCatCheatButton()
     {
