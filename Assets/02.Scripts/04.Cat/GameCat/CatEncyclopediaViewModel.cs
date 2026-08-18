@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 public class CatEncyclopediaViewModel : ViewModelBase
 {
     public string CatInfoDataId;

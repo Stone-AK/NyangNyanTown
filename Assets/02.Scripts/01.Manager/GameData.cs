@@ -28,4 +28,23 @@ public class CatInfoData : BaseData
     //public string CatEffect;
     //public float EffectValue;
     public string CatIconImgPath;
+    public int CatAppearanceWeight;
+}
+
+public class CatBodySkinData : BaseData
+{
+    public string Name;
+    public string AddressableString;
+}
+
+public class CatEyeSkinData : BaseData
+{
+    public string Name;
+    public string AddressableString;
+}
+
+public class CatMouthSkinData : BaseData
+{
+    public string Name;
+    public string AddressableString;
 }
