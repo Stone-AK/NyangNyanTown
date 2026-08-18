@@ -20,7 +20,7 @@ public class BuildingData : BaseData
     public int CatCapacity;
     public int BuildingType;
 }
-
+[System.Serializable]
 public class CatInfoData : BaseData
 {
     public string Name;
@@ -28,4 +28,12 @@ public class CatInfoData : BaseData
     //public string CatEffect;
     //public float EffectValue;
     public string CatIconImgPath;
+}
+[System.Serializable]
+public class LandUpGradeData : BaseData
+{
+    public int NeedGold;
+    public int NeedCat;
+    public string NeedBuildingId; 
+    public string NeedSpecialCatId;
 }

@@ -57,7 +57,7 @@ public class GameDataManager : BaseManager<GameDataManager>
             new LoadingTask(LoadingStep.LoadTestData, AddressableKey.GetDataKey(DataType.TestData), LoadDataAsync<TestData>),
             new LoadingTask(LoadingStep.LoadBuildingData, AddressableKey.GetDataKey(DataType.BuildingData), LoadDataAsync<BuildingData>),
             new LoadingTask(LoadingStep.LoadCatInfoData, AddressableKey.GetDataKey(DataType.CatInfoData), LoadDataAsync<CatInfoData>),
-
+            new LoadingTask(LoadingStep.LoadLandUpGradeData, AddressableKey.GetDataKey(DataType.LandUpGradeData), LoadDataAsync<LandUpGradeData>),
         };
 
         return jobs;

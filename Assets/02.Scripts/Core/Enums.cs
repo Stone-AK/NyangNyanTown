@@ -12,6 +12,7 @@ public enum LoadingStep
     LoadTestData,
     LoadBuildingData,
     LoadCatInfoData,
+    LoadLandUpGradeData,
     Complete
 }
 
@@ -19,7 +20,8 @@ public enum DataType
 {
     TestData,
     BuildingData,
-    CatInfoData
+    CatInfoData,
+    LandUpGradeData
 }
 
 public enum PrefabType
