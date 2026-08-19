@@ -70,6 +70,7 @@ public class GameManager : BaseManager<GameManager>
         await InitializeAsync();
         await ResourceManager.InitializeAsync();
         await DataManager.InitializeAsync();
+        EconomyService_DH.InitEconomyService();
         await ObjectManager.InitializeAsync();
         await UIManager.InitializeAsync();
         await BuildManager.InitializeAsync();

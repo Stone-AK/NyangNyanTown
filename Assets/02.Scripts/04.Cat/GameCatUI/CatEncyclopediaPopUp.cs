@@ -14,18 +14,9 @@ public class CatEncyclopediaPopUp : BaseUI
     [SerializeField] private Transform SlotContent;
     [SerializeField] private Image CollectImage;
 
-    // TODO(안우재/08.14) : 추후 EconomyService의 리스트 사용 예정 아래 리스트는 임시 리스트
-    private List<CatEncyclopediaViewModel> _catEncyclopediaList = new();
+    private IReadOnlyDictionary<string, CatEncyclopediaViewModel> _catEncyclopediaList;
     private Dictionary<string, CatEncyclopediaSlotBtn> _catListDictionary = new();
     private bool _isInitialized = false;
-
-
-    private void BindCatEncyclopedViewModel(CatEncyclopediaViewModel catEncyclopedVM)
-    {
-        if (catEncyclopedVM == null)
-            return;
-        catEncyclopedVM.PropertyChanged += OnPropChagned_View;
-    }
 
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
@@ -33,7 +24,6 @@ public class CatEncyclopediaPopUp : BaseUI
         {
             case nameof(CatEncyclopediaViewModel.IsCollected):
                 {
-                    // TODO(안우재/08.14) : isCollected의 값에 따라 slot이 달라져야함
                     if (sender is not CatEncyclopediaViewModel catViewModel)
                         return;
                     SetCatSlot(catViewModel.CatInfoDataId, catViewModel.IsCollected);
@@ -47,30 +37,23 @@ public class CatEncyclopediaPopUp : BaseUI
         if (_isInitialized)
             return;
 
-        _isInitialized = true;
+        if (GameManager.Instance?.EconomyService_DH == null)
+            return;
 
-        // TODO(안우재/08.14) : 추후 EconomyService의 리스트 사용 예정 임시초기화(InitCatEncyclopedList()메서드 삭제)
-        InitCatEncyclopedList();
+        _catEncyclopediaList = GameManager.Instance.EconomyService_DH.CatEncyclopediaList;
+
+        _isInitialized = true;
         CollectImage.gameObject.SetActive(false);
 
-    }
-
-    private void InitCatEncyclopedList()
-    {
-        if (GameManager.Instance.DataManager.TryGetDataTable<CatInfoData>(out var dataTable))
+        foreach (var catViewModel in _catEncyclopediaList.Values)
         {
-            foreach (var data in dataTable)
-            {
-                CatEncyclopediaViewModel newCatData = new();
-                newCatData.CatInfoDataId = data.Key;
-                BindCatEncyclopedViewModel(newCatData);
-                _catEncyclopediaList.Add(newCatData);
-                SetCatSlot(data.Key, newCatData.IsCollected);
-            }
+            catViewModel.PropertyChanged += OnPropChagned_View;
+
+            SetCatSlot(catViewModel.CatInfoDataId, catViewModel.IsCollected);
         }
     }
 
-    private void SetCatSlot(string catId, bool isCollected)
+    public void SetCatSlot(string catId, bool isCollected)
     {
         // 기존 Dictionary가 없는 상황
         if (!_catListDictionary.TryGetValue(catId, out CatEncyclopediaSlotBtn catSlot))
@@ -94,21 +77,10 @@ public class CatEncyclopediaPopUp : BaseUI
 
     private void RenewalText(string dataId)
     {
-        CatEncyclopediaViewModel catViewModel = null;
-
-        foreach(var catVM in _catEncyclopediaList)
-        {
-            if (catVM.CatInfoDataId == dataId)
-            {
-                catViewModel = catVM;
-                break;
-            }
-        }
-
-        if (catViewModel == null)
+        if (!_catEncyclopediaList.TryGetValue(dataId, out CatEncyclopediaViewModel textCatViewModel))
             return;
 
-        if (catViewModel.IsCollected == false)
+        if (textCatViewModel.IsCollected == false)
         {
             CatNameText.text = "???";
             CatDescriptionText.text = "수집되지 않았습니다.";

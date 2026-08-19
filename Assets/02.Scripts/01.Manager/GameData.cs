@@ -25,8 +25,8 @@ public class CatInfoData : BaseData
 {
     public string Name;
     public string Description;
-    //public string CatEffect;
-    //public float EffectValue;
+    public string CatEffect;
+    public float EffectValue;
     public string CatIconImgPath;
     public int CatAppearanceWeight;
 }
