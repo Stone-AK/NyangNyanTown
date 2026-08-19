@@ -1,6 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -199,5 +197,18 @@ public class UIManager : BaseManager<UIManager>
         {
             popup.Initialize(building);
         }
+    }
+
+    public async UniTask OpenCatInfoPopupAsync(CatView chooseCat, CancellationToken cancellationToken = default)
+    {
+        BaseUI baseUI = await OpenPopupRootAsync(
+        UIType.OnClickCatInfoPopUp,
+        cancellationToken);
+
+        if (baseUI is OnClickCatInfoPopUp popup)
+        {
+            popup.SettingPopUp(chooseCat);
+        }
+
     }
 }

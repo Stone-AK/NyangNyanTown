@@ -1,4 +1,6 @@
-using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 
 public class EconomyService_DH
@@ -7,8 +9,62 @@ public class EconomyService_DH
 // 계산식은 나중에 static 클래스로 관리
 {
 
+private EconomyViewModel_DH _economyViewModel; // 뷰모델 선언
 
-    private EconomyViewModel_DH _economyViewModel; // 뷰모델 선언
+private readonly List<CatEncyclopediaViewModel> _catEncyclopediaList = new();
+
+public IReadOnlyList<CatEncyclopediaViewModel> CatEncyclopediaList => _catEncyclopediaList;
+
+public event Action<string, bool> CatCollectionChanged;
+
+
+private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
+{
+    if (e.PropertyName != nameof(CatEncyclopediaViewModel.IsCollected))
+    {
+        return;
+    }
+
+    if (sender is not CatEncyclopediaViewModel catViewModel)
+    {
+        return;
+    }
+
+    CatCollectionChanged?.Invoke(catViewModel.CatInfoDataId, catViewModel.IsCollected);
+}
+
+public void InitCatEncyclopediaList()
+{
+    _catEncyclopediaList.Clear();
+
+    if (!GameManager.Instance.DataManager
+        .TryGetDataTable<CatInfoData>(out var dataTable))
+    {
+        return;
+    }
+
+    foreach (var data in dataTable)
+    {
+        CatEncyclopediaViewModel catViewModel = new()
+        {
+            CatInfoDataId = data.Key
+        };
+
+        catViewModel.PropertyChanged += OnPropChagned_View;
+        _catEncyclopediaList.Add(catViewModel);
+    }
+}
+
+public void SetCatEncyclopediaList(
+    IEnumerable<CatEncyclopediaViewModel> catList)
+{
+    _catEncyclopediaList.Clear();
+
+    if (catList == null)
+        return;
+
+    _catEncyclopediaList.AddRange(catList);
+}
 
 
     public EconomyViewModel_DH GetEconomyViewModel()
@@ -105,6 +161,8 @@ public class EconomyService_DH
             _economyViewModel.BuildingCount -= 1;
         }
     }
+
+
 
 
 
