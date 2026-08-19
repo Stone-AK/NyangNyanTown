@@ -13,6 +13,8 @@ public class CameraController : MonoBehaviour
 
     [Header("Move")]
     [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float _focusMoveDuration = 0.35f;
+    [SerializeField] private Vector2 _focusTargetScreenOffset = new Vector2(-150f, 0f);
     [Header("Move Range")]
     [SerializeField] private const float MOVE_MIN_Y = -1f;
     [SerializeField] private const float MOVE_MAX_Y = 3f;
@@ -40,6 +42,10 @@ public class CameraController : MonoBehaviour
 
     private bool _isDragging;
     private Vector2 _lastMousePosition;
+
+    private Transform _focusTarget;
+    private Vector3 _focusStartPosition;
+    private float _focusMoveElapsed;
 
     private void Awake()
     {
@@ -70,10 +76,10 @@ public class CameraController : MonoBehaviour
         }
         HandleDrag();
         HandleZoom();
-        Buildingtest();
-
+        TouchObject();
+        FollowFocusTargetOnUpdate();
     }
-    private void Buildingtest() {
+    private void TouchObject() {
         if (Mouse.current == null)
             return;
 
@@ -91,6 +97,15 @@ public class CameraController : MonoBehaviour
         {
             Debug.Log($"클릭한 오브젝트: {hit.collider.name}");
 
+            CatView catView = hit.collider.GetComponent<CatView>();
+
+            if (catView != null)
+            {
+                Debug.Log("고양이 클릭");
+                GameManager.Instance.UIManager.OpenCatInfoPopupAsync(catView).Forget();
+                return;
+            }
+
             Building building = hit.collider.GetComponentInParent<Building>();
 
             if (building != null)
@@ -100,6 +115,7 @@ public class CameraController : MonoBehaviour
             }
         }
     }
+
     private void HandleZoom()
     {
         if (Mouse.current == null)
@@ -220,5 +236,49 @@ public class CameraController : MonoBehaviour
         {
             GameManager.Instance.MapManager._lvm.OnLandLevelUp -= AddCameraRange;
         }
+    }
+
+    private void FollowFocusTargetOnUpdate()
+    {
+        if (_focusTarget == null)
+            return;
+
+        float worldPerPixel = (_camera.orthographicSize * 2f) / Screen.height;
+
+        Vector3 targetPosition = new Vector3(
+            _focusTarget.position.x
+                - (_focusTargetScreenOffset.x * worldPerPixel),
+            _focusTarget.position.y
+                - (_focusTargetScreenOffset.y * worldPerPixel),
+            _camera.transform.position.z);
+
+        if (_focusMoveElapsed < _focusMoveDuration)
+        {
+            _focusMoveElapsed += Time.deltaTime;
+
+            float ratio = Mathf.Clamp01(_focusMoveElapsed / _focusMoveDuration);
+
+            ratio = Mathf.SmoothStep(0f, 1f, ratio);
+
+            _camera.transform.position = Vector3.Lerp(_focusStartPosition, targetPosition, ratio);
+        }
+        else
+        {
+            _camera.transform.position = targetPosition;
+        }
+
+        UpdateVisibleRange();
+    }
+
+    public void SetFollowingTarget(Transform target)
+    {
+        _focusTarget = target;
+        _focusStartPosition = _camera.transform.position;
+        _focusMoveElapsed = 0f;
+    }
+
+    public void UnassignedFollowingTarget()
+    {
+        _focusTarget = null;
     }
 }
