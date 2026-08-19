@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 
 public class EconomyService_DH
@@ -15,23 +13,6 @@ private readonly List<CatEncyclopediaViewModel> _catEncyclopediaList = new();
 
 public IReadOnlyList<CatEncyclopediaViewModel> CatEncyclopediaList => _catEncyclopediaList;
 
-public event Action<string, bool> CatCollectionChanged;
-
-
-private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
-{
-    if (e.PropertyName != nameof(CatEncyclopediaViewModel.IsCollected))
-    {
-        return;
-    }
-
-    if (sender is not CatEncyclopediaViewModel catViewModel)
-    {
-        return;
-    }
-
-    CatCollectionChanged?.Invoke(catViewModel.CatInfoDataId, catViewModel.IsCollected);
-}
 
 public void InitCatEncyclopediaList()
 {
@@ -49,8 +30,6 @@ public void InitCatEncyclopediaList()
         {
             CatInfoDataId = data.Key
         };
-
-        catViewModel.PropertyChanged += OnPropChagned_View;
         _catEncyclopediaList.Add(catViewModel);
     }
 }
