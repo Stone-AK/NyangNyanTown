@@ -86,7 +86,8 @@ public class BuildManager : BaseManager<BuildManager>
             return;
         if (_currentBuildMode == BuildMode.Build)
         {
-            AddGold(-(_currentPreviewBuildingData.Cost));
+            GameManager.Instance.EconomyService_DH.RemoveCurrentGold((_currentPreviewBuildingData.Cost)); 
+            //AddGold(-(_currentPreviewBuildingData.Cost));
             EndBuild();
             _currentBuildingObject = Instantiate(_realBuildingPrefab, buildPositon, Quaternion.identity);
             _currentBuilding = _currentBuildingObject.GetComponent<Building>();
@@ -119,13 +120,15 @@ public class BuildManager : BaseManager<BuildManager>
         if (_currentBuildMode == BuildMode.Move)
             return true;
         
-        return _currentPreviewBuildingData.Cost <= TotalGold; 
+        var vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
+
+        return _currentPreviewBuildingData.Cost <= vm.CurrentGold; 
     }
     public void DestroyBuilding(Building building) 
     {
         if (building == null)
             return;
-
+        building.RemoveBuilding();
         GameManager.Instance.MapManager.DeleteBuilding(building.InstanceId);
         Destroy(building.gameObject);
     }

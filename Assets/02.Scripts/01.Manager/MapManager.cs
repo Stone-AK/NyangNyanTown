@@ -23,6 +23,7 @@ public class MapManager : BaseManager<MapManager>
     public override UniTask InitializeAsync()
     {
         _lvm = new LandViewModel();
+        
         _lvm.OnLandLevelUp += OnLandLevelUp;
         return UniTask.CompletedTask;
     }
@@ -91,7 +92,7 @@ public class MapManager : BaseManager<MapManager>
             _currentBuildingLDic.Remove(instanceId);
         }
     }
-    
+  
     private void OnLandLevelUp(int level) 
     {
         CurrentLandRange = DEFAULT_LAND_RANGE + (level * 5f);

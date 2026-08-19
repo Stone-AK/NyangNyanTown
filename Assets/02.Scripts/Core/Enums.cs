@@ -26,8 +26,7 @@ public enum DataType
     CatInfoData,
     CatBodySkinData,
     CatEyeSkinData,
-    CatMouthSkinData
-    CatInfoData,
+    CatMouthSkinData,
     LandUpGradeData
 }
 

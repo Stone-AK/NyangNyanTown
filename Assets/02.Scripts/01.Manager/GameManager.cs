@@ -16,7 +16,7 @@ public class GameManager : BaseManager<GameManager>
 
 
     public EconomyService_DH EconomyService_DH { get; private set; }
-
+    public LandUpGradeService LandUpGradeService {  get; private set; }
 
 
     [SerializeField] private GameObject WJPrefab;
@@ -30,13 +30,14 @@ public class GameManager : BaseManager<GameManager>
     {
         EnsureSingleton();
         SetupManagers();
-        InitService();
+        
     }
 
     private void InitService()
     {
         //서비스를 등록하려면 여기에 추가!
         EconomyService_DH = new EconomyService_DH();
+        LandUpGradeService = new LandUpGradeService(EconomyService_DH, MapManager);
     }
 
 
@@ -45,10 +46,8 @@ public class GameManager : BaseManager<GameManager>
     public async UniTask FirstGameLoadingAsync()
     {
         await InitializeManagersAsync();
-
+        InitService();
         await GameManager.Instance.UIManager.OpenMainMenuUIAsync();
-
-        
     }
 
     public async UniTask GameStartAsync()

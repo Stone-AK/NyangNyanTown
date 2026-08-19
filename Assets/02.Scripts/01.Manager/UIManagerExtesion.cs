@@ -18,6 +18,7 @@ public enum UIType
     BuildingPopUpUI,
     GachaPopupUI,
     CatEncyclopediaPopUp,
+    LandUpGradeUI,
     MainMenuUI
 }
 
@@ -42,7 +43,14 @@ public static class UIManagerExtension
         // VeryFront 레이어에 UI를 소환하고 싶을 때
 
     }
-
+    public static async UniTask OpenLandUpGradeUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    {
+        BaseUI baseUI = await uiManager.OpenPopupRootAsync(UIType.LandUpGradeUI, cancellationToken);
+        if (baseUI is LandUpGradeUIView ui)
+        {
+            ui.Init(new LandUpGradeUIViewModel(GameManager.Instance.LandUpGradeService));
+        }
+    }
     public static void CloseMain(this UIManager uiManager)
     {
         uiManager.Close(UIType.MainUI);

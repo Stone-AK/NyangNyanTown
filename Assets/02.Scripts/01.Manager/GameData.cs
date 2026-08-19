@@ -48,7 +48,7 @@ public class CatMouthSkinData : BaseData
     public string Name;
     public string AddressableString;
 }
-}
+
 [System.Serializable]
 public class LandUpGradeData : BaseData
 {

@@ -46,13 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Building
   _buildingData:
-    Id: 
     Name: 
     Cost: 0
     ScaleX: 0
     ScaleY: 0
     Width: 0
     CatCapacity: 0
+    BuildingType: 0
   _meshFilter: {fileID: 593518001413332408}
   _visual: {fileID: 2876410636439510645}
 --- !u!1001 &6002018529166443937
@@ -63,6 +63,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1721724467815750184}
     m_Modifications:
+    - target: {fileID: 7186495354157400298, guid: bfa18106f87f0ad4b9945e8e7597c596, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8403827090908421076, guid: bfa18106f87f0ad4b9945e8e7597c596, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -30,6 +30,8 @@ public class Building : MonoBehaviour
         InstanceId = Guid.NewGuid().ToString();
 
         GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+        GameManager.Instance.EconomyService_DH.AddCatCurrentCount(data.CatCapacity);
+
 
         Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
         _visual.localScale = scale;//건물 매쉬 조절
@@ -39,11 +41,14 @@ public class Building : MonoBehaviour
         SetBuildType(_buildingData.BuildingType);
         //AddBuildingComponent();
     }
-
+    public void RemoveBuilding() 
+    {
+        GameManager.Instance.EconomyService_DH.RemoveCatCurrentCount(_buildingData.CatCapacity);
+    }
 
     /// <summary>
     /// 건물의 Scale을 기준으로 입주 가능한 위치를 생성한다.
-    /// 예: Scale (3, 2, 1) → 3 x 2 = 6개의 자리
+    /// 예: Scale (3, 2, 1) → 3 x 2 = 6개의 자리s
     /// </summary>
 
     private void SetBuildType(int buildType)
@@ -180,19 +185,6 @@ public class Building : MonoBehaviour
         return _entrancePoint;
     }
 
-    //private void AddBuildingComponent() //건물 별 별도 컴포넌트 추가(특수경우에만)
-    //{
-    //    switch (data.Type)
-    //    {
-    //        case BuildingType.TownHall:
-    //            building.gameObject.AddComponent<TownHall>();
-    //            break;
-
-    //        case BuildingType.spanwer:
-    //            building.gameObject.AddComponent<Spanwer>();
-    //            break;
-    //    }
-    //}
     public void MoveBuilding(Vector3 movePosition) 
     {
         transform.position = movePosition;
@@ -203,4 +195,5 @@ public class Building : MonoBehaviour
     {
         return (float)_availableCatPoints.Count / _allCatPoints.Count;
     }
+    
 }

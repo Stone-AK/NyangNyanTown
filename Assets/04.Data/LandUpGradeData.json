@@ -1,0 +1,37 @@
+[
+  {
+    "Id": "LandUpGrade_01",
+    "NeedGold": 100,
+    "NeedCat": 1,
+    "NeedBuildingId": "Building_01_House",
+    "NeedSpecialCatId": null
+  },
+  {
+    "Id": "LandUpGrade_02",
+    "NeedGold": 200,
+    "NeedCat": 5,
+    "NeedBuildingId": "Building_02_Shop",
+    "NeedSpecialCatId": null
+  },
+  {
+    "Id": "LandUpGrade_03",
+    "NeedGold": 500,
+    "NeedCat": 10,
+    "NeedBuildingId": "Building_03_Museum",
+    "NeedSpecialCatId": null
+  },
+  {
+    "Id": "LandUpGrade_04",
+    "NeedGold": 1000,
+    "NeedCat": 50,
+    "NeedBuildingId": "Building_04_Fitness_Center",
+    "NeedSpecialCatId": null
+  },
+  {
+    "Id": "LandUpGrade_05",
+    "NeedGold": 10000,
+    "NeedCat": 100,
+    "NeedBuildingId": "Building_05_Theater",
+    "NeedSpecialCatId": null
+  }
+]

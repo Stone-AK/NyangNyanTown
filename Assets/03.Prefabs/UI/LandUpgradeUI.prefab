@@ -1788,8 +1788,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5746622996338449810}
+  - component: {fileID: 6465631756462216852}
   m_Layer: 0
-  m_Name: LandUpgradeUI
+  m_Name: LandUpGradeUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1819,6 +1820,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 761.2412, y: 761.2412}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6465631756462216852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5066992443325006002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb9be52a6ea42346a8d568769a47e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LandUpGradeUIView
+  GoldText: {fileID: 3768830718589190639}
+  CatText: {fileID: 8124028112663666099}
+  BuildingText: {fileID: 9039000687533236483}
+  SpecialCatText: {fileID: 3698803939463460489}
+  GoldSlider: {fileID: 1702914616314334659}
+  CatSlider: {fileID: 5010955778522116558}
+  Button_UpGrade: {fileID: 4978564348627530246}
+  Button_Exit: {fileID: 5841929260994202713}
 --- !u!1 &5274939151610640676
 GameObject:
   m_ObjectHideFlags: 0
