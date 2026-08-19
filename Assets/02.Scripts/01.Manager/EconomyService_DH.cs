@@ -1,4 +1,6 @@
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 
 public class EconomyService_DH
@@ -7,43 +9,38 @@ public class EconomyService_DH
 // 계산식은 나중에 static 클래스로 관리
 {
 
-private EconomyViewModel_DH _economyViewModel; // 뷰모델 선언
+    private EconomyViewModel_DH _economyViewModel; // 뷰모델 선언
 
-private readonly List<CatEncyclopediaViewModel> _catEncyclopediaList = new();
+    private readonly Dictionary<string,CatEncyclopediaViewModel> _catEncyclopediaList = new();
 
-public IReadOnlyList<CatEncyclopediaViewModel> CatEncyclopediaList => _catEncyclopediaList;
+    public IReadOnlyDictionary<string, CatEncyclopediaViewModel> CatEncyclopediaList => _catEncyclopediaList;
 
 
-public void InitCatEncyclopediaList()
-{
-    _catEncyclopediaList.Clear();
-
-    if (!GameManager.Instance.DataManager
-        .TryGetDataTable<CatInfoData>(out var dataTable))
+    // EconomyService 생성 시 초기화에 필요한 메서드 입력 필요
+    public void InitEconomyService()
     {
-        return;
+        InitCatEncyclopediaList();
     }
 
-    foreach (var data in dataTable)
+    public void InitCatEncyclopediaList()
     {
-        CatEncyclopediaViewModel catViewModel = new()
+        _catEncyclopediaList.Clear();
+
+        if (!GameManager.Instance.DataManager
+            .TryGetDataTable<CatInfoData>(out var dataTable))
         {
-            CatInfoDataId = data.Key
-        };
-        _catEncyclopediaList.Add(catViewModel);
+            return;
+        }
+
+        foreach (var data in dataTable)
+        {
+            CatEncyclopediaViewModel catViewModel = new()
+            {
+                CatInfoDataId = data.Key
+            };
+            _catEncyclopediaList.Add(catViewModel.CatInfoDataId, catViewModel);
+        }
     }
-}
-
-public void SetCatEncyclopediaList(
-    IEnumerable<CatEncyclopediaViewModel> catList)
-{
-    _catEncyclopediaList.Clear();
-
-    if (catList == null)
-        return;
-
-    _catEncyclopediaList.AddRange(catList);
-}
 
 
     public EconomyViewModel_DH GetEconomyViewModel()
@@ -141,7 +138,17 @@ public void SetCatEncyclopediaList(
         }
     }
 
+    public bool CheckClickCatIsNew(string catDataId)
+    {
+        if (!_catEncyclopediaList.TryGetValue(catDataId, out CatEncyclopediaViewModel catViewModel))
+            return false;
 
+        if (catViewModel.IsCollected)
+            return false;
+
+        catViewModel.IsCollected = true;
+        return true;
+    }
 
 
 
