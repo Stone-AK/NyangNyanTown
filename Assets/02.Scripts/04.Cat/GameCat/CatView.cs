@@ -69,34 +69,40 @@ public class CatView : MonoBehaviour
 
     private async void SettingMaterial(CatViewModel catViewModel)
     {
-        Material bodyMaterial =
+        try
+        {
+            Material bodyMaterial =
             await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
                 GameManager.Instance.CatManager.CatBodySkinDatas[catViewModel.CatBodyAddressableNum].AddressableString,
                 destroyCancellationToken);
 
-        if (bodyMaterial != null)
-        {
-            _bodyRenderer.sharedMaterial = bodyMaterial;
+            if (bodyMaterial != null)
+            {
+                _bodyRenderer.sharedMaterial = bodyMaterial;
+            }
+
+            Material eyeMaterial =
+                await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                    GameManager.Instance.CatManager.CatEyeSkinDatas[catViewModel.CatEyeAddressableNum].AddressableString,
+                    destroyCancellationToken);
+
+            if (eyeMaterial != null)
+            {
+                _eyeRenderer.sharedMaterial = eyeMaterial;
+            }
+
+            Material mouthMaterial =
+                await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                    GameManager.Instance.CatManager.CatMouthSkinDatas[catViewModel.CatMouthAddressableNum].AddressableString,
+                    destroyCancellationToken);
+
+            if (mouthMaterial != null)
+            {
+                _mouthRenderer.sharedMaterial = mouthMaterial;
+            }
         }
-
-        Material eyeMaterial =
-            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
-                GameManager.Instance.CatManager.CatEyeSkinDatas[catViewModel.CatEyeAddressableNum].AddressableString,
-                destroyCancellationToken);
-
-        if (eyeMaterial != null)
+        catch (OperationCanceledException)
         {
-            _eyeRenderer.sharedMaterial = eyeMaterial;
-        }
-
-        Material mouthMaterial =
-            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
-                GameManager.Instance.CatManager.CatMouthSkinDatas[catViewModel.CatMouthAddressableNum].AddressableString,
-                destroyCancellationToken);
-
-        if (mouthMaterial != null)
-        {
-            _mouthRenderer.sharedMaterial = mouthMaterial;
         }
     }
 
