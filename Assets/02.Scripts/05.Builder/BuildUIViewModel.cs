@@ -11,7 +11,7 @@ public class BuildUIViewModel : ViewModelBase
             {
                 var newSlot = new BuildingSlotItemViewModel();
 
-                newSlot.Initialize(data.Value, GameManager.Instance.BuildManager.TotalGold);
+                newSlot.Initialize(data.Value);
                 _itemSlots.Add(newSlot);
                 newSlot.OnBuildingSlotButtonClicked += StartBuild;
             }

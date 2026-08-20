@@ -17,8 +17,14 @@ public class BuildingData : BaseData
     public int ScaleY;
 
     public float Width;
+    public float Height;
+
+    public float GroundOffset;
+
     public int CatCapacity;
     public int BuildingType;
+
+    public string[] ModelAddresses;
 }
 [System.Serializable]
 public class CatInfoData : BaseData

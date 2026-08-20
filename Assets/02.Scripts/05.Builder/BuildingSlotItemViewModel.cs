@@ -22,12 +22,13 @@ public class BuildingSlotItemViewModel : ViewModelBase
     }
     private BuildingData _buildingData; 
     public event Action<BuildingData> OnBuildingSlotButtonClicked;
-    public void Initialize(BuildingData data,int currentGold) 
+    public void Initialize(BuildingData data) 
     {
         _buildingData = data;
         Cost = data.Cost;
         Name = data.Name;
-        RefreshCanBuild(currentGold);
+        var vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
+        RefreshCanBuild(vm.CurrentGold);
     }
     public void OnClickSlotViewButton() 
     {

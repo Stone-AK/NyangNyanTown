@@ -420,6 +420,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   _camera: {fileID: 1196302857}
   _moveSpeed: 10
+  _focusMoveDuration: 0.35
+  _focusTargetScreenOffset: {x: -150, y: 0}
   _zoomSpeed: 20
   _minZoom: 3
   _maxZoom: 10
@@ -961,7 +963,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 370331030339467684, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}

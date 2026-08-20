@@ -5,6 +5,7 @@ using UnityEngine;
 public struct PlacedBuildingData
 {
     public string InstanceId;
+    public string ModelAddress;
     public string BuildingID;
     public float RootX;
     public float Width;
@@ -58,7 +59,7 @@ public class MapManager : BaseManager<MapManager>
     {
         return Mathf.Round(worldPosX / GRID_WIDTH) * GRID_WIDTH;
     }
-    public void RegisterBuilding(BuildingData data, float rootX,string instanceId)
+    public void RegisterBuilding(BuildingData data, float rootX,string instanceId,string modeladdress)
     {
         if (_currentBuildingLDic.ContainsKey(instanceId))
         {
@@ -70,6 +71,7 @@ public class MapManager : BaseManager<MapManager>
         placedBuildingData.RootX = rootX;
         placedBuildingData.Width = data.Width;
         placedBuildingData.InstanceId = instanceId;
+        placedBuildingData.ModelAddress = modeladdress;
         _currentBuildingLDic.Add(instanceId,placedBuildingData);
     }
     public bool ModifyBuildingData(string instanceId, float rootX)

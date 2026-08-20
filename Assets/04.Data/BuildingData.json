@@ -3,80 +3,202 @@
     "Id": "Building_01_House",
     "Name": "House",
     "Cost": 10,
-    "ScaleX": 1,
-    "ScaleY": 1,
-    "Width": 1,
-    "CatCapacity": 1,
-    "BuildingType": 0
-  },
-  {
-    "Id": "Building_02_Shop",
-    "Name": "Shop",
-    "Cost": 15,
-    "ScaleX": 1,
-    "ScaleY": 2,
-    "Width": 1,
-    "CatCapacity": 3,
-    "BuildingType": 0
-  },
-  {
-    "Id": "Building_03_Museum",
-    "Name": "Museum",
-    "Cost": 20,
+    "Width": 2,
+    "Height": 3,
     "ScaleX": 2,
     "ScaleY": 2,
-    "Width": 2,
-    "CatCapacity": 5,
-    "BuildingType": 0
+    "GroundOffset": -1,
+    "CatCapacity": 1,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_House_Prefab_01",
+      "Building_House_Prefab_02",
+      "Building_House_Prefab_03",
+      "Building_House_Prefab_04"
+    ]
   },
   {
-    "Id": "Building_04_Fitness_Center",
-    "Name": "Fitness_Center",
-    "Cost": 30,
+    "Id": "Building_02_Cafe",
+    "Name": "Cafe",
+    "Cost": 50,
+    "Width": 3,
+    "Height": 4,
+    "ScaleX": 3,
+    "ScaleY": 3,
+    "GroundOffset": -1.5,
+    "CatCapacity": 2,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_CoffeeShop_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_03_Gym",
+    "Name": "Gym",
+    "Cost": 60,
+    "Width": 3,
+    "Height": 4,
+    "ScaleX": 3,
+    "ScaleY": 3,
+    "GroundOffset": -1.5,
+    "CatCapacity": 2,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Gym_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_04_Convenience_Store",
+    "Name": "Convenience_Store",
+    "Cost": 50,
+    "Width": 3,
+    "Height": 3,
     "ScaleX": 3,
     "ScaleY": 2,
-    "Width": 3,
-    "CatCapacity": 8,
-    "BuildingType": 0
+    "GroundOffset": -1,
+    "CatCapacity": 3,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Convenience_Store_Prefab_01",
+      "Building_Convenience_Store_Prefab_02",
+      "Building_Convenience_Store_Prefab_03"
+    ]
   },
   {
-    "Id": "Building_05_Theater",
-    "Name": "Theater",
-    "Cost": 50,
-    "ScaleX": 4,
-    "ScaleY": 3,
-    "Width": 4,
-    "CatCapacity": 15,
-    "BuildingType": 0
-  },
-  {
-    "Id": "Building_06_Department_Store",
-    "Name": "Department_Store",
-    "Cost": 100,
-    "ScaleX": 5,
-    "ScaleY": 6,
-    "Width": 5,
-    "CatCapacity": 40,
-    "BuildingType": 0
-  },
-  {
-    "Id": "Building_07_Spawner",
-    "Name": "Subway",
-    "Cost": 10,
-    "ScaleX": 1,
+    "Id": "Building_05_Drug_Store",
+    "Name": "Drug_Store",
+    "Cost": 1200,
+    "Width": 2,
+    "Height": 2,
+    "ScaleX": 2,
     "ScaleY": 1,
-    "Width": 1,
-    "CatCapacity": 0,
-    "BuildingType": 2
+    "GroundOffset": -0.5,
+    "CatCapacity": 4,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Drug_Store_Prefab_01"
+    ]
   },
   {
-    "Id": "Building_08_TownHall",
-    "Name": "TownHall",
-    "Cost": 0,
+    "Id": "Building_05_Hair_Shop",
+    "Name": "Hair_Shop",
+    "Cost": 1500,
+    "Width": 3,
+    "Height": 3,
+    "ScaleX": 3,
+    "ScaleY": 3,
+    "GroundOffset": -1.5,
+    "CatCapacity": 5,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Baber_Shop_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_06_Apartment",
+    "Name": "Apartment",
+    "Cost": 2000,
+    "Width": 4,
+    "Height": 5,
     "ScaleX": 4,
     "ScaleY": 4,
-    "Width": 4,
+    "GroundOffset": -2,
+    "CatCapacity": 8,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Apartment_Prefab_01",
+      "Building_Apartment_Prefab_02",
+      "Building_Apartment_Prefab_03"
+    ]
+  },
+  {
+    "Id": "Building_07_Repair_Shop",
+    "Name": "Repair_Shop",
+    "Cost": 2200,
+    "Width": 6,
+    "Height": 3,
+    "ScaleX": 6,
+    "ScaleY": 2,
+    "GroundOffset": -1,
+    "CatCapacity": 10,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Repair_Shop_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_08_Cinema",
+    "Name": "Cinema",
+    "Cost": 5000,
+    "Width": 10,
+    "Height": 5,
+    "ScaleX": 10,
+    "ScaleY": 3,
+    "GroundOffset": -1.5,
+    "CatCapacity": 20,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Cinema_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_09_Mall",
+    "Name": "Mall",
+    "Cost": 6500,
+    "Width": 12,
+    "Height": 3,
+    "ScaleX": 11,
+    "ScaleY": 1,
+    "GroundOffset": 0,
+    "CatCapacity": 25,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Mall_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_10_Police_Office",
+    "Name": "Police_Office",
+    "Cost": 7000,
+    "Width": 7,
+    "Height": 3,
+    "ScaleX": 7,
+    "ScaleY": 2,
+    "GroundOffset": -1,
+    "CatCapacity": 10,
+    "BuildingType": 0,
+    "ModelAddresses": [
+      "Building_Police_Office_Prefab_01"
+    ]
+  },
+  {
+    "Id": "Building_11_Spawner",
+    "Name": "Subway",
+    "Cost": 10,
+    "Width": 1,
+    "Height": 1,
+    "ScaleX": 1,
+    "ScaleY": 1,
+    "GroundOffset": 0,
     "CatCapacity": 0,
-    "BuildingType": 1
+    "BuildingType": 2,
+    "ModelAddresses": null
+  },
+  {
+    "Id": "Building_12_TownHall",
+    "Name": "TownHall",
+    "Cost": 0,
+    "Width": 6,
+    "Height": 6,
+    "ScaleX": 6,
+    "ScaleY": 4,
+    "GroundOffset": -2,
+    "CatCapacity": 0,
+    "BuildingType": 1,
+    "ModelAddresses": [
+      "Building_TownHall_Prefab_01",
+      "Building_TownHall_Prefab_02",
+      "Building_TownHall_Prefab_03"
+    ]
   }
 ]
