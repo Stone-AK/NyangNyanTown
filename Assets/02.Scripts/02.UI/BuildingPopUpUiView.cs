@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildingPopUpUIView : BaseUI
@@ -12,8 +13,6 @@ public class BuildingPopUpUIView : BaseUI
     private Building _building;
     private void OnEnable()
     {
-        
-
         if (Button_Move != null)
         {
             Button_Move.onClick.AddListener(OnClickMoveButton);
@@ -34,6 +33,8 @@ public class BuildingPopUpUIView : BaseUI
         {
             Button_BuyLand.onClick.AddListener(OnClickBuyLandButton);
         }
+
+        
     }
     private void OnDisable()
     {
@@ -48,16 +49,21 @@ public class BuildingPopUpUIView : BaseUI
         gameObject.SetActive(true);
         Debug.Log($"{building._buildingData.Name},{building.InstanceId}");
         _building = building;
-        if (building._buildingData.BuildingType == (int)BuildingType.TownHall) 
+      
+        if (_building._buildingData.BuildingType == (int)BuildingType.TownHall)
         {
             TownHallContainer.gameObject.SetActive(true);
+        }
+        else 
+        {
+            TownHallContainer.gameObject.SetActive(false); 
         }
     }
     private void OnClickMoveButton() { GameManager.Instance.BuildManager.MoveBuilding(_building); gameObject.SetActive(false); }
     private void OnClickDestroyButton() { GameManager.Instance.BuildManager.DestroyBuilding(_building); gameObject.SetActive(false); }
-    private void OnClickExitButton() { gameObject.SetActive(false); }
+    private void OnClickExitButton() { GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
 
-    private void OnClickBuyLandButton() { GameManager.Instance.MapManager._lvm.LandLevelUp(); gameObject.SetActive(false); }
+    private void OnClickBuyLandButton() { GameManager.Instance.UIManager.OpenLandUpGradeUIAsync().Forget(); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
 }
 public class BuildingPopUpUIViewModel : ViewModelBase
 {

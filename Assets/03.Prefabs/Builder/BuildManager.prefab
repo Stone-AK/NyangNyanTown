@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 083c46eeb2fa76d44b75e08025bc9f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildManager
-  _previewBuildingPrefab: {fileID: 929048737933534321, guid: 365ebeeae53c28948a8b44e5637811e0, type: 3}
+  _previewBuildingPrefab: {fileID: 3219148305151678454, guid: db78cc0e3eaae3d4f8bacc8a57544429, type: 3}
   _realBuildingPrefab: {fileID: 2476168248220090656, guid: 3239f6df532d3cd41995aab57c21343c, type: 3}

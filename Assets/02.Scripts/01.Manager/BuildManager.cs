@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using System.Security;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -14,21 +15,23 @@ public class BuildManager : BaseManager<BuildManager>
 {
     [SerializeField] GameObject _previewBuildingPrefab;
     [SerializeField] GameObject _realBuildingPrefab;
-    PreviewBuilding _previewBuilding;
- 
+    private PreviewBuilding _previewBuilding;
+    private Building _currentBuilding;              //건설에 필요한 프리팹과 빌딩오브젝트
+
     private GameObject _currentPreviewBuilding;
     private GameObject _currentBuildingObject;
-    private Building _currentBuilding;
-    private BuildingData _currentPreviewBuildingData;
-    public int TotalGold { get; set; } = 1000;//임시
+    private BuildingData _currentPreviewBuildingData; 
+    private string _currentBuildingInstaceId = null;// 현재 건설중인 건물과 데이터
+
+    private GameObject _modelPrefab;
+    private string _modelAddress;                     //건물 모델에 필요한 요소들    
+
+    private Vector3 _worldPos;    
+    private float _currentGridX;                    //화면에 표시되는 좌표
     private const float GRUOND_Y = 1.5f;//임시 보정
 
-    private Vector3 _worldPos;
-    private bool _isBuilding = false;
-    private float _currentGridX ;
-
-    private BuildMode _currentBuildMode = BuildMode.None;
-    private string _currentBuildingInstaceId = null;
+    public bool IsBuilding { get; private set; } = false;
+    private BuildMode _currentBuildMode = BuildMode.None;//건설 정보    
 
     public event Action<int> OnTotalGoldChanged;
     public override UniTask InitializeAsync()
@@ -38,59 +41,96 @@ public class BuildManager : BaseManager<BuildManager>
    
     private void Update()
     {
-       
-
-        if (!_isBuilding)
+        if (!IsBuilding)
             return;
         UpdateMouseWorldPosition();
         UpdatePreview();
         HandleBuildInput();
-
-
     }
-    public void StartBuild(BuildingData data, BuildMode mode)//프리뷰 건물 생성후 초기화
+    public async UniTask StartBuild(BuildingData data, BuildMode mode)//프리뷰 건물 생성후 초기화
     {
-        Debug.Log("startbuildind 호출");
+        Debug.Log("StartBuild 호출");
 
-        if (_isBuilding)
+        if (IsBuilding)
         {
             return;
         }
 
-        _isBuilding = true;
+        IsBuilding = true;
+
         UpdateMouseWorldPosition();
 
         _currentPreviewBuildingData = data;
         _currentBuildMode = mode;
-        _currentPreviewBuilding = Instantiate(_previewBuildingPrefab, new Vector3(_worldPos.x, (_currentPreviewBuildingData.ScaleY / 2f)- GRUOND_Y, 0), Quaternion.identity);
-       
-        Debug.Log($"프리뷰{data.ScaleY / 2f}");
-        _previewBuilding= _currentPreviewBuilding.GetComponent<PreviewBuilding>();
-        _previewBuilding.Initialize(data);
-        
-       
+
+        Vector3 buildPosition = new Vector3(_worldPos.x, (data.ScaleY / 2f) - GRUOND_Y, 0f );
+
+        // 1. 프리뷰 Root 생성
+        _currentPreviewBuilding = Instantiate(_previewBuildingPrefab,buildPosition, Quaternion.identity);
+
+        _previewBuilding = _currentPreviewBuilding.GetComponent<PreviewBuilding>();
+        if (_currentBuildMode != BuildMode.Move)
+        {
+            SelectRandomModelAddress();
+        }
+        await LoadBuildingModel();
+        CreatePreviewModel();
+    }
+    private async UniTask LoadBuildingModel()
+    {
+        // 3. 외형 Prefab 로드
+        _modelPrefab = await GameManager.Instance.ResourceManager.LoadAssetAsync<GameObject>(_modelAddress);
+
+        if (_modelPrefab == null)
+        {
+            Debug.LogError($"건물 외형 로드 실패: {_modelAddress}");
+
+            EndBuild();
+            return;
+        }
+    }
+    private void SelectRandomModelAddress() 
+    {
+        int randomIndex = UnityEngine.Random.Range(0, _currentPreviewBuildingData.ModelAddresses.Length);
+
+        _modelAddress = _currentPreviewBuildingData.ModelAddresses[randomIndex];
+    }
+    private void CreatePreviewModel()
+    {
+        GameObject model = Instantiate(_modelPrefab, _previewBuilding.transform );
+        model.transform.localPosition = new Vector3(0f, _currentPreviewBuildingData.GroundOffset, 0f);
+        _previewBuilding.Initialize(_currentPreviewBuildingData, model);
+    }
+    private void CreateRealModel()
+    {
+        GameObject model = Instantiate(_modelPrefab, _currentBuilding.transform);
+        model.transform.localPosition = new Vector3(0f, _currentPreviewBuildingData.GroundOffset, 0f);
     }
     private void EndBuild() // 프리뷰 건물 삭제
     {
-        _isBuilding = false;
+        IsBuilding = false;
         _currentBuildMode = BuildMode.None;
         _currentBuildingInstaceId = null;
 
+        GameManager.Instance.ResourceManager.ReleaseAsset(_modelAddress);
         Destroy(_currentPreviewBuilding);
         _currentPreviewBuilding = null;
         _previewBuilding = null;
     }
-    private void ConfirmBuilding(Vector3 buildPositon) //건물설치
+    private async UniTask ConfirmBuilding(Vector3 buildPositon) //건물설치
     {
         if (!HasEnoughGold())
             return;
         if (_currentBuildMode == BuildMode.Build)
         {
-            AddGold(-(_currentPreviewBuildingData.Cost));
+            GameManager.Instance.EconomyService_DH.RemoveCurrentGold((_currentPreviewBuildingData.Cost)); 
+            //AddGold(-(_currentPreviewBuildingData.Cost));
             EndBuild();
             _currentBuildingObject = Instantiate(_realBuildingPrefab, buildPositon, Quaternion.identity);
             _currentBuilding = _currentBuildingObject.GetComponent<Building>();
-            _currentBuilding.InitaizeData(buildPositon.x, _currentPreviewBuildingData);
+            await LoadBuildingModel();
+            CreateRealModel();
+            _currentBuilding.InitaizeData(buildPositon.x, _currentPreviewBuildingData,_modelAddress);
         }
         else if (_currentBuildMode == BuildMode.Move) 
         {
@@ -100,6 +140,7 @@ public class BuildManager : BaseManager<BuildManager>
         _currentBuildingObject = null;
         _currentBuilding = null;
     }
+    
     private void OnGridChanged() //프리뷰 건물을 옮길때 마다
     {
         if (_currentPreviewBuilding != null)
@@ -109,30 +150,33 @@ public class BuildManager : BaseManager<BuildManager>
         bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId);
         _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());
     }
-    private void AddGold(int addedGold) 
-    {
-        TotalGold += addedGold;
-        OnTotalGoldChanged?.Invoke(TotalGold);
-    }
     private bool HasEnoughGold() 
     {
         if (_currentBuildMode == BuildMode.Move)
             return true;
         
-        return _currentPreviewBuildingData.Cost <= TotalGold; 
-    }
-    public void DestroyBuilding(Building building) 
-    {
-        if (building == null)
-            return;
+        var vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
 
+        return _currentPreviewBuildingData.Cost <= vm.CurrentGold; 
+    }
+    public void DestroyBuilding(Building building)
+    {
+        if (building == null) { 
+        return;
+        }
+
+        _modelAddress = building.ModelAddress;
+        building.RemoveBuilding();
+        
         GameManager.Instance.MapManager.DeleteBuilding(building.InstanceId);
+        GameManager.Instance.ResourceManager.ReleaseAsset(_modelAddress);
         Destroy(building.gameObject);
     }
     public void MoveBuilding(Building building) 
     {
         _currentBuildingInstaceId = building.InstanceId;
         _currentBuilding = building;
+        _modelAddress = building.ModelAddress;
         StartBuild(building._buildingData,BuildMode.Move);
     }
     private void UpdateMouseWorldPosition() {
@@ -142,7 +186,7 @@ public class BuildManager : BaseManager<BuildManager>
     }
     private void UpdatePreview()
     {
-        if (!_isBuilding)
+        if (!IsBuilding)
             return;
 
         float newGridX = GameManager.Instance.MapManager.GetGridX(_worldPos.x);
