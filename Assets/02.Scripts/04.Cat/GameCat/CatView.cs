@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
@@ -61,6 +60,9 @@ public class CatView : MonoBehaviour
 
     public void InitCatView(CatViewModel catViewModel)
     {
+        if(catViewModel == null) 
+            return;
+
         _catViewModel = catViewModel;
         BindSlotViewMdoel(_catViewModel);
         SettingMaterial(catViewModel);
@@ -69,47 +71,131 @@ public class CatView : MonoBehaviour
 
     private async void SettingMaterial(CatViewModel catViewModel)
     {
-        try
+        // ID가 특수 고양이일 경우 ViewModel에서 BodyAddressableNum을 1000으로 설정
+        if(catViewModel.CatBodyAddressableNum == 1000)
         {
-            Material bodyMaterial =
+            SettingSpecialMaterial(catViewModel);
+        }
+        else
+        {
+            try
+            {
+                Material bodyMaterial =
+                await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                    GameManager.Instance.CatManager.CatBodySkinDatas[catViewModel.CatBodyAddressableNum].AddressableString,
+                    destroyCancellationToken);
+
+                if (bodyMaterial != null)
+                {
+                    _bodyRenderer.sharedMaterial = bodyMaterial;
+                }
+
+                Material eyeMaterial =
+                    await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                        GameManager.Instance.CatManager.CatEyeSkinDatas[catViewModel.CatEyeAddressableNum].AddressableString,
+                        destroyCancellationToken);
+
+                if (eyeMaterial != null)
+                {
+                    _eyeRenderer.sharedMaterial = eyeMaterial;
+                }
+
+                Material mouthMaterial =
+                    await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                        GameManager.Instance.CatManager.CatMouthSkinDatas[catViewModel.CatMouthAddressableNum].AddressableString,
+                        destroyCancellationToken);
+
+                if (mouthMaterial != null)
+                {
+                    _mouthRenderer.sharedMaterial = mouthMaterial;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+    }
+
+    private async void SettingSpecialMaterial(CatViewModel catViewModel)
+    {
+        string specialCatId = catViewModel.CatId;
+        GameManager.Instance.DataManager.TryGetData<CatInfoData>(specialCatId, out var catData);
+
+        Material bodyMaterial;
+
+        if (catData.SpecialCatBody == "None")
+        {
+            bodyMaterial =
             await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
-                GameManager.Instance.CatManager.CatBodySkinDatas[catViewModel.CatBodyAddressableNum].AddressableString,
-                destroyCancellationToken);
+                "Cat/Material/Body_01", destroyCancellationToken);
 
             if (bodyMaterial != null)
             {
                 _bodyRenderer.sharedMaterial = bodyMaterial;
             }
+        }
+        else
+        {
+            bodyMaterial = await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                    catData.SpecialCatBody, destroyCancellationToken);
 
-            Material eyeMaterial =
-                await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
-                    GameManager.Instance.CatManager.CatEyeSkinDatas[catViewModel.CatEyeAddressableNum].AddressableString,
-                    destroyCancellationToken);
+            if (bodyMaterial != null)
+            {
+                _bodyRenderer.sharedMaterial = bodyMaterial;
+            }
+        }
+
+        Material eyeMaterial;
+
+        if (catData.SpecialCatBody == "None")
+        {
+            eyeMaterial =
+            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                "Cat/Material/Eye_01", destroyCancellationToken);
 
             if (eyeMaterial != null)
             {
-                _eyeRenderer.sharedMaterial = eyeMaterial;
+                _bodyRenderer.sharedMaterial = eyeMaterial;
             }
+        }
+        else
+        {
+            eyeMaterial = await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                    catData.SpecialCatBody, destroyCancellationToken);
 
-            Material mouthMaterial =
-                await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
-                    GameManager.Instance.CatManager.CatMouthSkinDatas[catViewModel.CatMouthAddressableNum].AddressableString,
-                    destroyCancellationToken);
+            if (eyeMaterial != null)
+            {
+                _bodyRenderer.sharedMaterial = eyeMaterial;
+            }
+        }
+
+        Material mouthMaterial;
+
+        if (catData.SpecialCatBody == "None")
+        {
+            mouthMaterial =
+            await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                "Cat/Material/Mouth_01", destroyCancellationToken);
 
             if (mouthMaterial != null)
             {
-                _mouthRenderer.sharedMaterial = mouthMaterial;
+                _bodyRenderer.sharedMaterial = mouthMaterial;
             }
         }
-        catch (OperationCanceledException)
+        else
         {
+            mouthMaterial = await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
+                    catData.SpecialCatBody, destroyCancellationToken);
+
+            if (mouthMaterial != null)
+            {
+                _bodyRenderer.sharedMaterial = mouthMaterial;
+            }
         }
     }
 
     private void CatDetectTarget()
     {
-        // TODO(안우재/08.13) : MapManager의 _currentBuildingList<PlacedBuildingData>에서 Building과 Spawner검사해서
-        // 건물 갈때와 철수 할때를 구분해서 해당 위치로 가도록 설정 필요
         if (GameManager.Instance.MapManager._currentBuildingLDic == null)
             return;
 
@@ -278,7 +364,6 @@ public class CatView : MonoBehaviour
             }
             else if (_catViewModel.CatState == CatState.SearchTarget)
             {
-                // TODO(안우재/08.10) : 가까운 Spawner 오브젝트를 찾고, _targetTransform에 위치 설정
                 SearchDespawnPoint();
             }
         }

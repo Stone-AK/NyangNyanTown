@@ -14,7 +14,6 @@ public class CatViewModel : ViewModelBase
     private float _minSpeed = 1f;
     private float _maxSpeed = 5f;
 
-    // TODO(안우재/08.06) : 추후 데이터 부분 추가를 위해 대략적인 변수 선언
     private float _catSpeed;
     private string _catId;
     private int _catBodyAddressableNum;
@@ -67,5 +66,14 @@ public class CatViewModel : ViewModelBase
 
         if (GameManager.Instance.DataManager.TryGetDataTable<CatMouthSkinData>(out var mouthSkinDataTable))
             _catMouthAddressableNum = GameUtil.Random.Next(mouthSkinDataTable.Count);
+    }
+
+    public void InitSpecialCatStat(string catId)
+    {
+        _catId = catId;
+        _catState = CatState.MoveToTarget;
+        _catSpeed = (float)(GameUtil.Random.NextDouble() * (_maxSpeed - _minSpeed) + _minSpeed);
+
+        _catBodyAddressableNum = 1000;
     }
 }

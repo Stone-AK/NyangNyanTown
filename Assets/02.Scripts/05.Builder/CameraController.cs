@@ -103,6 +103,14 @@ public class CameraController : MonoBehaviour
             {
                 Debug.Log("고양이 클릭");
                 GameManager.Instance.UIManager.OpenCatInfoPopupAsync(catView).Forget();
+                if(GameManager.Instance.EconomyService_DH.CheckClickCatIsNew(catView.CatViewModelProp.CatId))
+                {
+                    Debug.Log("새로운 고양이 습득");
+                }
+                else
+                {
+                    Debug.Log("이미 습득한 고양이");
+                }
                 return;
             }
 

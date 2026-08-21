@@ -31,10 +31,13 @@ public class CatInfoData : BaseData
 {
     public string Name;
     public string Description;
-    //public string CatEffect;
-    //public float EffectValue;
+    public string CatEffect;
+    public float EffectValue;
     public string CatIconImgPath;
     public int CatAppearanceWeight;
+    public string SpecialCatBody;
+    public string SpecialCatEye;
+    public string SpecialCatMouth;
 }
 
 public class CatBodySkinData : BaseData
