@@ -84,9 +84,8 @@ public class CatManager : BaseManager<CatManager>
             return catViewModel;
         }
 
-        // TODO(08.15) 안우재 : 특별 고양이 스탯 지정 부분 추가 할당 필요 아래는 임시지정
-        catViewModel.InitRandomCatStat();
-        // ============================================================
+        catViewModel.InitSpecialCatStat(spawnedCatId);
+
         return catViewModel;
     }
 

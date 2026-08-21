@@ -1,29 +1,38 @@
 [
   {
     "Id": "Cat_Normal_01",
-    "Name": "일반 고양이",
-    "Description": "일반 고양이다",
+    "Name": "일반 고냥이",
+    "Description": "일반 고냥이다",
     "CatEffect": "Multiplies",
     "EffectValue": 0,
     "CatIconImgPath": "UI/CatIcon/TestIcon",
-    "CatAppearanceWeight": 1000
+    "CatAppearanceWeight": 10,
+    "SpecialCatBody": "None",
+    "SpecialCatEye": "None",
+    "SpecialCatMouth": "None"
   },
   {
     "Id": "Cat_Special_01",
-    "Name": "특별 고양이1",
-    "Description": "특별 고양이 1",
+    "Name": "황금 고냥이",
+    "Description": "황금 고냥이다.\n이 고냥이는 금으로 되어 있으며 보았다는 경험만으로 돈의 핵심을 깨닫게 해준다.",
     "CatEffect": "Multiplies",
     "EffectValue": 0.1,
-    "CatIconImgPath": "UI/CatIcon/TestIcon2",
-    "CatAppearanceWeight": 10
+    "CatIconImgPath": "UI/CatIcon/GoldCatIcon",
+    "CatAppearanceWeight": 1000,
+    "SpecialCatBody": "Cat_Material_Body_Gold",
+    "SpecialCatEye": "Cat_Material_Eye_Gold",
+    "SpecialCatMouth": "Cat_Material_Mouth_Gold"
   },
   {
     "Id": "Cat_Special_02",
-    "Name": "특별 고냥이2",
-    "Description": "특별 고냥이 2",
+    "Name": "주식 고냥이",
+    "Description": "주식을 하는 고냥이다.\n이 고냥이는 주식의 핵심을 깨달았다. 목격 사실만으로 돈을 추가로 벌 수 있는 방법을 깨닫는다.",
     "CatEffect": "Add",
     "EffectValue": 5,
-    "CatIconImgPath": "UI/CatIcon/TestIcon3",
-    "CatAppearanceWeight": 10
+    "CatIconImgPath": "UI/CatIcon/StockCatIcon",
+    "CatAppearanceWeight": 10,
+    "SpecialCatBody": "Cat_Material_Body_Stock",
+    "SpecialCatEye": "Cat_Material_Eye_Stock",
+    "SpecialCatMouth": "Cat_Material_Mouth_Stock"
   }
 ]

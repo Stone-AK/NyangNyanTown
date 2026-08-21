@@ -29,6 +29,9 @@ public class CatInfoData : BaseData
     public float EffectValue;
     public string CatIconImgPath;
     public int CatAppearanceWeight;
+    public string SpecialCatBody;
+    public string SpecialCatEye;
+    public string SpecialCatMouth;
 }
 
 public class CatBodySkinData : BaseData
