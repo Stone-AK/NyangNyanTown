@@ -20,7 +20,8 @@ public enum UIType
     CatEncyclopediaPopUp,
     LandUpGradeUI,
     OnClickCatInfoPopUp,
-    MainMenuUI
+    MainMenuUI,
+    BuildUI
 }
 
 public class BaseUI : MonoBehaviour
@@ -92,6 +93,17 @@ public static class UIManagerExtension
     {
         uiManager.Close(UIType.MainMenuUI);
     }
+
+    public static async UniTask OpenBuildUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    {
+        await uiManager.OpenMainRootAsync(UIType.BuildUI, cancellationToken);
+    }
+
+    public static void CloseBuildUI(this UIManager uiManager)
+    {
+        uiManager.Close(UIType.BuildUI);
+    }
+
 
     //UI를 생성하고 View를 가져오고 싶을 때 사용
     private static T GetView<T>(BaseUI baseUI, UIType uiType) where T : BaseUI

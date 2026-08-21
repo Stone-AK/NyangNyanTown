@@ -1,4 +1,6 @@
-﻿using System.Buffers.Text;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Buffers.Text;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using TMPro;
@@ -17,13 +19,18 @@ public class MainUIView : BaseUI
     [SerializeField] private TMP_Text FishText;
     [SerializeField] private TMP_Text CatCountText;
 
-    private EconomyViewModel_DH _vm;
+    [SerializeField] private TMP_Text GoldChangeText;
+    [SerializeField] private TMP_Text FishChangeText;
+    [SerializeField] private TMP_Text CatCountChangeText;
 
+    private EconomyViewModel_DH _vm;
+    private bool _isBuildUISet = false;
+
+    private float _onChangePropTime = 1.5f;
     public void BindViewModel(EconomyViewModel_DH vm)
     {
         _vm = vm;
         _vm.PropertyChanged += OnPropChagned_View;
-        _vm.InvokeOnceOnInit();
 
     }
     private void OnEnable()
@@ -80,9 +87,18 @@ public class MainUIView : BaseUI
 
     
 
-    private void OnClickBuildingButton()
+    private async void OnClickBuildingButton()
     {
-        Debug.Log("Button_Building");
+        if (_isBuildUISet == false)
+        {
+            await GameManager.Instance.UIManager.OpenBuildUIAsync();
+            _isBuildUISet = !_isBuildUISet;
+        }
+        else
+        {
+            GameManager.Instance.UIManager.CloseBuildUI();
+            _isBuildUISet = !_isBuildUISet;
+        }
     }
     private async void OnClickCatBookButton()
     {
@@ -111,22 +127,57 @@ public class MainUIView : BaseUI
         {
             case nameof(EconomyViewModel_DH.CurrentGold):
                 {
+                    OnChange(GoldChangeText, GoldText, _vm.CurrentGold).Forget();
+
                     GoldText.text = _vm.CurrentGold.ToString();
                     break;
                 }
             case nameof(EconomyViewModel_DH.CurrentFish):
                 {
+                    OnChange(FishChangeText, FishText, _vm.CurrentFish).Forget();
+
                     FishText.text = _vm.CurrentFish.ToString();
+
                     break;
                 }
             case nameof(EconomyViewModel_DH.CatCurrentCount):
                 {
+                    OnChange(CatCountChangeText, CatCountText, _vm.CatCurrentCount).Forget();
+
                     CatCountText.text = $"{_vm.CatCurrentCount.ToString()}";
+
                     break;
                 }
            
 
 
         }
+    }
+
+    private async UniTaskVoid OnChange(TMP_Text changedText, TMP_Text beforeText, int Value)
+    {
+
+        if (int.TryParse(beforeText.text, out int beforeTextValue))
+        {
+            int result = Value - beforeTextValue;
+            if(result > 0)
+            {
+                changedText.text = ("+")+result.ToString();
+            }
+            else
+            {
+                changedText.text = result.ToString();
+            }
+
+        }
+
+        if (!changedText.gameObject.activeInHierarchy) 
+        {
+            changedText.gameObject.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromSeconds(_onChangePropTime));
+            changedText.gameObject.SetActive(false);
+        }
+        
+
     }
 }
