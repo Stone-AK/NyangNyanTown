@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks.Triggers;
+using Cysharp.Threading.Tasks.Triggers;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
