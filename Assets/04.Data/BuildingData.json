@@ -1,13 +1,12 @@
 [
   {
-    "Id": "Building_01_House",
     "Name": "House",
     "Cost": 10,
-    "Width": 2,
-    "Height": 3,
     "ScaleX": 2,
     "ScaleY": 2,
-    "GroundOffset": -1,
+    "Width": 10.5,
+    "Height": 3.0,
+    "GroundOffset": -1.0,
     "CatCapacity": 1,
     "BuildingType": 0,
     "ModelAddresses": [
@@ -15,192 +14,193 @@
       "Building_House_Prefab_02",
       "Building_House_Prefab_03",
       "Building_House_Prefab_04"
-    ]
+    ],
+    "Id": "Building_01_House"
   },
   {
-    "Id": "Building_02_Cafe",
     "Name": "Cafe",
     "Cost": 50,
-    "Width": 3,
-    "Height": 4,
     "ScaleX": 3,
     "ScaleY": 3,
+    "Width": 10.5,
+    "Height": 4.0,
     "GroundOffset": -1.5,
     "CatCapacity": 2,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_CoffeeShop_Prefab_01"
-    ]
+    ],
+    "Id": "Building_02_Cafe"
   },
   {
-    "Id": "Building_03_Gym",
     "Name": "Gym",
     "Cost": 60,
-    "Width": 3,
-    "Height": 4,
     "ScaleX": 3,
     "ScaleY": 3,
+    "Width": 10.5,
+    "Height": 4.0,
     "GroundOffset": -1.5,
     "CatCapacity": 2,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Gym_Prefab_01"
-    ]
+    ],
+    "Id": "Building_03_Gym"
   },
   {
-    "Id": "Building_04_Convenience_Store",
     "Name": "Convenience_Store",
     "Cost": 50,
-    "Width": 3,
-    "Height": 3,
     "ScaleX": 3,
     "ScaleY": 2,
-    "GroundOffset": -1,
+    "Width": 10.8,
+    "Height": 3.0,
+    "GroundOffset": -1.0,
     "CatCapacity": 3,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Convenience_Store_Prefab_01",
       "Building_Convenience_Store_Prefab_02",
       "Building_Convenience_Store_Prefab_03"
-    ]
+    ],
+    "Id": "Building_04_Convenience_Store"
   },
   {
-    "Id": "Building_05_Drug_Store",
     "Name": "Drug_Store",
     "Cost": 1200,
-    "Width": 2,
-    "Height": 2,
     "ScaleX": 2,
     "ScaleY": 1,
+    "Width": 11.0,
+    "Height": 2.0,
     "GroundOffset": -0.5,
     "CatCapacity": 4,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Drug_Store_Prefab_01"
-    ]
+    ],
+    "Id": "Building_05_Drug_Store"
   },
   {
-    "Id": "Building_06_Hair_Shop",
     "Name": "Hair_Shop",
     "Cost": 1500,
-    "Width": 3,
-    "Height": 3,
     "ScaleX": 3,
     "ScaleY": 3,
+    "Width": 10.4,
+    "Height": 3.0,
     "GroundOffset": -1.5,
     "CatCapacity": 5,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Baber_Shop_Prefab_01"
-    ]
+    ],
+    "Id": "Building_06_Hair_Shop"
   },
   {
-    "Id": "Building_07_Apartment",
     "Name": "Apartment",
     "Cost": 2000,
-    "Width": 4,
-    "Height": 5,
     "ScaleX": 4,
     "ScaleY": 4,
-    "GroundOffset": -2,
+    "Width": 11.5,
+    "Height": 5.0,
+    "GroundOffset": -2.0,
     "CatCapacity": 8,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Apartment_Prefab_01",
       "Building_Apartment_Prefab_02",
       "Building_Apartment_Prefab_03"
-    ]
+    ],
+    "Id": "Building_07_Apartment"
   },
   {
-    "Id": "Building_08_Repair_Shop",
     "Name": "Repair_Shop",
     "Cost": 2200,
-    "Width": 6,
-    "Height": 3,
     "ScaleX": 6,
     "ScaleY": 2,
-    "GroundOffset": -1,
+    "Width": 21.5,
+    "Height": 3.0,
+    "GroundOffset": -1.0,
     "CatCapacity": 10,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Repair_Shop_Prefab_01"
-    ]
+    ],
+    "Id": "Building_08_Repair_Shop"
   },
   {
-    "Id": "Building_09_Cinema",
     "Name": "Cinema",
     "Cost": 5000,
-    "Width": 10,
-    "Height": 5,
     "ScaleX": 10,
     "ScaleY": 3,
+    "Width": 31.5,
+    "Height": 5.0,
     "GroundOffset": -1.5,
     "CatCapacity": 20,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Cinema_Prefab_01"
-    ]
+    ],
+    "Id": "Building_09_Cinema"
   },
   {
-    "Id": "Building_10_Mall",
     "Name": "Mall",
     "Cost": 6500,
-    "Width": 12,
-    "Height": 3,
     "ScaleX": 11,
     "ScaleY": 1,
-    "GroundOffset": 0,
+    "Width": 25.0,
+    "Height": 3.0,
+    "GroundOffset": 0.0,
     "CatCapacity": 25,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Mall_Prefab_01"
-    ]
+    ],
+    "Id": "Building_10_Mall"
   },
   {
-    "Id": "Building_11_Police_Office",
     "Name": "Police_Office",
     "Cost": 7000,
-    "Width": 7,
-    "Height": 3,
     "ScaleX": 7,
     "ScaleY": 2,
-    "GroundOffset": -1,
+    "Width": 24.5,
+    "Height": 3.0,
+    "GroundOffset": -1.0,
     "CatCapacity": 10,
     "BuildingType": 0,
     "ModelAddresses": [
       "Building_Police_Office_Prefab_01"
-    ]
+    ],
+    "Id": "Building_11_Police_Office"
   },
   {
-    "Id": "Building_12_Spawner",
     "Name": "Subway",
     "Cost": 10,
-    "Width": 2,
-    "Height": 2,
     "ScaleX": 1,
     "ScaleY": 1,
+    "Width": 5.2,
+    "Height": 2.0,
     "GroundOffset": -0.5,
     "CatCapacity": 0,
     "BuildingType": 2,
     "ModelAddresses": [
       "Building_Spawner_Prefab_01"
-    ]
+    ],
+    "Id": "Building_12_Spawner"
   },
   {
-    "Id": "Building_13_TownHall",
     "Name": "TownHall",
     "Cost": 0,
-    "Width": 6,
-    "Height": 6,
     "ScaleX": 6,
     "ScaleY": 4,
-    "GroundOffset": -2,
+    "Width": 20.5,
+    "Height": 6.0,
+    "GroundOffset": -2.0,
     "CatCapacity": 0,
     "BuildingType": 1,
     "ModelAddresses": [
       "Building_TownHall_Prefab_01",
       "Building_TownHall_Prefab_02",
       "Building_TownHall_Prefab_03"
-    ]
+    ],
+    "Id": "Building_13_TownHall"
   }
 ]
