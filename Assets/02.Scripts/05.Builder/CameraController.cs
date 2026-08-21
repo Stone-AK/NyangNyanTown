@@ -26,6 +26,12 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _minZoom = 10f;
     [SerializeField] private float _maxZoom = 30f;
 
+    [Header("Layer Cull Settings")]
+    [SerializeField] private string _outsideLayerName = "Outside";
+    [SerializeField] private float _outsideLayerCullDistance = 15f;
+    private int _outsideLayerIndex = -1;
+
+
     // 현재 카메라가 실제로 비추고 있는 X 범위
     public float VisibleMinX { get; private set; } 
     public float VisibleMaxX { get; private set; }
@@ -53,13 +59,19 @@ public class CameraController : MonoBehaviour
 
         if (_camera == null)
             _camera = Camera.main;
-       
+
+        _outsideLayerIndex = LayerMask.NameToLayer(_outsideLayerName);
+        if (_outsideLayerIndex == -1)
+        {
+            Debug.LogWarning($"[CameraController] '{_outsideLayerName}' 레이어가 프로젝트에 등록되어 있지 않습니다.");
+        }
     }
 
     private void Start()
     {
         UpdateMoveRange();
         UpdateVisibleRange();
+        UpdateOutsideLayerVisibility(_camera.orthographicSize);
     }
 
     private void Update()
@@ -143,6 +155,29 @@ public class CameraController : MonoBehaviour
         ClampCameraPosition();
 
         UpdateVisibleRange();
+        UpdateOutsideLayerVisibility(_camera.orthographicSize);
+    }
+
+    private void UpdateOutsideLayerVisibility(float currentZoom)
+    {
+        if (_camera == null)
+        {
+            Debug.LogError("[CameraController] Camera 참조가 없어 레이어 컬링을 갱신할 수 없습니다.");
+            return;
+        }
+
+        if (_outsideLayerIndex == -1)
+            return;
+
+        // 줌 거리(orthographicSize)가 기준값 이하일 때 레이어 끄기, 초과일 때 켜기
+        if (currentZoom <= _outsideLayerCullDistance)
+        {
+            _camera.cullingMask &= ~(1 << _outsideLayerIndex);
+        }
+        else
+        {
+            _camera.cullingMask |= (1 << _outsideLayerIndex);
+        }
     }
 
     private void UpdateMoveRange()
@@ -289,4 +324,6 @@ public class CameraController : MonoBehaviour
     {
         _focusTarget = null;
     }
+
+
 }
