@@ -20,36 +20,41 @@ public class EconomyService_DH
         InitCatEncyclopediaList();
     }
 
-public void InitCatEncyclopediaList()
-{
-    _catEncyclopediaList.Clear();
-
-        if (!GameManager.Instance.DataManager
-            .TryGetDataTable<CatInfoData>(out var dataTable))
-        {
-            return;
-        }
-
-    foreach (var data in dataTable)
+    public void InitCatEncyclopediaList()
     {
-        CatEncyclopediaViewModel catViewModel = new()
+        _catEncyclopediaList.Clear();
+
+            if (!GameManager.Instance.DataManager
+                .TryGetDataTable<CatInfoData>(out var dataTable))
+            {
+                return;
+            }
+
+        foreach (var data in dataTable)
         {
-            CatInfoDataId = data.Key
-        };
-        _catEncyclopediaList.Add(catViewModel);
+            CatEncyclopediaViewModel catViewModel = new()
+            {
+                CatInfoDataId = data.Key
+            };
+            _catEncyclopediaList.Add(catViewModel.CatInfoDataId, catViewModel);
+        }
     }
-}
 
-public void SetCatEncyclopediaList(
-    IEnumerable<CatEncyclopediaViewModel> catList)
-{
-    _catEncyclopediaList.Clear();
+    public void SetCatEncyclopediaList(IEnumerable<CatEncyclopediaViewModel> catList)
+    {
+            _catEncyclopediaList.Clear();
 
-    if (catList == null)
-        return;
+            if (catList == null)
+                return;
 
-    _catEncyclopediaList.AddRange(catList);
-}
+            foreach (var catViewModel in catList)
+            {
+                if (catViewModel == null)
+                    continue;
+
+                _catEncyclopediaList[catViewModel.CatInfoDataId] = catViewModel;
+            }
+    }
 
 
     public EconomyViewModel_DH GetEconomyViewModel()
