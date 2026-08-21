@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 
 
 public class EconomyService_DH
@@ -26,11 +24,11 @@ public class EconomyService_DH
     {
         _catEncyclopediaList.Clear();
 
-        if (!GameManager.Instance.DataManager
-            .TryGetDataTable<CatInfoData>(out var dataTable))
-        {
-            return;
-        }
+            if (!GameManager.Instance.DataManager
+                .TryGetDataTable<CatInfoData>(out var dataTable))
+            {
+                return;
+            }
 
         foreach (var data in dataTable)
         {
@@ -40,6 +38,22 @@ public class EconomyService_DH
             };
             _catEncyclopediaList.Add(catViewModel.CatInfoDataId, catViewModel);
         }
+    }
+
+    public void SetCatEncyclopediaList(IEnumerable<CatEncyclopediaViewModel> catList)
+    {
+            _catEncyclopediaList.Clear();
+
+            if (catList == null)
+                return;
+
+            foreach (var catViewModel in catList)
+            {
+                if (catViewModel == null)
+                    continue;
+
+                _catEncyclopediaList[catViewModel.CatInfoDataId] = catViewModel;
+            }
     }
 
 

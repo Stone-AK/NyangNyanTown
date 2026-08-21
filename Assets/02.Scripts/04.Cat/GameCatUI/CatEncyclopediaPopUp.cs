@@ -82,10 +82,14 @@ public class CatEncyclopediaPopUp : BaseUI
 
         if (textCatViewModel.IsCollected == false)
         {
+            CollectImage.gameObject.SetActive(false);
+
             CatNameText.text = "???";
             CatDescriptionText.text = "수집되지 않았습니다.";
             return;
         }
+
+        CollectImage.gameObject.SetActive(true);
 
         if (GameManager.Instance.DataManager.TryGetData(dataId, out CatInfoData catInfoData))
         {
