@@ -31,9 +31,8 @@ public class BuildManager : BaseManager<BuildManager>
     private const float GRUOND_Y = 1.5f;//임시 보정
 
     public bool IsBuilding { get; private set; } = false;
-    private BuildMode _currentBuildMode = BuildMode.None;//건설 정보    
-
-    public event Action<int> OnTotalGoldChanged;
+    private BuildMode _currentBuildMode = BuildMode.None;//건설 정보  
+  
     public override UniTask InitializeAsync()
     {
         return UniTask.CompletedTask;
@@ -177,7 +176,7 @@ public class BuildManager : BaseManager<BuildManager>
         _currentBuildingInstaceId = building.InstanceId;
         _currentBuilding = building;
         _modelAddress = building.ModelAddress;
-        StartBuild(building._buildingData,BuildMode.Move);
+        StartBuild(building._buildingData,BuildMode.Move).Forget();
     }
     private void UpdateMouseWorldPosition() {
         Vector2 mouseScreen = Mouse.current.position.ReadValue();
