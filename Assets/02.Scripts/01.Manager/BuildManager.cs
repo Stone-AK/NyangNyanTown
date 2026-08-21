@@ -45,7 +45,7 @@ public class BuildManager : BaseManager<BuildManager>
             return;
         UpdateMouseWorldPosition();
         UpdatePreview();
-        HandleBuildInput();
+        //HandleBuildInput();
     }
     public async UniTask StartBuild(BuildingData data, BuildMode mode)//프리뷰 건물 생성후 초기화
     {
@@ -200,28 +200,43 @@ public class BuildManager : BaseManager<BuildManager>
 
         OnGridChanged();
     }
-    private void HandleBuildInput()
+    //private void HandleBuildInput()
+    //{
+
+    //    if (Mouse.current.leftButton.wasPressedThisFrame)
+    //    {
+    //        if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
+    //            return;
+
+    //        if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
+    //        {
+    //            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f));
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("건설 불가능");
+    //        }
+    //        return;
+    //    }
+
+    //    if (Mouse.current.rightButton.wasPressedThisFrame)
+    //    {
+    //        EndBuild();
+    //    }
+    //}
+    public void PressLeftMouseButtonToConfirmBuild() 
     {
-       
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        { 
-            if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
-            return;
-
-            if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
-            {
-                ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f));
-            }
-            else
-            {
-                Debug.Log("건설 불가능");
-            }
-            return;
-        }
-
-        if (Mouse.current.rightButton.wasPressedThisFrame)
+        if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
         {
-            EndBuild();
+            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f)).Forget();
         }
+        else
+        {
+            Debug.Log("건설 불가능");
+        }
+    }
+    public void PressRightMouseButtonCancelBuild() 
+    {
+        EndBuild();
     }
 }

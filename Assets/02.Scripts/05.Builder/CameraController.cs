@@ -76,8 +76,16 @@ public class CameraController : MonoBehaviour
         }
         HandleDrag();
         HandleZoom();
-        TouchObject();
+        
         FollowFocusTargetOnUpdate();
+        if (GameManager.Instance.BuildManager.IsBuilding)
+        {
+            HandleBuilding();
+        }
+        else 
+        {
+            TouchObject();
+        }
     }
     private void TouchObject() {
         if (Mouse.current == null)
@@ -288,5 +296,20 @@ public class CameraController : MonoBehaviour
     public void UnassignedFollowingTarget()
     {
         _focusTarget = null;
+    }
+    private void HandleBuilding() 
+    {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
+                return;
+            GameManager.Instance.BuildManager.PressLeftMouseButtonToConfirmBuild();
+         
+        }
+
+        if (Mouse.current.rightButton.wasPressedThisFrame)
+        {
+            GameManager.Instance.BuildManager.PressRightMouseButtonCancelBuild();
+        }
     }
 }
