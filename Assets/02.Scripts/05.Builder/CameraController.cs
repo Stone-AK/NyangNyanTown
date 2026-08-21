@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,13 +18,13 @@ public class CameraController : MonoBehaviour
     [Header("Move Range")]
     [SerializeField] private const float MOVE_MIN_Y = -1f;
     [SerializeField] private const float MOVE_MAX_Y = 3f;
-    [SerializeField] private const float DEFAULT_MOVE_MIN_X = -20f;
-    [SerializeField] private const float DEFAULT_MOVE_MAX_X = 20f;
+    [SerializeField] private const float DEFAULT_MOVE_MIN_X = -50f;
+    [SerializeField] private const float DEFAULT_MOVE_MAX_X = 50f;
 
     [Header("Zoom")]
     [SerializeField] private float _zoomSpeed = 20f;
-    [SerializeField] private float _minZoom = 3f;
-    [SerializeField] private float _maxZoom = 10f;
+    [SerializeField] private float _minZoom = 10f;
+    [SerializeField] private float _maxZoom = 30f;
 
     // 현재 카메라가 실제로 비추고 있는 X 범위
     public float VisibleMinX { get; private set; } 
@@ -231,7 +231,7 @@ public class CameraController : MonoBehaviour
     }
     private void AddCameraRange(int landLv) 
     {
-        float boundFactor = landLv * 10f;
+        float boundFactor = landLv * 25f;
 
         Vector2 bounds = new Vector2(DEFAULT_MOVE_MIN_X - boundFactor, DEFAULT_MOVE_MAX_X + boundFactor);
 

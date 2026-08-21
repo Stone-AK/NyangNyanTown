@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +7,14 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     [SerializeField] private BoxCollider _boxCollider;
+    [SerializeField] private MeshRenderer _mesh;
+
+
+    [Header("Gizmo Settings")]
+    [SerializeField] private bool _showGizmo = true;
+    [SerializeField] private Color _gizmoBoxColor = new Color(1f, 0f, 0f, 0.3f);
+    [SerializeField] private Color _gizmoWireColor = Color.red;
+
 
     public BuildingData _buildingData;   
     private Transform _entrancePoint;
@@ -193,5 +201,36 @@ public class Building : MonoBehaviour
     {
         return (float)_availableCatPoints.Count / _allCatPoints.Count;
     }
-    
+
+
+
+    /// <summary>
+    /// BuildingData의 Width와 Height(실제 충돌/배치 판정 크기)를 감지하여 빨간색 상자 기즈모를 그립니다.
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        if (!_showGizmo) return;
+        // BuildingData가 없으면 실제 판정 수치를 알 수 없으므로 방어 처리
+        if (_buildingData == null)
+        {
+            if (_boxCollider != null)
+            {
+                Gizmos.color = _gizmoWireColor;
+                Gizmos.DrawWireCube(transform.TransformPoint(_boxCollider.center), _boxCollider.size);
+            }
+            return;
+        }
+        // 실질적인 충돌/배치 판정 크기 (Width, Height)
+        Vector3 size = new Vector3(_buildingData.Width, _buildingData.Height, 1f);
+        Vector3 center = transform.position;
+        if (_boxCollider != null)
+        {
+            center = transform.TransformPoint(_boxCollider.center);
+        }
+        // 빨간색 반투명 상자 + 외곽 테두리 렌더링
+        Gizmos.color = _gizmoBoxColor;
+        Gizmos.DrawCube(center, size);
+        Gizmos.color = _gizmoWireColor;
+        Gizmos.DrawWireCube(center, size);
+    }
 }
