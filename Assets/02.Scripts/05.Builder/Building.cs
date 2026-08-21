@@ -6,16 +6,12 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
-    //public BuildingData _buildingData;
-    //private Renderer _renderer;
+    [SerializeField] private BoxCollider _boxCollider;
 
     public BuildingData _buildingData;   
-    [SerializeField] private MeshFilter _meshFilter;
-    [SerializeField] private Transform _visual;
     private Transform _entrancePoint;
-
-    //private string _instanceId;
     public string InstanceId { get; private set; }
+    public string ModelAddress { get; private set; }
     // 현재 비어 있는 입주 자리
     private Queue<Transform> _availableCatPoints = new Queue<Transform>();
     // 생성된 모든 입주 자리
@@ -23,27 +19,34 @@ public class Building : MonoBehaviour
 
     private const float CELL_SIZE = 1f;
     
-    public void InitaizeData(float rootX, BuildingData data) 
+    public void InitaizeData(float rootX, BuildingData data ,string modelAddress) 
     {
        // _renderer = GetComponentInChildren<Renderer>();
         _buildingData = data;
         InstanceId = Guid.NewGuid().ToString();
+        ModelAddress = modelAddress;
 
-        GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId);//추후에 빌딩 데이터가 생기면 매니저에서 등록
+        GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId, modelAddress);
+        GameManager.Instance.EconomyService_DH.AddCatCurrentCount(data.CatCapacity);
+
 
         Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
-        _visual.localScale = scale;//건물 매쉬 조절
+        _boxCollider.size = scale;
+        //_visual.localScale = scale;//건물 매쉬 조절
 
         CreateCatPoints(scale);
         CreateEntrancePoint(scale);
         SetBuildType(_buildingData.BuildingType);
         //AddBuildingComponent();
     }
-
+    public void RemoveBuilding() 
+    {
+        GameManager.Instance.EconomyService_DH.RemoveCatCurrentCount(_buildingData.CatCapacity);
+    }
 
     /// <summary>
     /// 건물의 Scale을 기준으로 입주 가능한 위치를 생성한다.
-    /// 예: Scale (3, 2, 1) → 3 x 2 = 6개의 자리
+    /// 예: Scale (3, 2, 1) → 3 x 2 = 6개의 자리s
     /// </summary>
 
     private void SetBuildType(int buildType)
@@ -180,19 +183,6 @@ public class Building : MonoBehaviour
         return _entrancePoint;
     }
 
-    //private void AddBuildingComponent() //건물 별 별도 컴포넌트 추가(특수경우에만)
-    //{
-    //    switch (data.Type)
-    //    {
-    //        case BuildingType.TownHall:
-    //            building.gameObject.AddComponent<TownHall>();
-    //            break;
-
-    //        case BuildingType.spanwer:
-    //            building.gameObject.AddComponent<Spanwer>();
-    //            break;
-    //    }
-    //}
     public void MoveBuilding(Vector3 movePosition) 
     {
         transform.position = movePosition;
@@ -203,4 +193,5 @@ public class Building : MonoBehaviour
     {
         return (float)_availableCatPoints.Count / _allCatPoints.Count;
     }
+    
 }

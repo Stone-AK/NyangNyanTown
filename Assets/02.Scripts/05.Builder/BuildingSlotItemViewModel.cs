@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+
 
 public class BuildingSlotItemViewModel : ViewModelBase
 {
@@ -22,12 +24,15 @@ public class BuildingSlotItemViewModel : ViewModelBase
     }
     private BuildingData _buildingData; 
     public event Action<BuildingData> OnBuildingSlotButtonClicked;
-    public void Initialize(BuildingData data,int currentGold) 
+    private EconomyViewModel_DH _vm;
+    public void Initialize(BuildingData data) 
     {
         _buildingData = data;
         Cost = data.Cost;
         Name = data.Name;
-        RefreshCanBuild(currentGold);
+        _vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
+        RefreshCanBuild(_vm.CurrentGold);
+        _vm.PropertyChanged += OnViewModelPropertyChanged;
     }
     public void OnClickSlotViewButton() 
     {
@@ -44,5 +49,14 @@ public class BuildingSlotItemViewModel : ViewModelBase
             return true;
         }
         return false;    
+    }
+    private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(EconomyViewModel_DH.CurrentGold):
+                RefreshCanBuild(_vm.CurrentGold);
+                break;
+        }
     }
 }

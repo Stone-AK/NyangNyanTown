@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1979120468840968421}
-  - component: {fileID: 689679121532500206}
   - component: {fileID: 7303629251021344525}
   - component: {fileID: 2202790694781066371}
   - component: {fileID: 8373742477411111942}
@@ -35,14 +34,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &689679121532500206
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 929048737933534321}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &7303629251021344525
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -125,7 +116,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf9c09bd761a89488b1aa9fcc5de3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PreviewBuilding
-  _meshFilter: {fileID: 689679121532500206}
+  _meshFilter: {fileID: 0}
   _renderer: {fileID: 7303629251021344525}
   _canBuildMaterial: {fileID: 2100000, guid: 612fcd64856b23147927a7e371e0c4c1, type: 2}
   _cannotBuildMaterial: {fileID: 2100000, guid: 2d73875b26d2107409bb8988ee731542, type: 2}
+  _boxCollider: {fileID: 0}
+  BuildingDataModel:
+    Name: 
+    Cost: 0
+    ScaleX: 0
+    ScaleY: 0
+    Width: 0
+    CatCapacity: 0
+    BuildingType: 0
+    ModelAddresses: []

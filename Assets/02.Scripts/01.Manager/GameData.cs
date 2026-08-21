@@ -17,10 +17,16 @@ public class BuildingData : BaseData
     public int ScaleY;
 
     public float Width;
+    public float Height;
+
+    public float GroundOffset;
+
     public int CatCapacity;
     public int BuildingType;
-}
 
+    public string[] ModelAddresses;
+}
+[System.Serializable]
 public class CatInfoData : BaseData
 {
     public string Name;
@@ -50,4 +56,13 @@ public class CatMouthSkinData : BaseData
 {
     public string Name;
     public string AddressableString;
+}
+
+[System.Serializable]
+public class LandUpGradeData : BaseData
+{
+    public int NeedGold;
+    public int NeedCat;
+    public string NeedBuildingId; 
+    public string NeedSpecialCatId;
 }

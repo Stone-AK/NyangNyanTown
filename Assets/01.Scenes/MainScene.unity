@@ -420,6 +420,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   _camera: {fileID: 1196302857}
   _moveSpeed: 10
+  _focusMoveDuration: 0.35
+  _focusTargetScreenOffset: {x: -150, y: 0}
   _zoomSpeed: 20
   _minZoom: 3
   _maxZoom: 10
@@ -818,6 +820,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8335901017142003193, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
+      propertyPath: _previewBuildingPrefab
+      value: 
+      objectReference: {fileID: 3219148305151678454, guid: db78cc0e3eaae3d4f8bacc8a57544429, type: 3}
     - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
       propertyPath: DHPrefab
       value: 
@@ -961,7 +967,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 370331030339467684, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29cd1296b4405544ca848cf8543acacf, type: 3}
