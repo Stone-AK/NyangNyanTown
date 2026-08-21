@@ -820,6 +820,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8335901017142003193, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
+      propertyPath: _previewBuildingPrefab
+      value: 
+      objectReference: {fileID: 3219148305151678454, guid: db78cc0e3eaae3d4f8bacc8a57544429, type: 3}
     - target: {fileID: 8971903590183428838, guid: 7525bc0bca28de6478e897b65d123ef1, type: 3}
       propertyPath: DHPrefab
       value: 

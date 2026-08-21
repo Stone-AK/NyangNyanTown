@@ -80,7 +80,7 @@
     ]
   },
   {
-    "Id": "Building_05_Hair_Shop",
+    "Id": "Building_06_Hair_Shop",
     "Name": "Hair_Shop",
     "Cost": 1500,
     "Width": 3,
@@ -95,7 +95,7 @@
     ]
   },
   {
-    "Id": "Building_06_Apartment",
+    "Id": "Building_07_Apartment",
     "Name": "Apartment",
     "Cost": 2000,
     "Width": 4,
@@ -112,7 +112,7 @@
     ]
   },
   {
-    "Id": "Building_07_Repair_Shop",
+    "Id": "Building_08_Repair_Shop",
     "Name": "Repair_Shop",
     "Cost": 2200,
     "Width": 6,
@@ -127,7 +127,7 @@
     ]
   },
   {
-    "Id": "Building_08_Cinema",
+    "Id": "Building_09_Cinema",
     "Name": "Cinema",
     "Cost": 5000,
     "Width": 10,
@@ -142,7 +142,7 @@
     ]
   },
   {
-    "Id": "Building_09_Mall",
+    "Id": "Building_10_Mall",
     "Name": "Mall",
     "Cost": 6500,
     "Width": 12,
@@ -157,7 +157,7 @@
     ]
   },
   {
-    "Id": "Building_10_Police_Office",
+    "Id": "Building_11_Police_Office",
     "Name": "Police_Office",
     "Cost": 7000,
     "Width": 7,
@@ -172,20 +172,22 @@
     ]
   },
   {
-    "Id": "Building_11_Spawner",
+    "Id": "Building_12_Spawner",
     "Name": "Subway",
     "Cost": 10,
-    "Width": 1,
-    "Height": 1,
+    "Width": 2,
+    "Height": 2,
     "ScaleX": 1,
     "ScaleY": 1,
-    "GroundOffset": 0,
+    "GroundOffset": -0.5,
     "CatCapacity": 0,
     "BuildingType": 2,
-    "ModelAddresses": null
+    "ModelAddresses": [
+      "Building_Spawner_Prefab_01"
+    ]
   },
   {
-    "Id": "Building_12_TownHall",
+    "Id": "Building_13_TownHall",
     "Name": "TownHall",
     "Cost": 0,
     "Width": 6,

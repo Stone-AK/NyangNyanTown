@@ -30,7 +30,7 @@ public class BuildManager : BaseManager<BuildManager>
     private float _currentGridX;                    //화면에 표시되는 좌표
     private const float GRUOND_Y = 1.5f;//임시 보정
 
-    private bool _isBuilding = false;
+    public bool IsBuilding { get; private set; } = false;
     private BuildMode _currentBuildMode = BuildMode.None;//건설 정보    
 
     public event Action<int> OnTotalGoldChanged;
@@ -41,7 +41,7 @@ public class BuildManager : BaseManager<BuildManager>
    
     private void Update()
     {
-        if (!_isBuilding)
+        if (!IsBuilding)
             return;
         UpdateMouseWorldPosition();
         UpdatePreview();
@@ -51,12 +51,12 @@ public class BuildManager : BaseManager<BuildManager>
     {
         Debug.Log("StartBuild 호출");
 
-        if (_isBuilding)
+        if (IsBuilding)
         {
             return;
         }
 
-        _isBuilding = true;
+        IsBuilding = true;
 
         UpdateMouseWorldPosition();
 
@@ -108,7 +108,7 @@ public class BuildManager : BaseManager<BuildManager>
     }
     private void EndBuild() // 프리뷰 건물 삭제
     {
-        _isBuilding = false;
+        IsBuilding = false;
         _currentBuildMode = BuildMode.None;
         _currentBuildingInstaceId = null;
 
@@ -186,7 +186,7 @@ public class BuildManager : BaseManager<BuildManager>
     }
     private void UpdatePreview()
     {
-        if (!_isBuilding)
+        if (!IsBuilding)
             return;
 
         float newGridX = GameManager.Instance.MapManager.GetGridX(_worldPos.x);
