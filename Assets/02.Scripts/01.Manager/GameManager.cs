@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : BaseManager<GameManager>
@@ -37,6 +37,7 @@ public class GameManager : BaseManager<GameManager>
     {
         //서비스를 등록하려면 여기에 추가!
         EconomyService_DH = new EconomyService_DH();
+        EconomyService_DH.InitEconomyService();
         LandUpGradeService = new LandUpGradeService(EconomyService_DH, MapManager);
     }
 
@@ -69,7 +70,7 @@ public class GameManager : BaseManager<GameManager>
         await InitializeAsync();
         await ResourceManager.InitializeAsync();
         await DataManager.InitializeAsync();
-        EconomyService_DH.InitEconomyService();
+        //EconomyService_DH.InitEconomyService();
         await ObjectManager.InitializeAsync();
         await UIManager.InitializeAsync();
         await BuildManager.InitializeAsync();
