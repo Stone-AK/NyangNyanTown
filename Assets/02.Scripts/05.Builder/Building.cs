@@ -1,3 +1,4 @@
+﻿using Cysharp.Threading.Tasks.Triggers;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -25,6 +26,8 @@ public class Building : MonoBehaviour
     // 생성된 모든 입주 자리
     private List<Transform> _allCatPoints = new List<Transform>();
 
+    private List<CatView> _movedInCatList = new();
+
     private const float CELL_SIZE = 1f;
     
     public void InitaizeData(float rootX, BuildingData data ,string modelAddress) 
@@ -49,6 +52,7 @@ public class Building : MonoBehaviour
     }
     public void RemoveBuilding() 
     {
+
         GameManager.Instance.EconomyService_DH.RemoveCatCurrentCount(_buildingData.CatCapacity);
     }
 
@@ -111,20 +115,21 @@ public class Building : MonoBehaviour
     /// <summary>
     /// 입주 가능한 빈 자리를 하나 반환한다.
     /// </summary>
-    public Transform GetAvailableCatPoint()
+    public Transform GetAvailableCatPoint(CatView movedInCat)
     {
         if (_availableCatPoints.Count == 0)
         {
             return null;
         }
 
+        _movedInCatList.Add(movedInCat);
         return _availableCatPoints.Dequeue();
     }
 
     /// <summary>
     /// 사용했던 자리를 다시 빈 자리로 돌려놓는다.
     /// </summary>
-    public void ReturnCatPoint(Transform point)
+    public void ReturnCatPoint(Transform point, CatView movedOutCat)
     {
         if (point == null)
             return;
@@ -135,7 +140,42 @@ public class Building : MonoBehaviour
         if (_availableCatPoints.Contains(point))
             return;
 
+        _movedInCatList.Remove(movedOutCat);
         _availableCatPoints.Enqueue(point);
+    }
+
+    private void GetOutAllCat()
+    {
+        if (_entrancePoint != null)
+        {
+            Vector3 escapePoint = _entrancePoint.position;
+            escapePoint.z = 0f;
+
+            foreach (var outCat in _movedInCatList)
+            {
+                if (outCat == null)
+                    continue;
+
+                outCat.transform.position = escapePoint;
+                outCat.EscapeDestroyBuilding();
+            }
+        }
+
+        _movedInCatList.Clear();
+        ResetAvailableCatPoints();
+    }
+
+    private void ResetAvailableCatPoints()
+    {
+        _availableCatPoints.Clear();
+
+        foreach (Transform point in _allCatPoints)
+        {
+            if (point != null)
+            {
+                _availableCatPoints.Enqueue(point);
+            }
+        }
     }
 
     /// <summary>
@@ -163,6 +203,8 @@ public class Building : MonoBehaviour
                 Destroy(point.gameObject);
             }
         }
+
+        GetOutAllCat();
 
         _allCatPoints.Clear();
         _availableCatPoints.Clear();
@@ -193,6 +235,7 @@ public class Building : MonoBehaviour
 
     public void MoveBuilding(Vector3 movePosition) 
     {
+        GetOutAllCat();
         transform.position = movePosition;
         GameManager.Instance.MapManager.ModifyBuildingData(InstanceId, movePosition.x);
     }
