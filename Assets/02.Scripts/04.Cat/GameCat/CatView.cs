@@ -323,18 +323,26 @@ public class CatView : MonoBehaviour
         }
     }
 
-    public void SearchDespawnPoint()
+    private void MoveCatBuildingEntrance()
     {
         if (_pointInBuilding != null && _targetBuilding != null)
         {
-            Transform entrancePoint = _targetBuilding.GetEntrancePoint();
+            if(_targetBuilding.GetEntrancePoint() != null)
+            {
+                Vector3 entrancePoint = _targetBuilding.GetEntrancePoint().position;
+                entrancePoint.z = 0;
 
-            _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
-            _pointInBuilding = null;
+                _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
+                _pointInBuilding = null;
 
-            if (entrancePoint != null)
-                transform.position = entrancePoint.position;
+                transform.position = entrancePoint;
+            }
         }
+    }
+
+    public void SearchDespawnPoint()
+    {
+        MoveCatBuildingEntrance();
 
         if (GameManager.Instance.CatManager.CatSpanweList.Count == 0)
         {
