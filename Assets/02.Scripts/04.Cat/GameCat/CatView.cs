@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class CatView : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class CatView : MonoBehaviour
         if (catVM == null)
             return;
         catVM.PropertyChanged += OnPropChagned_View;
+        ActionFromStatus();
     }
 
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
@@ -302,6 +304,7 @@ public class CatView : MonoBehaviour
 
             if (_catViewModel.CatState == CatState.InBuildingAction)
             {
+                ChangeLayer(0);
                 _catAnimationControl.PlayAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
                 _catViewModel.CatState = CatState.SearchTarget;
@@ -316,11 +319,22 @@ public class CatView : MonoBehaviour
             {
                 SearchDespawnPoint();
             }
+            else if (_catViewModel.CatState == CatState.MoveToTarget)
+            {
+                ChangeLayer(6);
+            }
         }
         catch(OperationCanceledException) 
         { 
 
         }
+    }
+
+    private void ChangeLayer(int layer)
+    {
+        _bodyRenderer.gameObject.layer = layer;
+        _eyeRenderer.gameObject.layer = layer;
+        _mouthRenderer.gameObject.layer = layer;
     }
 
     private void MoveCatBuildingEntrance()
