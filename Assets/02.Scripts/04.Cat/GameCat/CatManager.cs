@@ -127,9 +127,14 @@ public class CatManager : BaseManager<CatManager>
         return true;
     }
 
-    public async UniTask<GameObject> SpawnCat(Transform spawnTransform)
+    public async UniTask<GameObject> SpawnCat(Vector3 spawnPosition)
     {
         if (!IsCatSpawnAvailable())
+            return null;
+
+        Building targetBuilding = FindAvailableTargetBuilding();
+
+        if (targetBuilding == null)
             return null;
 
         string spawnedCatId = SelectRandomCatIdByWeight();
@@ -144,7 +149,7 @@ public class CatManager : BaseManager<CatManager>
 
         _activeCatCount++;
 
-        GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnTransform);
+        GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnPosition, Quaternion.identity);
 
         if (returnCatObj == null)
         {
@@ -153,9 +158,46 @@ public class CatManager : BaseManager<CatManager>
         }
 
         if (returnCatObj.TryGetComponent<CatView>(out var catView))
-            catView.InitCatView(spawnCatVM);
+            catView.InitCatView(spawnCatVM, targetBuilding);
 
         return returnCatObj;
+    }
+
+    public Building FindAvailableTargetBuilding()
+    {
+        Building candidateTargetBuilding = null;
+        float highestAvailableSpaceRate = 0f;
+
+        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
+        {
+            Vector3 searchPosition = new Vector3(placeBuildingData.Value.RootX, 0, 0);
+
+            Collider[] colliders = Physics.OverlapSphere(searchPosition, 0.01f);
+
+            foreach (var collider in colliders)
+            {
+                if (collider == null)
+                    continue;
+
+                Building building = collider.GetComponentInParent<Building>();
+
+                if (building == null)
+                    continue;
+
+                if (building.GetComponent<CatSpawner>() != null)
+                    continue;
+
+                float availableSpaceRate = building.GetAvailableSpaceRate();
+
+                if (highestAvailableSpaceRate < availableSpaceRate)
+                {
+                    highestAvailableSpaceRate = availableSpaceRate;
+                    candidateTargetBuilding = building;
+                }
+            }
+        }
+
+        return candidateTargetBuilding;
     }
 
     public void DespawnCat(GameObject targetDspawnObject)

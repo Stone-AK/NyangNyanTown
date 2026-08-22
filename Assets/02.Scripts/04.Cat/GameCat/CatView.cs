@@ -68,15 +68,17 @@ public class CatView : MonoBehaviour
         transform.Translate(Vector3.forward * _catViewModel.CatSpeed * Time.fixedDeltaTime);
     }
 
-    public void InitCatView(CatViewModel catViewModel)
+    public void InitCatView(CatViewModel catViewModel, Building targetBuilding)
     {
-        if(catViewModel == null) 
+        if (catViewModel == null || targetBuilding == null)
             return;
 
         _catViewModel = catViewModel;
+        _targetBuilding = targetBuilding;
+
         BindSlotViewMdoel(_catViewModel);
         SettingMaterial(catViewModel);
-        CatDetectTarget();
+        SettingTargetPosition();
     }
 
     private async void SettingMaterial(CatViewModel catViewModel)
@@ -157,7 +159,7 @@ public class CatView : MonoBehaviour
 
         Material eyeMaterial;
 
-        if (catData.SpecialCatBody == "None")
+        if (catData.SpecialCatEye == "None")
         {
             eyeMaterial =
             await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
@@ -181,7 +183,7 @@ public class CatView : MonoBehaviour
 
         Material mouthMaterial;
 
-        if (catData.SpecialCatBody == "None")
+        if (catData.SpecialCatMouth == "None")
         {
             mouthMaterial =
             await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
@@ -202,68 +204,6 @@ public class CatView : MonoBehaviour
                 _bodyRenderer.sharedMaterial = mouthMaterial;
             }
         }
-    }
-
-    private void CatDetectTarget()
-    {
-        if (GameManager.Instance.MapManager._currentBuildingLDic == null)
-            return;
-
-        if (GameManager.Instance.MapManager._currentBuildingLDic.Count == 0)
-        {
-            Debug.Log("지어진 건물이 없습니다.");
-            // 추후 건물이 없어도 고양이가 생성되어야 한다면 해당 위치에 정의 필요
-            return;
-        }
-
-        _targetBuilding = SearchTargetBuilding();
-
-        // 아무 알맞은 건물을 못찾은 상태, 0으로 가도록 함
-        if (_targetBuilding == null)
-        {
-            Vector3 temporaryDirection = new Vector3(0, 0, 0);
-            transform.rotation = Quaternion.LookRotation(temporaryDirection);
-            return;
-        }
-
-        SettingTargetPosition();
-    }
-
-    private Building SearchTargetBuilding()
-    {
-        Building candidateTargetBuilding = null;
-        float nowSpaceOccupancyRate = 0f;
-        float newSpaceOccupancyRate = 0f;
-        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
-        {
-            Vector3 searchTargetPosition = new Vector3(placeBuildingData.Value.RootX, 0, 0);
-            Collider[] buildingChildCollider = Physics.OverlapSphere(searchTargetPosition, 0.01f);
-
-            foreach (var buildingChild in buildingChildCollider)
-            {
-                if (buildingChild == null) 
-                    continue;
-
-                Building building = buildingChild.GetComponentInParent<Building>();
-                if (building == null)
-                    continue;
-
-                if (building.GetComponent<CatSpawner>() != null)
-                    continue;
-
-                newSpaceOccupancyRate = building.GetAvailableSpaceRate();
-
-                if (nowSpaceOccupancyRate < newSpaceOccupancyRate)
-                {
-                    nowSpaceOccupancyRate = newSpaceOccupancyRate;
-                    candidateTargetBuilding = building;
-                }
-            }
-        }
-        if (candidateTargetBuilding == null)
-            return null;
-
-        return candidateTargetBuilding;
     }
 
     private void SettingTargetPosition()
