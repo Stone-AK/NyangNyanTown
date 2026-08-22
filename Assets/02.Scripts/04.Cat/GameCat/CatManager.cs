@@ -51,7 +51,7 @@ public class CatManager : BaseManager<CatManager>
     }
 
     // 나중에 가중치 값 변경 시 호출 되어야함
-    public void ChangedCatSpawnWeight()
+    private void ChangedCatSpawnWeight()
     {
         if(_catSpawnWeightList.Count == 0)
         {
@@ -89,7 +89,7 @@ public class CatManager : BaseManager<CatManager>
         return catViewModel;
     }
 
-    private string SelectRandomCatIdByWeight()
+    public string SelectRandomCatIdByWeight()
     {
         if (_catSpawnWeightList == null)
             return null;
@@ -123,6 +123,8 @@ public class CatManager : BaseManager<CatManager>
 
         _catSpawnWeightList[changedCatId] = newWeight;
         _totalWeight += newWeight - currentWeight;
+
+        ChangedCatSpawnWeight();
 
         return true;
     }
