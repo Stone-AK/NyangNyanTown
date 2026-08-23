@@ -151,6 +151,8 @@ public class CatManager : BaseManager<CatManager>
 
         _activeCatCount++;
 
+        CatEncyclopediaViewModel spawnCatEncycloiediaVM = GameManager.Instance.EconomyService_DH.CatEncyclopediaList[spawnedCatId];
+
         GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnPosition, Quaternion.identity);
 
         if (returnCatObj == null)
@@ -160,7 +162,9 @@ public class CatManager : BaseManager<CatManager>
         }
 
         if (returnCatObj.TryGetComponent<CatView>(out var catView))
-            catView.InitCatView(spawnCatVM, targetBuilding);
+        {
+            catView.InitCatView(spawnCatVM, targetBuilding, spawnCatEncycloiediaVM);
+        }
 
         return returnCatObj;
     }

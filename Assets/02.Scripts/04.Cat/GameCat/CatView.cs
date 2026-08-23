@@ -1,8 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.ComponentModel;
+using System.Reflection;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class CatView : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class CatView : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer _eyeRenderer;
     [SerializeField] private SkinnedMeshRenderer _mouthRenderer;
     [SerializeField] private CatAnimationControl _catAnimationControl;
+    [SerializeField] private GameObject _newCatParticle;
 
     public CatViewModel CatViewModelProp { get => _catViewModel; }
 
@@ -40,24 +41,47 @@ public class CatView : MonoBehaviour
         }
     }
 
-    private void BindSlotViewMdoel(CatViewModel catVM)
+    public void BindViewMdoel<T>(T bindVM) where T : ViewModelBase
     {
-        if (catVM == null)
+        if (bindVM == null)
             return;
-        catVM.PropertyChanged += OnPropChagned_View;
+        bindVM.PropertyChanged += OnPropChagned_View;
         ActionFromStatus();
     }
 
+
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
-        switch (e.PropertyName)
+        if (sender is CatViewModel)
         {
-            case nameof(CatViewModelProp.CatState):
-                {
-                    ActionFromStatus();
-                }
-                break;
+            switch (e.PropertyName)
+            {
+                case nameof(CatViewModelProp.CatState):
+                    {
+                        ActionFromStatus();
+                    }
+                    break;
+            }
         }
+        else if (sender is CatEncyclopediaViewModel encyclopediaVM)
+        {
+            switch(e.PropertyName)
+            {
+                case nameof(CatEncyclopediaViewModel.IsCollected):
+                    {
+                        ActiveNotCollectedCatParticle(encyclopediaVM.IsCollected);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void ActiveNotCollectedCatParticle(bool isCollected)
+    {
+        if(isCollected == false)
+            _newCatParticle.SetActive(true);
+        else if(isCollected == true)
+            _newCatParticle.SetActive(false);
     }
 
     private void MoveCatOnFixedUpdate()
@@ -70,7 +94,7 @@ public class CatView : MonoBehaviour
         transform.Translate(Vector3.forward * _catViewModel.CatSpeed * Time.fixedDeltaTime);
     }
 
-    public void InitCatView(CatViewModel catViewModel, Building targetBuilding)
+    public void InitCatView(CatViewModel catViewModel, Building targetBuilding, CatEncyclopediaViewModel enclopediaVM)
     {
         if (catViewModel == null || targetBuilding == null)
             return;
@@ -78,7 +102,8 @@ public class CatView : MonoBehaviour
         _catViewModel = catViewModel;
         _targetBuilding = targetBuilding;
 
-        BindSlotViewMdoel(_catViewModel);
+        BindViewMdoel(_catViewModel);
+        BindViewMdoel(enclopediaVM);
         SettingMaterial(catViewModel);
         SettingTargetPosition();
     }
@@ -291,8 +316,18 @@ public class CatView : MonoBehaviour
 
     private void ArriveSpanwPositionAndEscape()
     {
+        UnBindViewMdoel(_catViewModel);
+        UnBindViewMdoel(GameManager.Instance.EconomyService_DH.CatEncyclopediaList[_catViewModel.CatId]);
         // TODO(안우재/08.09) : 가까운 Spawn지역에 도착 시 탈출하는 모션 출력 필요.
         GameManager.Instance.CatManager.DespawnCat(this.gameObject);
+    }
+
+    private void UnBindViewMdoel<T>(T unBindVM) where T : ViewModelBase
+    {
+        if (unBindVM == null)
+            return;
+        unBindVM.PropertyChanged -= OnPropChagned_View;
+        ActionFromStatus();
     }
 
     private async void ActionFromStatus()
@@ -335,6 +370,7 @@ public class CatView : MonoBehaviour
         _bodyRenderer.gameObject.layer = layer;
         _eyeRenderer.gameObject.layer = layer;
         _mouthRenderer.gameObject.layer = layer;
+        _newCatParticle.layer = layer;
     }
 
     private void MoveCatBuildingEntrance()
