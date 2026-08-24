@@ -187,7 +187,7 @@ public class CatManager : BaseManager<CatManager>
 
         foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
         {
-            Vector3 searchPosition = new Vector3(placeBuildingData.Value.RootX, 0, 0);
+            Vector3 searchPosition = new Vector3(placeBuildingData.Value.RootX, 0,GameManager.Instance.BuildManager.BuildingZ);
 
             Collider[] colliders = Physics.OverlapSphere(searchPosition, 0.01f);
 
