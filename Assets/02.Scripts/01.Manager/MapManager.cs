@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +12,8 @@ public struct PlacedBuildingData
 }
 public class MapManager : BaseManager<MapManager>
 {
-    private const float GRID_WIDTH = 0.1f;
-    private const float DEFAULT_LAND_RANGE = 20f;
+    private const float GRID_WIDTH = 0.25f;
+    private const float DEFAULT_LAND_RANGE = 50f;
     private float CurrentLandRange { get; set; } = DEFAULT_LAND_RANGE;
 
 
@@ -97,6 +97,6 @@ public class MapManager : BaseManager<MapManager>
   
     private void OnLandLevelUp(int level) 
     {
-        CurrentLandRange = DEFAULT_LAND_RANGE + (level * 5f);
+        CurrentLandRange = DEFAULT_LAND_RANGE + (level * 25f);
     }
 }

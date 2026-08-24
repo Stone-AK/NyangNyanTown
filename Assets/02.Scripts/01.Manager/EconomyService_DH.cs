@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 
 public class EconomyService_DH
@@ -69,7 +69,7 @@ public class EconomyService_DH
     public EconomyViewModel_DH CreateEconomyViewModel()
     {
         var economyViewModel = new EconomyViewModel_DH();
-        economyViewModel.CurrentGold = 0;
+        economyViewModel.CurrentGold = 10;
         economyViewModel.CatCurrentCount = 0;
         economyViewModel.SpecialCatCount = 0;
         economyViewModel.BuildingCount = 0;
