@@ -5,7 +5,7 @@
     "Description": "일반 고냥이다\n\n수집효과 : 없음",
     "CatEffect": "Multiplies",
     "EffectValue": 0,
-    "CatIconImgPath": "UI/CatIcon/TestIcon",
+    "CatIconImgPath": "UI/CatIcon/CommonCatIcon",
     "CatAppearanceWeight": 1000,
     "SpecialCatBody": "None",
     "SpecialCatEye": "None",
