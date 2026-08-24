@@ -49,7 +49,10 @@ public class CatSpawner : MonoBehaviour
             if (GameManager.Instance.CatManager == null)
                 return;
 
-            Transform spawnTransform = this.gameObject.GetComponent<Building>().GetEntrancePoint();
+            Vector3 spawnTransform = this.gameObject.GetComponent<Building>().GetEntrancePoint().position;
+            spawnTransform.y = -1.5f;
+            spawnTransform.z = 0f;
+
             await GameManager.Instance.CatManager.SpawnCat(spawnTransform);
         }
     }
