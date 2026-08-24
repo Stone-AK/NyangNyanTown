@@ -67,12 +67,12 @@ public class BuildingPopUpUIView : BaseUI
 
     public void InitDescription()
     {
-        Text_Description.text = $"{_building._buildingData.Name}\n인구수 + {_building._buildingData.CatCapacity}";
+        Text_Description.text = $"{_building._buildingData.Name}\n인구수 + {_building._buildingData.CatCapacity}\n";
         Debug.Log($"1.{Text_Description.text}");
         if (_building._buildingData.SpCatId != null) 
         {
             GameManager.Instance.DataManager.TryGetData(_building._buildingData.SpCatId, out CatInfoData data);
-            Text_Description.text += $"\n{data.Name} 등장확률 증가!";
+            Text_Description.text += $"{data.Name} 등장확률 증가!";
             Debug.Log($"2.{Text_Description.text}");
         }
     }

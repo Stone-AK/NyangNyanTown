@@ -1,8 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
-using System.Security;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum BuildMode
@@ -29,6 +26,7 @@ public class BuildManager : BaseManager<BuildManager>
     private Vector3 _worldPos;    
     private float _currentGridX;                    //화면에 표시되는 좌표
     private const float GRUOND_Y = 1.5f;//임시 보정
+    private const float BUILDING_Z = 10f;
 
     public bool IsBuilding { get; private set; } = false;
     private BuildMode _currentBuildMode = BuildMode.None;//건설 정보  
@@ -227,7 +225,7 @@ public class BuildManager : BaseManager<BuildManager>
     {
         if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
         {
-            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, 0f)).Forget();
+            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, BUILDING_Z)).Forget();
         }
         else
         {
