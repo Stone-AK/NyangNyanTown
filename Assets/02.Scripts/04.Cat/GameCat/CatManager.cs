@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 
 public class CatManager : BaseManager<CatManager>
 {
+    private string _commonCatId;
     private int _activeCatCount;
     public List<CatSpawner> CatSpanweList = new();
     private Dictionary<string, int> _catSpawnWeightList = new();
@@ -57,8 +58,14 @@ public class CatManager : BaseManager<CatManager>
         {
             if (GameManager.Instance.DataManager.TryGetDataTable<CatInfoData>(out var catDataTable))
             {
+                int tmpInt = 0;
                 foreach (var catData in catDataTable)
                 {
+                    if (tmpInt == 0)
+                    {
+                        _commonCatId = catData.Key;
+                        tmpInt++;
+                    }
                     _catSpawnWeightList.Add(catData.Key, catData.Value.CatAppearanceWeight);
                 }
             }
@@ -78,7 +85,7 @@ public class CatManager : BaseManager<CatManager>
 
         CatViewModel catViewModel = new CatViewModel();
 
-        if (spawnedCatId == "Cat_Normal_01")
+        if (spawnedCatId == _commonCatId)
         {
             catViewModel.InitRandomCatStat();
             return catViewModel;
@@ -147,8 +154,12 @@ public class CatManager : BaseManager<CatManager>
             return null;
         }
 
+        if(spawnedCatId != _commonCatId)
+        {
+            GameManager.Instance.EconomyService_DH.AddCurrentFish(1);
+        }
+        
         CatViewModel spawnCatVM = InitCatStat(spawnedCatId);
-
         _activeCatCount++;
 
         CatEncyclopediaViewModel spawnCatEncycloiediaVM = GameManager.Instance.EconomyService_DH.CatEncyclopediaList[spawnedCatId];
