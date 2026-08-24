@@ -19,9 +19,17 @@ public class CatView : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(_targetBuilding == null)
+        if (_catViewModel == null)
+            return;
+
+        if (_targetBuilding == null)
         {
-            SearchDespawnPoint();
+            if (_catViewModel.CatState == CatState.MoveToTarget)
+            {
+                SearchDespawnPoint();
+            }
+
+            return;
         }
 
         if (_catViewModel.CatState == CatState.MoveToTarget)
@@ -54,8 +62,10 @@ public class CatView : MonoBehaviour
     {
         if(_catViewModel == null)
             return;
+
         _catAnimationControl.PlayMoveToTarget(_catViewModel.CatSpeed);
-        transform.Translate(Vector3.forward * _catViewModel.CatSpeed * Time.deltaTime);
+
+        transform.Translate(Vector3.forward * _catViewModel.CatSpeed * Time.fixedDeltaTime);
     }
 
     public void InitCatView(CatViewModel catViewModel)
@@ -332,7 +342,7 @@ public class CatView : MonoBehaviour
             return;
         }
 
-        _pointInBuilding = building.GetAvailableCatPoint();
+        _pointInBuilding = building.GetAvailableCatPoint(this);
         this.gameObject.transform.position = _pointInBuilding.position;
         _catViewModel.CatState = CatState.InBuildingAction;
     }
@@ -377,14 +387,13 @@ public class CatView : MonoBehaviour
     {
         if (_pointInBuilding != null && _targetBuilding != null)
         {
-            _targetBuilding.ReturnCatPoint(_pointInBuilding);
-            _pointInBuilding = null;
-        }
+            Transform entrancePoint = _targetBuilding.GetEntrancePoint();
 
-        if (_targetBuilding != null)
-        {
-            if(_targetBuilding.GetComponent<CatSpawner>() == null)
-                this.gameObject.transform.position = _targetBuilding.GetComponent<Building>().GetEntrancePoint().position;
+            _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
+            _pointInBuilding = null;
+
+            if (entrancePoint != null)
+                transform.position = entrancePoint.position;
         }
 
         if (GameManager.Instance.CatManager.CatSpanweList.Count == 0)
@@ -423,5 +432,13 @@ public class CatView : MonoBehaviour
         _targetBuilding = targetSpawner.gameObject.GetComponent<Building>();
         SettingTargetPosition();
         _catViewModel.CatState = CatState.MoveToTarget;
+    }
+
+    public void EscapeDestroyBuilding()
+    {
+        _pointInBuilding = null;
+        _targetBuilding = null;
+
+        _catViewModel.CatState = CatState.TargetMissing;
     }
 }

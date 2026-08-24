@@ -1,4 +1,5 @@
-﻿using System;
+using Cysharp.Threading.Tasks.Triggers;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,14 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     [SerializeField] private BoxCollider _boxCollider;
+    [SerializeField] private MeshRenderer _mesh;
+
+
+    [Header("Gizmo Settings")]
+    [SerializeField] private bool _showGizmo = true;
+    [SerializeField] private Color _gizmoBoxColor = new Color(1f, 0f, 0f, 0.3f);
+    [SerializeField] private Color _gizmoWireColor = Color.red;
+
 
     public BuildingData _buildingData;   
     private Transform _entrancePoint;
@@ -16,6 +25,8 @@ public class Building : MonoBehaviour
     private Queue<Transform> _availableCatPoints = new Queue<Transform>();
     // 생성된 모든 입주 자리
     private List<Transform> _allCatPoints = new List<Transform>();
+
+    private List<CatView> _movedInCatList = new();
 
     private const float CELL_SIZE = 1f;
     
@@ -41,6 +52,7 @@ public class Building : MonoBehaviour
     }
     public void RemoveBuilding() 
     {
+
         GameManager.Instance.EconomyService_DH.RemoveCatCurrentCount(_buildingData.CatCapacity);
     }
 
@@ -103,20 +115,21 @@ public class Building : MonoBehaviour
     /// <summary>
     /// 입주 가능한 빈 자리를 하나 반환한다.
     /// </summary>
-    public Transform GetAvailableCatPoint()
+    public Transform GetAvailableCatPoint(CatView movedInCat)
     {
         if (_availableCatPoints.Count == 0)
         {
             return null;
         }
 
+        _movedInCatList.Add(movedInCat);
         return _availableCatPoints.Dequeue();
     }
 
     /// <summary>
     /// 사용했던 자리를 다시 빈 자리로 돌려놓는다.
     /// </summary>
-    public void ReturnCatPoint(Transform point)
+    public void ReturnCatPoint(Transform point, CatView movedOutCat)
     {
         if (point == null)
             return;
@@ -127,7 +140,42 @@ public class Building : MonoBehaviour
         if (_availableCatPoints.Contains(point))
             return;
 
+        _movedInCatList.Remove(movedOutCat);
         _availableCatPoints.Enqueue(point);
+    }
+
+    private void GetOutAllCat()
+    {
+        if (_entrancePoint != null)
+        {
+            Vector3 escapePoint = _entrancePoint.position;
+            escapePoint.z = 0f;
+
+            foreach (var outCat in _movedInCatList)
+            {
+                if (outCat == null)
+                    continue;
+
+                outCat.transform.position = escapePoint;
+                outCat.EscapeDestroyBuilding();
+            }
+        }
+
+        _movedInCatList.Clear();
+        ResetAvailableCatPoints();
+    }
+
+    private void ResetAvailableCatPoints()
+    {
+        _availableCatPoints.Clear();
+
+        foreach (Transform point in _allCatPoints)
+        {
+            if (point != null)
+            {
+                _availableCatPoints.Enqueue(point);
+            }
+        }
     }
 
     /// <summary>
@@ -155,6 +203,8 @@ public class Building : MonoBehaviour
                 Destroy(point.gameObject);
             }
         }
+
+        GetOutAllCat();
 
         _allCatPoints.Clear();
         _availableCatPoints.Clear();
@@ -185,6 +235,7 @@ public class Building : MonoBehaviour
 
     public void MoveBuilding(Vector3 movePosition) 
     {
+        GetOutAllCat();
         transform.position = movePosition;
         GameManager.Instance.MapManager.ModifyBuildingData(InstanceId, movePosition.x);
     }
@@ -193,5 +244,36 @@ public class Building : MonoBehaviour
     {
         return (float)_availableCatPoints.Count / _allCatPoints.Count;
     }
-    
+
+
+
+    /// <summary>
+    /// BuildingData의 Width와 Height(실제 충돌/배치 판정 크기)를 감지하여 빨간색 상자 기즈모를 그립니다.
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        if (!_showGizmo) return;
+        // BuildingData가 없으면 실제 판정 수치를 알 수 없으므로 방어 처리
+        if (_buildingData == null)
+        {
+            if (_boxCollider != null)
+            {
+                Gizmos.color = _gizmoWireColor;
+                Gizmos.DrawWireCube(transform.TransformPoint(_boxCollider.center), _boxCollider.size);
+            }
+            return;
+        }
+        // 실질적인 충돌/배치 판정 크기 (Width, Height)
+        Vector3 size = new Vector3(_buildingData.Width, _buildingData.Height, 1f);
+        Vector3 center = transform.position;
+        if (_boxCollider != null)
+        {
+            center = transform.TransformPoint(_boxCollider.center);
+        }
+        // 빨간색 반투명 상자 + 외곽 테두리 렌더링
+        Gizmos.color = _gizmoBoxColor;
+        Gizmos.DrawCube(center, size);
+        Gizmos.color = _gizmoWireColor;
+        Gizmos.DrawWireCube(center, size);
+    }
 }
