@@ -16,15 +16,15 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _focusMoveDuration = 0.35f;
     [SerializeField] private Vector2 _focusTargetScreenOffset = new Vector2(-150f, 0f);
     [Header("Move Range")]
-    [SerializeField] private const float MOVE_MIN_Y = -1f;
-    [SerializeField] private const float MOVE_MAX_Y = 3f;
-    [SerializeField] private const float DEFAULT_MOVE_MIN_X = -50f;
-    [SerializeField] private const float DEFAULT_MOVE_MAX_X = 50f;
+    [SerializeField] private const float MOVE_MIN_Y = -3f;
+    [SerializeField] private const float MOVE_MAX_Y = 10f;
+    [SerializeField] private const float DEFAULT_MOVE_MIN_X = -60f;
+    [SerializeField] private const float DEFAULT_MOVE_MAX_X = 60f;
 
     [Header("Zoom")]
     [SerializeField] private float _zoomSpeed = 20f;
     [SerializeField] private float _minZoom = 10f;
-    [SerializeField] private float _maxZoom = 30f;
+    [SerializeField] private float _maxZoom = 40f;
 
     [Header("Layer Cull Settings")]
     [SerializeField] private string _outsideLayerName = "Outside";

@@ -62,7 +62,7 @@ public class BuildManager : BaseManager<BuildManager>
         _currentPreviewBuildingData = data;
         _currentBuildMode = mode;
 
-        Vector3 buildPosition = new Vector3(_worldPos.x, (data.ScaleY / 2f) - GRUOND_Y, 0f );
+        Vector3 buildPosition = new Vector3(_worldPos.x, (data.Height / 2f) - GRUOND_Y, 0f );
 
         // 1. 프리뷰 Root 생성
         _currentPreviewBuilding = Instantiate(_previewBuildingPrefab,buildPosition, Quaternion.identity);
@@ -97,13 +97,13 @@ public class BuildManager : BaseManager<BuildManager>
     private void CreatePreviewModel()
     {
         GameObject model = Instantiate(_modelPrefab, _previewBuilding.transform );
-        model.transform.localPosition = new Vector3(0f, _currentPreviewBuildingData.GroundOffset, 0f);
+        model.transform.localPosition = new Vector3(0f,-(_currentPreviewBuildingData.Height/2) , 0f);
         _previewBuilding.Initialize(_currentPreviewBuildingData, model);
     }
     private void CreateRealModel()
     {
         GameObject model = Instantiate(_modelPrefab, _currentBuilding.transform);
-        model.transform.localPosition = new Vector3(0f, _currentPreviewBuildingData.GroundOffset, 0f);
+        model.transform.localPosition = new Vector3(0f, -(_currentPreviewBuildingData.Height / 2) , 0f);
     }
     private void EndBuild() // 프리뷰 건물 삭제
     {
@@ -144,7 +144,7 @@ public class BuildManager : BaseManager<BuildManager>
     {
         if (_currentPreviewBuilding != null)
         {
-          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f);
+          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, 0f);
         }
         bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId);
         _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());
@@ -165,7 +165,7 @@ public class BuildManager : BaseManager<BuildManager>
         }
 
         _modelAddress = building.ModelAddress;
-        building.RemoveBuilding();
+        building.OnRemoveBuilding();
         
         GameManager.Instance.MapManager.DeleteBuilding(building.InstanceId);
         GameManager.Instance.ResourceManager.ReleaseAsset(_modelAddress);
@@ -227,7 +227,7 @@ public class BuildManager : BaseManager<BuildManager>
     {
         if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
         {
-            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f)).Forget();
+            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, 0f)).Forget();
         }
         else
         {
