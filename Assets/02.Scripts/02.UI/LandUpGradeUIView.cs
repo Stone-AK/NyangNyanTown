@@ -9,14 +9,23 @@ public class LandUpGradeUIView : BaseUI
     [SerializeField] TextMeshProUGUI CatText;
     [SerializeField] TextMeshProUGUI BuildingText;
     [SerializeField] TextMeshProUGUI SpecialCatText;
+    [SerializeField] TextMeshProUGUI LvText;
     [SerializeField] Slider GoldSlider;
     [SerializeField] Slider CatSlider;
     [SerializeField] Button Button_UpGrade;
     [SerializeField] Button Button_Exit;
+    [SerializeField] Button Button_ExitBg;
+    [SerializeField] GameObject UpgradeCompleteContainer;
 
     private LandUpGradeUIViewModel _vm;
-    public void Init(LandUpGradeUIViewModel vm) { _vm = vm; Debug.Log("vm적용 완료.");  InitializeUI();
-        _vm.OnGoldChanged += OnGoldChanged;}
+    public bool HasFullUpgrade;
+    public void Init(LandUpGradeUIViewModel vm) 
+    {
+        _vm = vm;
+        Debug.Log("vm적용 완료.");  
+        InitializeUI();
+        _vm.OnGoldChanged += OnGoldChanged;
+    }
     private void OnEnable()
     {
 
@@ -29,7 +38,11 @@ public class LandUpGradeUIView : BaseUI
         {
             Button_Exit.onClick.AddListener(OnClickExitButton);
         }
-       
+        if (Button_ExitBg != null)
+        {
+            Button_ExitBg.onClick.AddListener(OnClickExitButton);
+        }
+        InitializeUI();
     }
 
 
@@ -38,6 +51,7 @@ public class LandUpGradeUIView : BaseUI
     {
         Button_UpGrade.onClick.RemoveListener(OnClickUpGradeButton);
         Button_Exit.onClick.RemoveListener(OnClickExitButton);
+        Button_ExitBg.onClick.RemoveListener(OnClickExitButton);
         _vm.OnGoldChanged -= OnGoldChanged;
     }
     private void OnClickUpGradeButton() { _vm.OnClickUpGradeButton(); GameManager.Instance.UIManager.Close(UIType.LandUpGradeUI); }
@@ -45,13 +59,30 @@ public class LandUpGradeUIView : BaseUI
 
     private void InitializeUI() 
     {
-        if (_vm == null) { Debug.Log("vm이 없습니다."); }
+        if (_vm == null) 
+        { 
+            Debug.Log("vm이 없습니다."); 
+            return; 
+        }
+        if (IsUpgradeComplete()) 
+        {
+            return;
+        }
+        LvText.text = $"Lv.{_vm.GetCurrentLandLevel()} -> Lv.{_vm.GetCurrentLandLevel()+1}";
         GoldText.text = $"{_vm.GetCurrentGold()} / {_vm.GetNeedGold()}";
         CatText.text = $"{_vm.GetCurrentCat()} / {_vm.GetNeedCat()}";
-        BuildingText.text = $"{_vm.GetNeedBuildingName()}";
-        SpecialCatText.text = $"{_vm.GetNeedSpecialCatName()}";
+        BuildingText.text = $"Need : {_vm.GetNeedBuildingName()}";
+        if (_vm.GetNeedSpecialCatName() == null)
+        {
+            SpecialCatText.text = $"NoNeedSpCat";
+        }
+        else
+        {
+            SpecialCatText.text = $"Need : {_vm.GetNeedSpecialCatName()}";
+        }
         RefreshUIContents();
         CheckCanUpGrade();
+        
     }
     private void RefreshGoldText() 
     {
@@ -83,5 +114,14 @@ public class LandUpGradeUIView : BaseUI
             Button_UpGrade.interactable = false;
         }
     
+    }
+    private bool IsUpgradeComplete() 
+    {
+        if (_vm.CheckUpGradeComplete())
+        {
+            UpgradeCompleteContainer.SetActive(true);
+            return true;
+        }
+        return false;
     }
 }

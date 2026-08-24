@@ -3,7 +3,11 @@ using System.ComponentModel;
 using UnityEngine;
 
 public class LandUpGradeUIViewModel : ViewModelBase
-{
+{   
+    public event Action OnGoldChanged;
+    private LandUpGradeService _landUpGradeService;
+
+    public bool IsUpgradeComplete { get; private set ;}
     public int GetCurrentGold() { return _landUpGradeService.GetCurrentGold(); } 
     public int GetNeedGold() { return _landUpGradeService.GetNeedUpGradeGold(); }
     public int GetCurrentCat() { return _landUpGradeService.GetCurrentCat(); }
@@ -24,10 +28,10 @@ public class LandUpGradeUIViewModel : ViewModelBase
         }
         return null;
     }
-
-    public event Action OnGoldChanged;
-
-    private LandUpGradeService _landUpGradeService;
+    public int GetCurrentLandLevel() {
+        return _landUpGradeService.GetCurrentLandLevel();
+    }
+    
     public bool IsGoldEnough()
     {
         return _landUpGradeService.IsGoldEnough();
@@ -45,6 +49,11 @@ public class LandUpGradeUIViewModel : ViewModelBase
     public bool CheckUpGradeAvailable()
     {
         return _landUpGradeService.CanUpGradeLand();
+    }
+    public bool CheckUpGradeComplete()
+    {
+        IsUpgradeComplete = _landUpGradeService.IsUpgradeComplete();
+        return IsUpgradeComplete;
     }
     public void OnClickUpGradeButton() 
     {

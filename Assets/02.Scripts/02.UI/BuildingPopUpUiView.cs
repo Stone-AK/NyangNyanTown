@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class BuildingPopUpUIView : BaseUI
     [SerializeField] Button Button_Exit;
     [SerializeField] Button Button_CancelBg;
     [SerializeField] Button Button_BuyLand;
+    [SerializeField] TextMeshProUGUI Text_Description;
     [SerializeField] GameObject TownHallContainer;
     private Building _building;
     private void OnEnable()
@@ -34,7 +36,6 @@ public class BuildingPopUpUIView : BaseUI
             Button_BuyLand.onClick.AddListener(OnClickBuyLandButton);
         }
 
-        
     }
     private void OnDisable()
     {
@@ -44,26 +45,37 @@ public class BuildingPopUpUIView : BaseUI
         Button_CancelBg.onClick.RemoveListener(OnClickExitButton);
         Button_BuyLand.onClick.RemoveListener(OnClickBuyLandButton);
     }
-    public void Initialize(Building building) 
+    public void Initialize(Building building)
     {
         gameObject.SetActive(true);
         Debug.Log($"{building._buildingData.Name},{building.InstanceId}");
         _building = building;
-      
+        InitDescription();
         if (_building._buildingData.BuildingType == (int)BuildingType.TownHall)
         {
             TownHallContainer.gameObject.SetActive(true);
         }
-        else 
+        else
         {
-            TownHallContainer.gameObject.SetActive(false); 
+            TownHallContainer.gameObject.SetActive(false);
         }
     }
-    private void OnClickMoveButton() { GameManager.Instance.BuildManager.MoveBuilding(_building); gameObject.SetActive(false); }
-    private void OnClickDestroyButton() { GameManager.Instance.BuildManager.DestroyBuilding(_building); gameObject.SetActive(false); }
+    private void OnClickMoveButton() { GameManager.Instance.BuildManager.MoveBuilding(_building); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
+    private void OnClickDestroyButton() { GameManager.Instance.BuildManager.DestroyBuilding(_building); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
     private void OnClickExitButton() { GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
-
     private void OnClickBuyLandButton() { GameManager.Instance.UIManager.OpenLandUpGradeUIAsync().Forget(); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
+
+    public void InitDescription()
+    {
+        Text_Description.text = $"{_building._buildingData.Name}\n인구수 + {_building._buildingData.CatCapacity}\n";
+        Debug.Log($"1.{Text_Description.text}");
+        if (_building._buildingData.SpCatId != null) 
+        {
+            GameManager.Instance.DataManager.TryGetData(_building._buildingData.SpCatId, out CatInfoData data);
+            Text_Description.text += $"{data.Name} 등장확률 증가!";
+            Debug.Log($"2.{Text_Description.text}");
+        }
+    }
 }
 public class BuildingPopUpUIViewModel : ViewModelBase
 {
