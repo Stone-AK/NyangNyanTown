@@ -27,7 +27,7 @@ public class BuildManager : BaseManager<BuildManager>
     private float _currentGridX;                    //화면에 표시되는 좌표
     private const float GRUOND_Y = 1.5f;//임시 보정
     private const float BUILDING_Z = 10f;
-
+    public float BuildingZ { get; set; } = BUILDING_Z;
     public bool IsBuilding { get; private set; } = false;
     private BuildMode _currentBuildMode = BuildMode.None;//건설 정보  
   
