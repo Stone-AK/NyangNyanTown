@@ -8,7 +8,6 @@ public class CatSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        SettingSpawnTransform();
         CreateCatSpawner();
     }
 
@@ -61,7 +60,7 @@ public class CatSpawner : MonoBehaviour
 
     private void SettingSpawnTransform()
     {
-        Vector3 _spawnPosition = this.gameObject.GetComponent<Building>().GetEntrancePoint().position;
+        _spawnPosition = this.gameObject.GetComponent<Building>().GetEntrancePoint().position;
         _spawnPosition.y = -1.5f;
         _spawnPosition.z = 0f;
     }
