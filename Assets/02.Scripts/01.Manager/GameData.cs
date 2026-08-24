@@ -25,6 +25,9 @@ public class BuildingData : BaseData
     public int BuildingType;
 
     public string[] ModelAddresses;
+
+    public string SpCatId;
+    public int SpCatValue;
 }
 [System.Serializable]
 public class CatInfoData : BaseData

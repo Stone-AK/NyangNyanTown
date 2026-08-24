@@ -1,8 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
-using System.Security;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum BuildMode
@@ -29,11 +26,11 @@ public class BuildManager : BaseManager<BuildManager>
     private Vector3 _worldPos;    
     private float _currentGridX;                    //화면에 표시되는 좌표
     private const float GRUOND_Y = 1.5f;//임시 보정
-
+    private const float BUILDING_Z = 10f;
+    public float BuildingZ { get; set; } = BUILDING_Z;
     public bool IsBuilding { get; private set; } = false;
-    private BuildMode _currentBuildMode = BuildMode.None;//건설 정보    
-
-    public event Action<int> OnTotalGoldChanged;
+    private BuildMode _currentBuildMode = BuildMode.None;//건설 정보  
+  
     public override UniTask InitializeAsync()
     {
         return UniTask.CompletedTask;
@@ -45,7 +42,7 @@ public class BuildManager : BaseManager<BuildManager>
             return;
         UpdateMouseWorldPosition();
         UpdatePreview();
-        HandleBuildInput();
+        //HandleBuildInput();
     }
     public async UniTask StartBuild(BuildingData data, BuildMode mode)//프리뷰 건물 생성후 초기화
     {
@@ -63,7 +60,7 @@ public class BuildManager : BaseManager<BuildManager>
         _currentPreviewBuildingData = data;
         _currentBuildMode = mode;
 
-        Vector3 buildPosition = new Vector3(_worldPos.x, (data.ScaleY / 2f) - GRUOND_Y, 0f );
+        Vector3 buildPosition = new Vector3(_worldPos.x, (data.Height / 2f) - GRUOND_Y, 0f );
 
         // 1. 프리뷰 Root 생성
         _currentPreviewBuilding = Instantiate(_previewBuildingPrefab,buildPosition, Quaternion.identity);
@@ -98,13 +95,13 @@ public class BuildManager : BaseManager<BuildManager>
     private void CreatePreviewModel()
     {
         GameObject model = Instantiate(_modelPrefab, _previewBuilding.transform );
-        model.transform.localPosition = new Vector3(0f, _currentPreviewBuildingData.GroundOffset, 0f);
+        model.transform.localPosition = new Vector3(0f,-(_currentPreviewBuildingData.Height/2) , 0f);
         _previewBuilding.Initialize(_currentPreviewBuildingData, model);
     }
     private void CreateRealModel()
     {
         GameObject model = Instantiate(_modelPrefab, _currentBuilding.transform);
-        model.transform.localPosition = new Vector3(0f, _currentPreviewBuildingData.GroundOffset, 0f);
+        model.transform.localPosition = new Vector3(0f, -(_currentPreviewBuildingData.Height / 2) , 0f);
     }
     private void EndBuild() // 프리뷰 건물 삭제
     {
@@ -145,7 +142,7 @@ public class BuildManager : BaseManager<BuildManager>
     {
         if (_currentPreviewBuilding != null)
         {
-          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f);
+          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, 0f);
         }
         bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId);
         _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());
@@ -166,7 +163,7 @@ public class BuildManager : BaseManager<BuildManager>
         }
 
         _modelAddress = building.ModelAddress;
-        building.RemoveBuilding();
+        building.OnRemoveBuilding();
         
         GameManager.Instance.MapManager.DeleteBuilding(building.InstanceId);
         GameManager.Instance.ResourceManager.ReleaseAsset(_modelAddress);
@@ -177,7 +174,7 @@ public class BuildManager : BaseManager<BuildManager>
         _currentBuildingInstaceId = building.InstanceId;
         _currentBuilding = building;
         _modelAddress = building.ModelAddress;
-        StartBuild(building._buildingData,BuildMode.Move);
+        StartBuild(building._buildingData,BuildMode.Move).Forget();
     }
     private void UpdateMouseWorldPosition() {
         Vector2 mouseScreen = Mouse.current.position.ReadValue();
@@ -200,28 +197,43 @@ public class BuildManager : BaseManager<BuildManager>
 
         OnGridChanged();
     }
-    private void HandleBuildInput()
+    //private void HandleBuildInput()
+    //{
+
+    //    if (Mouse.current.leftButton.wasPressedThisFrame)
+    //    {
+    //        if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
+    //            return;
+
+    //        if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
+    //        {
+    //            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f));
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("건설 불가능");
+    //        }
+    //        return;
+    //    }
+
+    //    if (Mouse.current.rightButton.wasPressedThisFrame)
+    //    {
+    //        EndBuild();
+    //    }
+    //}
+    public void PressLeftMouseButtonToConfirmBuild() 
     {
-       
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        { 
-            if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
-            return;
-
-            if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
-            {
-                ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f));
-            }
-            else
-            {
-                Debug.Log("건설 불가능");
-            }
-            return;
-        }
-
-        if (Mouse.current.rightButton.wasPressedThisFrame)
+        if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
         {
-            EndBuild();
+            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, BUILDING_Z)).Forget();
         }
+        else
+        {
+            Debug.Log("건설 불가능");
+        }
+    }
+    public void PressRightMouseButtonCancelBuild() 
+    {
+        EndBuild();
     }
 }

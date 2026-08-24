@@ -24,6 +24,6 @@ public class PreviewBuilding : MonoBehaviour
         _model=model;
         _modelRenderer = _model.GetComponentInChildren<MeshRenderer>();
         // transform.localScale = new Vector3(data.ScaleX, data.ScaleY,1f);
-        _boxCollider.size = new Vector3(data.ScaleX, data.ScaleY,1f);
+        _boxCollider.size = new Vector3(data.Width, data.Height,1f);
     }
 }

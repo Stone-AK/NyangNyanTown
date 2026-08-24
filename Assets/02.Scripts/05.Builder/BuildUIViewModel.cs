@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 
 public class BuildUIViewModel : ViewModelBase
 {
@@ -15,18 +16,10 @@ public class BuildUIViewModel : ViewModelBase
                 _itemSlots.Add(newSlot);
                 newSlot.OnBuildingSlotButtonClicked += StartBuild;
             }
-            GameManager.Instance.BuildManager.OnTotalGoldChanged += OnTotalGoldChanged;
         }
     }
     public void StartBuild(BuildingData data) 
     {
-        GameManager.Instance.BuildManager.StartBuild(data, BuildMode.Build);
-    }
-    private void OnTotalGoldChanged(int currentGold) 
-    {
-        foreach (var itemSlot in _itemSlots) 
-        {
-            itemSlot.RefreshCanBuild(currentGold);
-        }
+        GameManager.Instance.BuildManager.StartBuild(data, BuildMode.Build).Forget();
     }
 }
