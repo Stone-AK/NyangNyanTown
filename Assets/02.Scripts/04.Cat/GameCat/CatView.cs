@@ -46,9 +46,23 @@ public class CatView : MonoBehaviour
         if (bindVM == null)
             return;
         bindVM.PropertyChanged += OnPropChagned_View;
-        ActionFromStatus();
+
+        InvokeCurrentValue(bindVM);
     }
 
+    private void InvokeCurrentValue(ViewModelBase viewModel)
+    {
+        switch (viewModel)
+        {
+            case CatViewModel catViewModel:
+                OnPropChagned_View(catViewModel, new PropertyChangedEventArgs(nameof(CatViewModel.CatState)));
+                break;
+
+            case CatEncyclopediaViewModel encyclopediaViewModel:
+                OnPropChagned_View(encyclopediaViewModel, new PropertyChangedEventArgs(nameof(CatEncyclopediaViewModel.IsCollected)));
+                break;
+        }
+    }
 
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
