@@ -17,7 +17,7 @@
       "Building_House_Prefab_04"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_02_Cafe",
@@ -34,7 +34,7 @@
       "Building_CoffeeShop_Prefab_01"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_03_Gym",
@@ -70,7 +70,7 @@
       "Building_Convenience_Store_Prefab_03"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_05_Drug_Store",
@@ -104,7 +104,7 @@
       "Building_Baber_Shop_Prefab_01"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_07_Apartment",
@@ -140,7 +140,7 @@
       "Building_Repair_Shop_Prefab_01"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_09_Cinema",
@@ -157,7 +157,7 @@
       "Building_Cinema_Prefab_01"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_10_Mall",
@@ -208,7 +208,7 @@
       "Building_Spawner_Prefab_01"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   },
   {
     "Id": "Building_13_TownHall",
@@ -227,6 +227,6 @@
       "Building_TownHall_Prefab_03"
     ],
     "SpCatId": null,
-    "SpCatValue": null
+    "SpCatValue": 0
   }
 ]
