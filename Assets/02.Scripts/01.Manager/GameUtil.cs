@@ -38,10 +38,14 @@ public static class GameUtil
         return null;
     }
 
-    public static int CalcEconomyGold(int catCount, int incomeGoldBase, int specialCatCount, float specialCatsMultiply)
+    public static int CalcEconomyGold(int catCount, int incomeGoldBase, int specialCatsAdd, float specialCatsMulti)
     {
-        int nomalIncomeGold = catCount * incomeGoldBase;
-        float bonusIncomeGold = nomalIncomeGold * ( 1.0f + (specialCatCount * specialCatsMultiply));
+        // (기본값 + add효과 총 수치) * 고양이 수
+        int nomalIncomeGold = (incomeGoldBase + specialCatsAdd) * catCount;
+
+        // nomalIncomeGold * (1 + multi효과 총 수치)
+        float bonusIncomeGold = nomalIncomeGold * (1.0f + specialCatsMulti);
+
         int finalIncomeGold = Mathf.RoundToInt(bonusIncomeGold);
         return finalIncomeGold;
     }
