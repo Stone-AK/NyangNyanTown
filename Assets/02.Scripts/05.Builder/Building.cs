@@ -1,7 +1,7 @@
-﻿using Cysharp.Threading.Tasks.Triggers;
+﻿
 using System;
 using System.Collections.Generic;
-using UnityEditor;
+
 using UnityEngine;
 
 
@@ -17,7 +17,7 @@ public class Building : MonoBehaviour
     [SerializeField] private Color _gizmoWireColor = Color.red;
     [SerializeField] private Vector3 _gizmocentor;
 
-    public BuildingData _buildingData;   
+    public BuildingData _buildingData;
     private Transform _entrancePoint;
     public string InstanceId { get; private set; }
     public string ModelAddress { get; private set; }
@@ -28,9 +28,11 @@ public class Building : MonoBehaviour
 
     private List<CatView> _movedInCatList = new();
 
+    private Queue<Transform> _catSlotQueue = new();
+
     private const float CELL_SIZE = 1f;
-    
-    public void InitaizeData(float rootX, BuildingData data ,string modelAddress) 
+
+    public void InitaizeData(float rootX, BuildingData data, string modelAddress)
     {
         _buildingData = data;
         InstanceId = Guid.NewGuid().ToString();
@@ -39,7 +41,17 @@ public class Building : MonoBehaviour
         OnBuildBuilding(rootX);
         SetBuildType(_buildingData.BuildingType);
     }
-    private void OnBuildBuilding(float rootX) 
+    public void InitaizeData(float rootX, BuildingData data, string modelAddress, GameObject model)
+    {
+        _buildingData = data;
+        InstanceId = Guid.NewGuid().ToString();
+        ModelAddress = modelAddress;
+
+        InitializeCatSlots(model);
+        OnBuildBuilding(rootX);
+        SetBuildType(_buildingData.BuildingType);
+    }
+    private void OnBuildBuilding(float rootX)
     {
         Vector3 scale = new Vector3(_buildingData.ScaleX, _buildingData.ScaleY, 1f);
         CreatePoints(scale);
@@ -51,14 +63,14 @@ public class Building : MonoBehaviour
         if (_buildingData.SpCatId != null)
         {
             GameManager.Instance.CatManager.TryChangeSpawnWeight(_buildingData.SpCatId, _buildingData.SpCatValue);
-        }        
+        }
     }
-    private void CreatePoints(Vector3 scale) 
+    private void CreatePoints(Vector3 scale)
     {
         CreateCatPoints(scale);
         CreateEntrancePoint(scale);
     }
-    public void OnRemoveBuilding() 
+    public void OnRemoveBuilding()
     {
 
         GameManager.Instance.EconomyService_DH.RemoveCatCurrentCount(_buildingData.CatCapacity);
@@ -238,14 +250,14 @@ public class Building : MonoBehaviour
         _entrancePoint = pointObject.transform;
         _entrancePoint.SetParent(transform, false);
 
-        _entrancePoint.localPosition = new Vector3(0f,-scale.y / 2f, 0f);
+        _entrancePoint.localPosition = new Vector3(0f, -scale.y / 2f, 0f);
     }
     public Transform GetEntrancePoint()
     {
         return _entrancePoint;
     }
 
-    public void MoveBuilding(Vector3 movePosition) 
+    public void MoveBuilding(Vector3 movePosition)
     {
         GetOutAllCat();
         transform.position = movePosition;
@@ -277,7 +289,7 @@ public class Building : MonoBehaviour
         }
         // 실질적인 충돌/배치 판정 크기 (Width, Height)
         Vector3 size = new Vector3(_buildingData.Width, _buildingData.Height, 1f);
-        Vector3 center = new Vector3(transform.position.x, transform.position.y+(_buildingData.Height/2)+ _buildingData.GroundOffset, -15f);
+        Vector3 center = new Vector3(transform.position.x, transform.position.y + (_buildingData.Height / 2) + _buildingData.GroundOffset, -15f);
         if (_boxCollider == null)
         {
             center = transform.TransformPoint(_boxCollider.center);
@@ -286,8 +298,25 @@ public class Building : MonoBehaviour
         // 빨간색 반투명 상자 + 외곽 테두리 렌더링
         Gizmos.color = _gizmoBoxColor;
         Gizmos.DrawCube(_gizmocentor, size);
-       
+
         Gizmos.color = _gizmoWireColor;
         Gizmos.DrawWireCube(_gizmocentor, size);
+    }
+    private void InitializeCatSlots(GameObject model)
+    {
+        CatSlotRoot slotRoot = model.GetComponentInChildren<CatSlotRoot>();
+
+        if (slotRoot == null)
+        {
+            Debug.LogWarning($"[{name}] CatSlotRoot를 찾을 수 없습니다.");
+            return;
+        }
+
+        _catSlotQueue.Clear();
+
+        foreach (Transform slot in slotRoot.GetSlots())
+        {
+            _catSlotQueue.Enqueue(slot);
+        }
     }
 }

@@ -10,9 +10,11 @@ public class LandUpGradeService
     private LandUpGradeData _landUpGradeData;
     private LandViewModel _landViewModel;
     private EconomyViewModel_DH _economyViewModel;
+    private MapManager _mapManager;
     public LandUpGradeService(EconomyService_DH economyService, MapManager mapManager) 
     {
         _economyService = economyService;
+        _mapManager = mapManager;
         _currentBuildingLDic = mapManager._currentBuildingLDic;
         _landViewModel = mapManager._lvm;
         if (GameManager.Instance.DataManager.TryGetDataTable( out Dictionary<string, LandUpGradeData> landUpGradeDataTable))
@@ -47,14 +49,7 @@ public class LandUpGradeService
     }
     public bool IsBuildingEnough() 
     {
-        foreach (PlacedBuildingData data in _currentBuildingLDic.Values)
-        {
-            if (data.BuildingID == _landUpGradeData.NeedBuildingId)
-            {
-                return true;
-            }
-        }
-        return false;
+        return _mapManager.IsBuildingBuilt(_landUpGradeData.NeedBuildingId);
     }
     public bool IsSpecialCatEnough() 
     {

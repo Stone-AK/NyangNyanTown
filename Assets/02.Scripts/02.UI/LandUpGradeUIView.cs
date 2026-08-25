@@ -18,7 +18,6 @@ public class LandUpGradeUIView : BaseUI
     [SerializeField] GameObject UpgradeCompleteContainer;
 
     private LandUpGradeUIViewModel _vm;
-    public bool HasFullUpgrade;
     public void Init(LandUpGradeUIViewModel vm) 
     {
         _vm = vm;
@@ -71,14 +70,30 @@ public class LandUpGradeUIView : BaseUI
         LvText.text = $"Lv.{_vm.GetCurrentLandLevel()} -> Lv.{_vm.GetCurrentLandLevel()+1}";
         GoldText.text = $"{_vm.GetCurrentGold()} / {_vm.GetNeedGold()}";
         CatText.text = $"{_vm.GetCurrentCat()} / {_vm.GetNeedCat()}";
-        BuildingText.text = $"Need : {_vm.GetNeedBuildingName()}";
+        BuildingText.text = $"건설 필요 : {_vm.GetNeedBuildingName()}";
+        if (_vm.IsBuildingEnough())
+        {
+            BuildingText.color = Color.green;
+        }
+        else 
+        {
+            BuildingText.color = Color.red;
+        }
         if (_vm.GetNeedSpecialCatName() == null)
         {
-            SpecialCatText.text = $"NoNeedSpCat";
+            SpecialCatText.text = $"필요 고양이 없음!";
         }
         else
         {
-            SpecialCatText.text = $"Need : {_vm.GetNeedSpecialCatName()}";
+            SpecialCatText.text = $"수집 필요 : {_vm.GetNeedSpecialCatName()}";
+            if (_vm.IsSpecialCatEnough())
+            {
+                SpecialCatText.color = Color.green;
+            }
+            else
+            {
+                SpecialCatText.color = Color.red;
+            }
         }
         RefreshUIContents();
         CheckCanUpGrade();

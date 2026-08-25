@@ -1,5 +1,5 @@
-using Cysharp.Threading.Tasks;
-
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 public struct PlacedBuildingData
@@ -15,7 +15,7 @@ public class MapManager : BaseManager<MapManager>
     private const float GRID_WIDTH = 0.25f;
     private const float DEFAULT_LAND_RANGE = 50f;
     private float CurrentLandRange { get; set; } = DEFAULT_LAND_RANGE;
-
+    public event Action OnBuildingChanged;
 
     public Dictionary<string, PlacedBuildingData> _currentBuildingLDic = new Dictionary<string, PlacedBuildingData>();
 
@@ -73,6 +73,7 @@ public class MapManager : BaseManager<MapManager>
         placedBuildingData.InstanceId = instanceId;
         placedBuildingData.ModelAddress = modeladdress;
         _currentBuildingLDic.Add(instanceId,placedBuildingData);
+        OnBuildingChanged?.Invoke();
     }
     public bool ModifyBuildingData(string instanceId, float rootX)
     {
@@ -93,10 +94,21 @@ public class MapManager : BaseManager<MapManager>
         {
             _currentBuildingLDic.Remove(instanceId);
         }
+        OnBuildingChanged?.Invoke();
     }
-  
     private void OnLandLevelUp(int level) 
     {
         CurrentLandRange = DEFAULT_LAND_RANGE + (level * 25f);
+    }
+    public bool IsBuildingBuilt(string buildingId) 
+    {
+        foreach (PlacedBuildingData data in _currentBuildingLDic.Values)
+        {
+            if (data.BuildingID == buildingId)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

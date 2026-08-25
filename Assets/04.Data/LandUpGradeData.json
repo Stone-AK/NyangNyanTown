@@ -4,34 +4,34 @@
     "NeedGold": 100,
     "NeedCat": 1,
     "NeedBuildingId": "Building_01_House",
-    "NeedSpecialCatId": null
+    "NeedSpecialCatId": "Cat_Normal_01"
   },
   {
     "Id": "LandUpGrade_02",
     "NeedGold": 1000,
     "NeedCat": 5,
     "NeedBuildingId": "Building_05_Drug_Store",
-    "NeedSpecialCatId": "Cat_Normal_01"
+    "NeedSpecialCatId": "Cat_Special_03"
   },
   {
     "Id": "LandUpGrade_03",
     "NeedGold": 5000,
     "NeedCat": 20,
     "NeedBuildingId": "Building_07_Apartment",
-    "NeedSpecialCatId": null
+    "NeedSpecialCatId": "Cat_Special_07"
   },
   {
     "Id": "LandUpGrade_04",
     "NeedGold": 7500,
     "NeedCat": 50,
     "NeedBuildingId": "Building_09_Cinema",
-    "NeedSpecialCatId": null
+    "NeedSpecialCatId": "Cat_Special_02"
   },
   {
     "Id": "LandUpGrade_05",
     "NeedGold": 12000,
     "NeedCat": 100,
     "NeedBuildingId": "Building_11_Police_Office",
-    "NeedSpecialCatId": null
+    "NeedSpecialCatId": "Cat_Special_04"
   }
 ]

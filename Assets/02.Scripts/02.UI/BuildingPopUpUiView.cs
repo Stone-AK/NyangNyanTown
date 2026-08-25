@@ -60,10 +60,25 @@ public class BuildingPopUpUIView : BaseUI
             TownHallContainer.gameObject.SetActive(false);
         }
     }
-    private void OnClickMoveButton() { GameManager.Instance.BuildManager.MoveBuilding(_building); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
-    private void OnClickDestroyButton() { GameManager.Instance.BuildManager.DestroyBuilding(_building); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
-    private void OnClickExitButton() { GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
-    private void OnClickBuyLandButton() { GameManager.Instance.UIManager.OpenLandUpGradeUIAsync().Forget(); GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); }
+    private void OnClickMoveButton() 
+    {
+        GameManager.Instance.BuildManager.MoveBuilding(_building);
+        GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); 
+    }
+    private void OnClickDestroyButton() 
+    { 
+        GameManager.Instance.BuildManager.DestroyBuilding(_building); 
+        GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); 
+    }
+    private void OnClickExitButton() 
+    {
+        GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI);
+    }
+    private void OnClickBuyLandButton() 
+    { 
+        GameManager.Instance.UIManager.OpenLandUpGradeUIAsync().Forget(); 
+        GameManager.Instance.UIManager.Close(UIType.BuildingPopUpUI); 
+    }
 
     public void InitDescription()
     {
@@ -76,12 +91,4 @@ public class BuildingPopUpUIView : BaseUI
             Debug.Log($"2.{Text_Description.text}");
         }
     }
-}
-public class BuildingPopUpUIViewModel : ViewModelBase
-{
-
-
-
-
-
 }
