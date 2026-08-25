@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 2243438234393527810}
   - component: {fileID: 1766776662002773876}
   - component: {fileID: 8335901017142003193}
+  - component: {fileID: 1586352770850335970}
+  - component: {fileID: 3514662673643786766}
   m_Layer: 0
   m_Name: ManagerContainer
   m_TagString: Untagged
@@ -142,3 +144,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildManager
   _previewBuildingPrefab: {fileID: 929048737933534321, guid: 365ebeeae53c28948a8b44e5637811e0, type: 3}
   _realBuildingPrefab: {fileID: 2476168248220090656, guid: 3239f6df532d3cd41995aab57c21343c, type: 3}
+--- !u!114 &1586352770850335970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269918965854432291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac60bf5a368d3c479302ee02ee59b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GachaManager
+--- !u!114 &3514662673643786766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269918965854432291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bb2b0242579d945b75f65e90e48383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager

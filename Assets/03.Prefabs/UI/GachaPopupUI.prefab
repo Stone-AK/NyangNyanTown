@@ -52,6 +52,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GachaUIView
   ExitBackButton: {fileID: 1643080598208428838}
   ExitButton: {fileID: 327916137112914404}
+  OneTimeGachaButton: {fileID: 8671127130147233295}
+  TenTimeGachaButton: {fileID: 581848811822686222}
+  OneTimeGachaText: {fileID: 1070665660582071941}
+  TenTimeGachaText: {fileID: 4585497557886077978}
 --- !u!1 &327916137017555893
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +778,7 @@ GameObject:
   - component: {fileID: 8956423425980128409}
   - component: {fileID: 581848811822686222}
   m_Layer: 0
-  m_Name: TenthButton
+  m_Name: TenGachaButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
