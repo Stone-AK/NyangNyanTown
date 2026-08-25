@@ -62,6 +62,8 @@ public class GameDataManager : BaseManager<GameDataManager>
             new LoadingTask(LoadingStep.LoadCatMouthSkin, AddressableKey.GetDataKey(DataType.CatMouthSkinData), LoadDataAsync<CatMouthSkinData>),
 
             new LoadingTask(LoadingStep.LoadLandUpGradeData, AddressableKey.GetDataKey(DataType.LandUpGradeData), LoadDataAsync<LandUpGradeData>),
+            new LoadingTask(LoadingStep.LoadAudioData, AddressableKey.GetDataKey(DataType.AudioData), LoadDataAsync<AudioData>),
+
         };
 
         return jobs;

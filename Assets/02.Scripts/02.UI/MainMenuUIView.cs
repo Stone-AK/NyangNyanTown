@@ -5,6 +5,7 @@ public class MainMenuUIView : BaseUI
 {
     [SerializeField] private Button Button_Start;
     [SerializeField] private Button Button_Exit;
+    [SerializeField] private string BGMAudioId;
 
 
     private void OnEnable()
@@ -18,6 +19,7 @@ public class MainMenuUIView : BaseUI
         {
             Button_Exit.onClick.AddListener(OnClickExitButton);
         }
+        GameManager.Instance.AudioManager.PlayBGM(BGMAudioId);
     }
 
     private void OnDisable()
