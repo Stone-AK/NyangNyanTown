@@ -527,6 +527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuUIView
   Button_Start: {fileID: 833719712867349286}
   Button_Exit: {fileID: 6486712957765284592}
+  BGMAudioId: BGM_Lobby_01
 --- !u!1 &4738186819627617210
 GameObject:
   m_ObjectHideFlags: 0
