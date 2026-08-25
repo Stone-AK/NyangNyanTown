@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks.Triggers;
+﻿using Cysharp.Threading.Tasks.Triggers;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -15,7 +15,7 @@ public class Building : MonoBehaviour
     [SerializeField] private bool _showGizmo = true;
     [SerializeField] private Color _gizmoBoxColor = new Color(1f, 0f, 0f, 0.3f);
     [SerializeField] private Color _gizmoWireColor = Color.red;
-
+    [SerializeField] private Vector3 _gizmocentor;
 
     public BuildingData _buildingData;   
     private Transform _entrancePoint;
@@ -32,28 +32,40 @@ public class Building : MonoBehaviour
     
     public void InitaizeData(float rootX, BuildingData data ,string modelAddress) 
     {
-       // _renderer = GetComponentInChildren<Renderer>();
         _buildingData = data;
         InstanceId = Guid.NewGuid().ToString();
         ModelAddress = modelAddress;
 
-        GameManager.Instance.MapManager.RegisterBuilding(data, rootX, InstanceId, modelAddress);
-        GameManager.Instance.EconomyService_DH.AddCatCurrentCount(data.CatCapacity);
-
-
-        Vector3 scale = new Vector3(data.ScaleX, data.ScaleY, 1f);
+        OnBuildBuilding(rootX);
+        SetBuildType(_buildingData.BuildingType);
+    }
+    private void OnBuildBuilding(float rootX) 
+    {
+        Vector3 scale = new Vector3(_buildingData.ScaleX, _buildingData.ScaleY, 1f);
+        CreatePoints(scale);
         _boxCollider.size = scale;
-        //_visual.localScale = scale;//건물 매쉬 조절
 
+        GameManager.Instance.MapManager.RegisterBuilding(_buildingData, rootX, InstanceId, ModelAddress);
+        GameManager.Instance.EconomyService_DH.AddCatCurrentCount(_buildingData.CatCapacity);
+
+        if (_buildingData.SpCatId != null)
+        {
+            GameManager.Instance.CatManager.TryChangeSpawnWeight(_buildingData.SpCatId, _buildingData.SpCatValue);
+        }        
+    }
+    private void CreatePoints(Vector3 scale) 
+    {
         CreateCatPoints(scale);
         CreateEntrancePoint(scale);
-        SetBuildType(_buildingData.BuildingType);
-        //AddBuildingComponent();
     }
-    public void RemoveBuilding() 
+    public void OnRemoveBuilding() 
     {
 
         GameManager.Instance.EconomyService_DH.RemoveCatCurrentCount(_buildingData.CatCapacity);
+        if (_buildingData.SpCatId != null)
+        {
+            GameManager.Instance.CatManager.TryChangeSpawnWeight(_buildingData.SpCatId, -_buildingData.SpCatValue);
+        }
     }
 
     /// <summary>
@@ -265,15 +277,17 @@ public class Building : MonoBehaviour
         }
         // 실질적인 충돌/배치 판정 크기 (Width, Height)
         Vector3 size = new Vector3(_buildingData.Width, _buildingData.Height, 1f);
-        Vector3 center = transform.position;
-        if (_boxCollider != null)
+        Vector3 center = new Vector3(transform.position.x, transform.position.y+(_buildingData.Height/2)+ _buildingData.GroundOffset, -15f);
+        if (_boxCollider == null)
         {
             center = transform.TransformPoint(_boxCollider.center);
         }
+        _gizmocentor = center;
         // 빨간색 반투명 상자 + 외곽 테두리 렌더링
         Gizmos.color = _gizmoBoxColor;
-        Gizmos.DrawCube(center, size);
+        Gizmos.DrawCube(_gizmocentor, size);
+       
         Gizmos.color = _gizmoWireColor;
-        Gizmos.DrawWireCube(center, size);
+        Gizmos.DrawWireCube(_gizmocentor, size);
     }
 }

@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 
 public class CatManager : BaseManager<CatManager>
 {
+    private string _commonCatId;
     private int _activeCatCount;
     public List<CatSpawner> CatSpanweList = new();
     private Dictionary<string, int> _catSpawnWeightList = new();
@@ -51,14 +52,20 @@ public class CatManager : BaseManager<CatManager>
     }
 
     // 나중에 가중치 값 변경 시 호출 되어야함
-    public void ChangedCatSpawnWeight()
+    private void ChangedCatSpawnWeight()
     {
         if(_catSpawnWeightList.Count == 0)
         {
             if (GameManager.Instance.DataManager.TryGetDataTable<CatInfoData>(out var catDataTable))
             {
+                int tmpInt = 0;
                 foreach (var catData in catDataTable)
                 {
+                    if (tmpInt == 0)
+                    {
+                        _commonCatId = catData.Key;
+                        tmpInt++;
+                    }
                     _catSpawnWeightList.Add(catData.Key, catData.Value.CatAppearanceWeight);
                 }
             }
@@ -78,7 +85,7 @@ public class CatManager : BaseManager<CatManager>
 
         CatViewModel catViewModel = new CatViewModel();
 
-        if (spawnedCatId == "Cat_Normal_01")
+        if (spawnedCatId == _commonCatId)
         {
             catViewModel.InitRandomCatStat();
             return catViewModel;
@@ -89,7 +96,7 @@ public class CatManager : BaseManager<CatManager>
         return catViewModel;
     }
 
-    private string SelectRandomCatIdByWeight()
+    public string SelectRandomCatIdByWeight()
     {
         if (_catSpawnWeightList == null)
             return null;
@@ -124,12 +131,19 @@ public class CatManager : BaseManager<CatManager>
         _catSpawnWeightList[changedCatId] = newWeight;
         _totalWeight += newWeight - currentWeight;
 
+        ChangedCatSpawnWeight();
+
         return true;
     }
 
-    public async UniTask<GameObject> SpawnCat(Transform spawnTransform)
+    public async UniTask<GameObject> SpawnCat(Vector3 spawnPosition)
     {
         if (!IsCatSpawnAvailable())
+            return null;
+
+        Building targetBuilding = FindAvailableTargetBuilding();
+
+        if (targetBuilding == null)
             return null;
 
         string spawnedCatId = SelectRandomCatIdByWeight();
@@ -140,11 +154,17 @@ public class CatManager : BaseManager<CatManager>
             return null;
         }
 
+        if(spawnedCatId != _commonCatId)
+        {
+            GameManager.Instance.EconomyService_DH.AddCurrentFish(1);
+        }
+        
         CatViewModel spawnCatVM = InitCatStat(spawnedCatId);
-
         _activeCatCount++;
 
-        GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnTransform);
+        CatEncyclopediaViewModel spawnCatEncycloiediaVM = GameManager.Instance.EconomyService_DH.CatEncyclopediaList[spawnedCatId];
+
+        GameObject returnCatObj = await GameManager.Instance.ObjectManager.SpawnAsync("Prefab/Cat_Prefab", this.gameObject.transform, spawnPosition, Quaternion.identity);
 
         if (returnCatObj == null)
         {
@@ -153,9 +173,48 @@ public class CatManager : BaseManager<CatManager>
         }
 
         if (returnCatObj.TryGetComponent<CatView>(out var catView))
-            catView.InitCatView(spawnCatVM);
+        {
+            catView.InitCatView(spawnCatVM, targetBuilding, spawnCatEncycloiediaVM);
+        }
 
         return returnCatObj;
+    }
+
+    public Building FindAvailableTargetBuilding()
+    {
+        Building candidateTargetBuilding = null;
+        float highestAvailableSpaceRate = 0f;
+
+        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
+        {
+            Vector3 searchPosition = new Vector3(placeBuildingData.Value.RootX, 0,GameManager.Instance.BuildManager.BuildingZ);
+
+            Collider[] colliders = Physics.OverlapSphere(searchPosition, 0.01f);
+
+            foreach (var collider in colliders)
+            {
+                if (collider == null)
+                    continue;
+
+                Building building = collider.GetComponentInParent<Building>();
+
+                if (building == null)
+                    continue;
+
+                if (building.GetComponent<CatSpawner>() != null)
+                    continue;
+
+                float availableSpaceRate = building.GetAvailableSpaceRate();
+
+                if (highestAvailableSpaceRate < availableSpaceRate)
+                {
+                    highestAvailableSpaceRate = availableSpaceRate;
+                    candidateTargetBuilding = building;
+                }
+            }
+        }
+
+        return candidateTargetBuilding;
     }
 
     public void DespawnCat(GameObject targetDspawnObject)

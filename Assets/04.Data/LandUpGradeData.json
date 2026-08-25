@@ -11,7 +11,7 @@
     "NeedGold": 1000,
     "NeedCat": 5,
     "NeedBuildingId": "Building_05_Drug_Store",
-    "NeedSpecialCatId": null
+    "NeedSpecialCatId": "Cat_Normal_01"
   },
   {
     "Id": "LandUpGrade_03",

@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.ComponentModel;
+using System.Reflection;
 using UnityEngine;
 
 public class CatView : MonoBehaviour
@@ -14,6 +15,7 @@ public class CatView : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer _eyeRenderer;
     [SerializeField] private SkinnedMeshRenderer _mouthRenderer;
     [SerializeField] private CatAnimationControl _catAnimationControl;
+    [SerializeField] private GameObject _newCatParticle;
 
     public CatViewModel CatViewModelProp { get => _catViewModel; }
 
@@ -39,23 +41,61 @@ public class CatView : MonoBehaviour
         }
     }
 
-    private void BindSlotViewMdoel(CatViewModel catVM)
+    public void BindViewMdoel<T>(T bindVM) where T : ViewModelBase
     {
-        if (catVM == null)
+        if (bindVM == null)
             return;
-        catVM.PropertyChanged += OnPropChagned_View;
+        bindVM.PropertyChanged += OnPropChagned_View;
+
+        InvokeCurrentValue(bindVM);
+    }
+
+    private void InvokeCurrentValue(ViewModelBase viewModel)
+    {
+        switch (viewModel)
+        {
+            case CatViewModel catViewModel:
+                OnPropChagned_View(catViewModel, new PropertyChangedEventArgs(nameof(CatViewModel.CatState)));
+                break;
+
+            case CatEncyclopediaViewModel encyclopediaViewModel:
+                OnPropChagned_View(encyclopediaViewModel, new PropertyChangedEventArgs(nameof(CatEncyclopediaViewModel.IsCollected)));
+                break;
+        }
     }
 
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
-        switch (e.PropertyName)
+        if (sender is CatViewModel)
         {
-            case nameof(CatViewModelProp.CatState):
-                {
-                    ActionFromStatus();
-                }
-                break;
+            switch (e.PropertyName)
+            {
+                case nameof(CatViewModelProp.CatState):
+                    {
+                        ActionFromStatus();
+                    }
+                    break;
+            }
         }
+        else if (sender is CatEncyclopediaViewModel encyclopediaVM)
+        {
+            switch(e.PropertyName)
+            {
+                case nameof(CatEncyclopediaViewModel.IsCollected):
+                    {
+                        ActiveNotCollectedCatParticle(encyclopediaVM.IsCollected);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void ActiveNotCollectedCatParticle(bool isCollected)
+    {
+        if(isCollected == false)
+            _newCatParticle.SetActive(true);
+        else if(isCollected == true)
+            _newCatParticle.SetActive(false);
     }
 
     private void MoveCatOnFixedUpdate()
@@ -68,15 +108,18 @@ public class CatView : MonoBehaviour
         transform.Translate(Vector3.forward * _catViewModel.CatSpeed * Time.fixedDeltaTime);
     }
 
-    public void InitCatView(CatViewModel catViewModel)
+    public void InitCatView(CatViewModel catViewModel, Building targetBuilding, CatEncyclopediaViewModel enclopediaVM)
     {
-        if(catViewModel == null) 
+        if (catViewModel == null || targetBuilding == null)
             return;
 
         _catViewModel = catViewModel;
-        BindSlotViewMdoel(_catViewModel);
+        _targetBuilding = targetBuilding;
+
+        BindViewMdoel(_catViewModel);
+        BindViewMdoel(enclopediaVM);
         SettingMaterial(catViewModel);
-        CatDetectTarget();
+        SettingTargetPosition();
     }
 
     private async void SettingMaterial(CatViewModel catViewModel)
@@ -157,7 +200,7 @@ public class CatView : MonoBehaviour
 
         Material eyeMaterial;
 
-        if (catData.SpecialCatBody == "None")
+        if (catData.SpecialCatEye == "None")
         {
             eyeMaterial =
             await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
@@ -181,7 +224,7 @@ public class CatView : MonoBehaviour
 
         Material mouthMaterial;
 
-        if (catData.SpecialCatBody == "None")
+        if (catData.SpecialCatMouth == "None")
         {
             mouthMaterial =
             await GameManager.Instance.ResourceManager.LoadAssetAsync<Material>(
@@ -202,68 +245,6 @@ public class CatView : MonoBehaviour
                 _bodyRenderer.sharedMaterial = mouthMaterial;
             }
         }
-    }
-
-    private void CatDetectTarget()
-    {
-        if (GameManager.Instance.MapManager._currentBuildingLDic == null)
-            return;
-
-        if (GameManager.Instance.MapManager._currentBuildingLDic.Count == 0)
-        {
-            Debug.Log("지어진 건물이 없습니다.");
-            // 추후 건물이 없어도 고양이가 생성되어야 한다면 해당 위치에 정의 필요
-            return;
-        }
-
-        _targetBuilding = SearchTargetBuilding();
-
-        // 아무 알맞은 건물을 못찾은 상태, 0으로 가도록 함
-        if (_targetBuilding == null)
-        {
-            Vector3 temporaryDirection = new Vector3(0, 0, 0);
-            transform.rotation = Quaternion.LookRotation(temporaryDirection);
-            return;
-        }
-
-        SettingTargetPosition();
-    }
-
-    private Building SearchTargetBuilding()
-    {
-        Building candidateTargetBuilding = null;
-        float nowSpaceOccupancyRate = 0f;
-        float newSpaceOccupancyRate = 0f;
-        foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
-        {
-            Vector3 searchTargetPosition = new Vector3(placeBuildingData.Value.RootX, 0, 0);
-            Collider[] buildingChildCollider = Physics.OverlapSphere(searchTargetPosition, 0.01f);
-
-            foreach (var buildingChild in buildingChildCollider)
-            {
-                if (buildingChild == null) 
-                    continue;
-
-                Building building = buildingChild.GetComponentInParent<Building>();
-                if (building == null)
-                    continue;
-
-                if (building.GetComponent<CatSpawner>() != null)
-                    continue;
-
-                newSpaceOccupancyRate = building.GetAvailableSpaceRate();
-
-                if (nowSpaceOccupancyRate < newSpaceOccupancyRate)
-                {
-                    nowSpaceOccupancyRate = newSpaceOccupancyRate;
-                    candidateTargetBuilding = building;
-                }
-            }
-        }
-        if (candidateTargetBuilding == null)
-            return null;
-
-        return candidateTargetBuilding;
     }
 
     private void SettingTargetPosition()
@@ -349,8 +330,18 @@ public class CatView : MonoBehaviour
 
     private void ArriveSpanwPositionAndEscape()
     {
+        UnBindViewMdoel(_catViewModel);
+        UnBindViewMdoel(GameManager.Instance.EconomyService_DH.CatEncyclopediaList[_catViewModel.CatId]);
         // TODO(안우재/08.09) : 가까운 Spawn지역에 도착 시 탈출하는 모션 출력 필요.
         GameManager.Instance.CatManager.DespawnCat(this.gameObject);
+    }
+
+    private void UnBindViewMdoel<T>(T unBindVM) where T : ViewModelBase
+    {
+        if (unBindVM == null)
+            return;
+        unBindVM.PropertyChanged -= OnPropChagned_View;
+        ActionFromStatus();
     }
 
     private async void ActionFromStatus()
@@ -362,6 +353,7 @@ public class CatView : MonoBehaviour
 
             if (_catViewModel.CatState == CatState.InBuildingAction)
             {
+                ChangeLayer(0);
                 _catAnimationControl.PlayAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
                 _catViewModel.CatState = CatState.SearchTarget;
@@ -376,6 +368,10 @@ public class CatView : MonoBehaviour
             {
                 SearchDespawnPoint();
             }
+            else if (_catViewModel.CatState == CatState.MoveToTarget)
+            {
+                ChangeLayer(6);
+            }
         }
         catch(OperationCanceledException) 
         { 
@@ -383,18 +379,34 @@ public class CatView : MonoBehaviour
         }
     }
 
-    public void SearchDespawnPoint()
+    private void ChangeLayer(int layer)
+    {
+        _bodyRenderer.gameObject.layer = layer;
+        _eyeRenderer.gameObject.layer = layer;
+        _mouthRenderer.gameObject.layer = layer;
+        _newCatParticle.layer = layer;
+    }
+
+    private void MoveCatBuildingEntrance()
     {
         if (_pointInBuilding != null && _targetBuilding != null)
         {
-            Transform entrancePoint = _targetBuilding.GetEntrancePoint();
+            if(_targetBuilding.GetEntrancePoint() != null)
+            {
+                Vector3 entrancePoint = _targetBuilding.GetEntrancePoint().position;
+                entrancePoint.z = 0;
 
-            _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
-            _pointInBuilding = null;
+                _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
+                _pointInBuilding = null;
 
-            if (entrancePoint != null)
-                transform.position = entrancePoint.position;
+                transform.position = entrancePoint;
+            }
         }
+    }
+
+    public void SearchDespawnPoint()
+    {
+        MoveCatBuildingEntrance();
 
         if (GameManager.Instance.CatManager.CatSpanweList.Count == 0)
         {

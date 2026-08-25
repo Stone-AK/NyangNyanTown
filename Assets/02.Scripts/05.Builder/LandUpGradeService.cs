@@ -56,7 +56,21 @@ public class LandUpGradeService
         }
         return false;
     }
-    public bool IsSpecialCatEnough() { return true; }
+    public bool IsSpecialCatEnough() 
+    {
+        if (_landUpGradeData.NeedSpecialCatId == null) 
+        {
+            return true;
+        }
+        if (_economyService.CatEncyclopediaList.TryGetValue(_landUpGradeData.NeedSpecialCatId, out var vm)) 
+        {
+            if (vm.IsCollected == true) 
+            {
+                return true;
+            }
+        }
+        return false; 
+    }
     public int GetNeedUpGradeGold() 
     {
         return _landUpGradeData.NeedGold;
@@ -73,6 +87,10 @@ public class LandUpGradeService
     {
         return _economyViewModel.CatCurrentCount;
     }
+    public int GetCurrentLandLevel() 
+    {
+        return _landViewModel.LandLevel;
+    }
     public string GetNeedBuildingId() 
     {
     return _landUpGradeData.NeedBuildingId;
@@ -85,10 +103,27 @@ public class LandUpGradeService
     {
         return IsGoldEnough() && IsCatEnough() && IsBuildingEnough() && IsSpecialCatEnough();
     }
+    public bool IsUpgradeComplete() 
+    {
+        if (_landUpGradeData == null) 
+        {
+            return true;
+        }
+        return false;
+    
+    }
     public void GetCurrentLandUpGradeData(int landLevel) 
     {
+        if (landLevel < 0 || landLevel >= _landUpGradeDataTable.Count)
+        {
+            Debug.LogWarning($"랜드 레벨 {landLevel}에 해당하는 데이터가 없습니다.");
+            _landUpGradeData = null;
+            return;
+        }
+
         _landUpGradeData = _landUpGradeDataTable.Values.ElementAt(landLevel);
     }
+
     public bool LandUpGrade()
     {
         if (!CanUpGradeLand())
