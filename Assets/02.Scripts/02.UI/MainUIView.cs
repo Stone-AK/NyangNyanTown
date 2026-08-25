@@ -31,7 +31,6 @@ public class MainUIView : BaseUI
     {
         _vm = vm;
         _vm.PropertyChanged += OnPropChagned_View;
-
     }
     private void OnEnable()
     {

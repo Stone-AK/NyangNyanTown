@@ -16,6 +16,7 @@ public enum LoadingStep
     LoadCatEyeSkin,
     LoadCatMouthSkin,
     LoadLandUpGradeData,
+    LoadAudioData,
     Complete
 }
 
@@ -27,7 +28,8 @@ public enum DataType
     CatBodySkinData,
     CatEyeSkinData,
     CatMouthSkinData,
-    LandUpGradeData
+    LandUpGradeData,
+    AudioData
 }
 
 public enum PrefabType

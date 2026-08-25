@@ -11,7 +11,8 @@ public class GameManager : BaseManager<GameManager>
     public BuildManager BuildManager { get; private set; }
     public MapManager MapManager { get; private set; }
     public CatManager CatManager { get; private set; }
-
+    public AudioManager AudioManager { get; private set; }
+    public GachaManager GachaManager { get; private set; }
 
 
 
@@ -76,6 +77,8 @@ public class GameManager : BaseManager<GameManager>
         await BuildManager.InitializeAsync();
         await MapManager.InitializeAsync();
         await CatManager.InitializeAsync();
+        await AudioManager.InitializeAsync();
+        await GachaManager.InitializeAsync();
     }
     public override UniTask InitializeAsync()
     {
@@ -102,5 +105,7 @@ public class GameManager : BaseManager<GameManager>
         BuildManager = this.GetComponent<BuildManager>(); 
         MapManager = this.GetComponent<MapManager>();
         CatManager = this.GetComponent<CatManager>();
+        AudioManager = this.GetComponent<AudioManager>();
+        GachaManager = this.GetComponent<GachaManager>();
     }
 }
