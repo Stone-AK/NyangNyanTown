@@ -315,7 +315,14 @@ public class CatView : MonoBehaviour
         if(building == null)
             return;
 
-        if(building.GetAvailableCatPointCount() == 0)
+        if (building.GetAvailableCatPointCount() == 0)
+        {
+            Debug.Log("해당 건물은 빈 자리가 없습니다.");
+            _catViewModel.CatState = CatState.TargetMissing;
+            return;
+        }
+
+        if (building.GetAvailableCatPointCount() == 0)
         {
             Debug.Log("해당 건물은 빈 자리가 없습니다.");
             _catViewModel.CatState = CatState.TargetMissing;
