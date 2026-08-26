@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CatSpawner : MonoBehaviour
 {
+    private Vector3 _spawnPosition = new();
+
     private void OnEnable()
     {
         CreateCatSpawner();
@@ -49,11 +51,17 @@ public class CatSpawner : MonoBehaviour
             if (GameManager.Instance.CatManager == null)
                 return;
 
-            Vector3 spawnTransform = this.gameObject.GetComponent<Building>().GetEntrancePoint().position;
-            spawnTransform.y = -1.5f;
-            spawnTransform.z = 0f;
+            if (_spawnPosition.x != this.gameObject.GetComponent<Building>().GetEntrancePoint().position.x)
+                SettingSpawnTransform();
 
-            await GameManager.Instance.CatManager.SpawnCat(spawnTransform);
+            await GameManager.Instance.CatManager.SpawnCat(_spawnPosition);
         }
+    }
+
+    private void SettingSpawnTransform()
+    {
+        _spawnPosition = this.gameObject.GetComponent<Building>().GetEntrancePoint().position;
+        _spawnPosition.y = -1.5f;
+        _spawnPosition.z = 0f;
     }
 }
