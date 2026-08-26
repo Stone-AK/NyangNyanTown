@@ -42,7 +42,8 @@ public enum BuildingType
 {
     Normal,
     TownHall,
-    Spawner
+    Spawner,
+    LandMark
 }
 
 

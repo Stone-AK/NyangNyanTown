@@ -422,7 +422,7 @@ MonoBehaviour:
   _moveSpeed: 10
   _focusMoveDuration: 0.35
   _focusTargetScreenOffset: {x: -150, y: 0}
-  _zoomSpeed: 20
+  _zoomSpeed: 30
   _minZoom: 10
   _maxZoom: 40
   _outsideLayerName: Outside

@@ -42,7 +42,6 @@ public class BuildManager : BaseManager<BuildManager>
             return;
         UpdateMouseWorldPosition();
         UpdatePreview();
-        //HandleBuildInput();
     }
     public async UniTask StartBuild(BuildingData data, BuildMode mode)//프리뷰 건물 생성후 초기화
     {
@@ -60,9 +59,8 @@ public class BuildManager : BaseManager<BuildManager>
         _currentPreviewBuildingData = data;
         _currentBuildMode = mode;
 
-        Vector3 buildPosition = new Vector3(_worldPos.x, (data.Height / 2f) - GRUOND_Y, 0f );
-
-        // 1. 프리뷰 Root 생성
+        Vector3 buildPosition = new Vector3(_worldPos.x, (data.Height / 2f) - GRUOND_Y, BUILDING_Z);
+       
         _currentPreviewBuilding = Instantiate(_previewBuildingPrefab,buildPosition, Quaternion.identity);
 
         _previewBuilding = _currentPreviewBuilding.GetComponent<PreviewBuilding>();
@@ -117,7 +115,13 @@ public class BuildManager : BaseManager<BuildManager>
     private async UniTask ConfirmBuilding(Vector3 buildPositon) //건물설치
     {
         if (!HasEnoughGold())
+        {
             return;
+        }
+        if (IsBuildingBuilt()) 
+        {
+            return;
+        }
         if (_currentBuildMode == BuildMode.Build)
         {
             GameManager.Instance.EconomyService_DH.RemoveCurrentGold((_currentPreviewBuildingData.Cost)); 
@@ -142,10 +146,10 @@ public class BuildManager : BaseManager<BuildManager>
     {
         if (_currentPreviewBuilding != null)
         {
-          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, 0f);
+          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, BUILDING_Z);
         }
         bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId);
-        _previewBuilding.SetBuildable(canBuild&& HasEnoughGold());
+        _previewBuilding.SetBuildable(canBuild&& HasEnoughGold() && !IsBuildingBuilt());
     }
     private bool HasEnoughGold() 
     {
@@ -197,30 +201,6 @@ public class BuildManager : BaseManager<BuildManager>
 
         OnGridChanged();
     }
-    //private void HandleBuildInput()
-    //{
-
-    //    if (Mouse.current.leftButton.wasPressedThisFrame)
-    //    {
-    //        if (EventSystem.current.IsPointerOverGameObject())//버튼 중복입력 방지
-    //            return;
-
-    //        if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
-    //        {
-    //            ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.ScaleY / 2f) - GRUOND_Y, 0f));
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("건설 불가능");
-    //        }
-    //        return;
-    //    }
-
-    //    if (Mouse.current.rightButton.wasPressedThisFrame)
-    //    {
-    //        EndBuild();
-    //    }
-    //}
     public void PressLeftMouseButtonToConfirmBuild() 
     {
         if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
@@ -235,5 +215,22 @@ public class BuildManager : BaseManager<BuildManager>
     public void PressRightMouseButtonCancelBuild() 
     {
         EndBuild();
+    }
+    private bool IsBuildingBuilt() 
+    {
+        if (_currentBuildMode == BuildMode.Move) 
+        {
+            return false;
+        }
+        if ((BuildingType)_currentPreviewBuildingData.BuildingType == BuildingType.TownHall)
+        {
+            bool isAlreadyBuilt = GameManager.Instance.MapManager.IsBuildingBuilt(_currentPreviewBuildingData.Id);
+
+            if (isAlreadyBuilt)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

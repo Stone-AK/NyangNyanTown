@@ -1,7 +1,7 @@
 [
   {
     "Id": "Building_01_House",
-    "Name": "House",
+    "Name": "주택",
     "Cost": 10,
     "Width": 10.5,
     "Height": 14,
@@ -21,7 +21,7 @@
   },
   {
     "Id": "Building_02_Cafe",
-    "Name": "Cafe",
+    "Name": "카페",
     "Cost": 50,
     "Width": 10.5,
     "Height": 16,
@@ -38,7 +38,7 @@
   },
   {
     "Id": "Building_03_Gym",
-    "Name": "Gym",
+    "Name": "헬스장",
     "Cost": 60,
     "Width": 10.5,
     "Height": 12,
@@ -55,7 +55,7 @@
   },
   {
     "Id": "Building_04_Convenience_Store",
-    "Name": "Convenience_Store",
+    "Name": "편의점",
     "Cost": 50,
     "Width": 10.8,
     "Height": 11,
@@ -74,7 +74,7 @@
   },
   {
     "Id": "Building_05_Drug_Store",
-    "Name": "Drug_Store",
+    "Name": "약국",
     "Cost": 1200,
     "Width": 11,
     "Height": 7,
@@ -91,7 +91,7 @@
   },
   {
     "Id": "Building_06_Hair_Shop",
-    "Name": "Hair_Shop",
+    "Name": "헤어샵",
     "Cost": 1500,
     "Width": 10.4,
     "Height": 12,
@@ -108,7 +108,7 @@
   },
   {
     "Id": "Building_07_Apartment",
-    "Name": "Apartment",
+    "Name": "아파트",
     "Cost": 2000,
     "Width": 11.5,
     "Height": 17,
@@ -127,7 +127,7 @@
   },
   {
     "Id": "Building_08_Repair_Shop",
-    "Name": "Repair_Shop",
+    "Name": "정비소",
     "Cost": 2200,
     "Width": 21.5,
     "Height": 10,
@@ -144,7 +144,7 @@
   },
   {
     "Id": "Building_09_Cinema",
-    "Name": "Cinema",
+    "Name": "영화관",
     "Cost": 5000,
     "Width": 31.5,
     "Height": 15,
@@ -161,7 +161,7 @@
   },
   {
     "Id": "Building_10_Mall",
-    "Name": "Mall",
+    "Name": "대형 마트",
     "Cost": 6500,
     "Width": 38.5,
     "Height": 8,
@@ -178,7 +178,7 @@
   },
   {
     "Id": "Building_11_Police_Office",
-    "Name": "Police_Office",
+    "Name": "경찰서",
     "Cost": 7000,
     "Width": 24.5,
     "Height": 10,
@@ -195,7 +195,7 @@
   },
   {
     "Id": "Building_12_Spawner",
-    "Name": "Subway",
+    "Name": "지하철 역",
     "Cost": 10,
     "Width": 5.2,
     "Height": 6,
@@ -212,7 +212,7 @@
   },
   {
     "Id": "Building_13_TownHall",
-    "Name": "TownHall",
+    "Name": "시청",
     "Cost": 0,
     "Width": 20.5,
     "Height": 20,
