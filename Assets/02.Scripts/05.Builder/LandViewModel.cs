@@ -15,4 +15,9 @@ public class LandViewModel
         OnLandLevelUp?.Invoke(LandLevel);
     }
 
+    public void RestoreLandLevel(int landLevel)
+    {
+        LandLevel = Mathf.Max(0, landLevel);
+        OnLandLevelUp?.Invoke(LandLevel);
+    }
 }

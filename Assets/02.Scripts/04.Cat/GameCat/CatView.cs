@@ -343,6 +343,32 @@ public class CatView : MonoBehaviour
         GameManager.Instance.CatManager.DespawnCat(this.gameObject);
     }
 
+    public void DespawnImmediately()
+    {
+        if (_pointInBuilding != null && _targetBuilding != null)
+        {
+            _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
+        }
+
+        _pointInBuilding = null;
+        _targetBuilding = null;
+
+        if (_catViewModel != null)
+        {
+            _catViewModel.PropertyChanged -= OnPropChagned_View;
+
+            if (GameManager.Instance.EconomyService_DH.CatEncyclopediaList.TryGetValue(
+                    _catViewModel.CatId,
+                    out CatEncyclopediaViewModel encyclopediaViewModel))
+            {
+                encyclopediaViewModel.PropertyChanged -= OnPropChagned_View;
+            }
+        }
+
+        _catViewModel = null;
+        GameManager.Instance.CatManager.DespawnCat(gameObject);
+    }
+
     private void UnBindViewMdoel<T>(T unBindVM) where T : ViewModelBase
     {
         if (unBindVM == null)
@@ -355,27 +381,37 @@ public class CatView : MonoBehaviour
     {
         try
         {
-            if (_catViewModel == null)
+            CatViewModel actionViewModel = _catViewModel;
+
+            if (actionViewModel == null)
                 return;
 
-            if (_catViewModel.CatState == CatState.InBuildingAction)
+            if (actionViewModel.CatState == CatState.InBuildingAction)
             {
                 ChangeLayer(0);
                 _catAnimationControl.PlayAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
-                _catViewModel.CatState = CatState.SearchTarget;
+
+                if (!gameObject.activeInHierarchy || _catViewModel != actionViewModel)
+                    return;
+
+                actionViewModel.CatState = CatState.SearchTarget;
             }
-            else if (_catViewModel.CatState == CatState.TargetMissing)
+            else if (actionViewModel.CatState == CatState.TargetMissing)
             {
                 _catAnimationControl.PlayTargetMissingAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: this.GetCancellationTokenOnDestroy());
-                _catViewModel.CatState = CatState.SearchTarget;
+
+                if (!gameObject.activeInHierarchy || _catViewModel != actionViewModel)
+                    return;
+
+                actionViewModel.CatState = CatState.SearchTarget;
             }
-            else if (_catViewModel.CatState == CatState.SearchTarget)
+            else if (actionViewModel.CatState == CatState.SearchTarget)
             {
                 SearchDespawnPoint();
             }
-            else if (_catViewModel.CatState == CatState.MoveToTarget)
+            else if (actionViewModel.CatState == CatState.MoveToTarget)
             {
                 ChangeLayer(6);
             }

@@ -239,6 +239,21 @@ public class CatManager : BaseManager<CatManager>
         GameManager.Instance.ObjectManager.Despawn(targetDspawnObject);
     }
 
+    public void DespawnAllCats()
+    {
+        CatView[] activeCats = FindObjectsByType<CatView>(FindObjectsSortMode.None);
+
+        foreach (CatView catView in activeCats)
+        {
+            if (catView != null)
+            {
+                catView.DespawnImmediately();
+            }
+        }
+
+        _activeCatCount = 0;
+    }
+
     public bool IsCatSpawnAvailable()
     {
         if(_activeCatCount < GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CatCurrentCount)
