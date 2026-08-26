@@ -82,7 +82,7 @@ public class BuildingPopUpUIView : BaseUI
 
     public void InitDescription()
     {
-        Text_Description.text = $"{_building._buildingData.Name}\n인구수 + {_building._buildingData.CatCapacity}\n";
+        Text_Description.text = $"{_building._buildingData.Name}\n\n인구수 + {_building._buildingData.CatCapacity}\n";
         Debug.Log($"1.{Text_Description.text}");
         if (_building._buildingData.SpCatId != null) 
         {

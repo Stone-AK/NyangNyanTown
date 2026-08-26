@@ -59,7 +59,7 @@ public class BuildManager : BaseManager<BuildManager>
         _currentPreviewBuildingData = data;
         _currentBuildMode = mode;
 
-        Vector3 buildPosition = new Vector3(_worldPos.x, (data.Height / 2f) - GRUOND_Y, 0f );
+        Vector3 buildPosition = new Vector3(_worldPos.x, (data.Height / 2f) - GRUOND_Y, BUILDING_Z);
        
         _currentPreviewBuilding = Instantiate(_previewBuildingPrefab,buildPosition, Quaternion.identity);
 
@@ -146,7 +146,7 @@ public class BuildManager : BaseManager<BuildManager>
     {
         if (_currentPreviewBuilding != null)
         {
-          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, 0f);
+          _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, BUILDING_Z);
         }
         bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId);
         _previewBuilding.SetBuildable(canBuild&& HasEnoughGold() && !IsBuildingBuilt());
