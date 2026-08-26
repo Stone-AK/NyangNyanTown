@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : BaseManager<GameManager>
@@ -18,7 +18,7 @@ public class GameManager : BaseManager<GameManager>
 
     public EconomyService_DH EconomyService_DH { get; private set; }
     public LandUpGradeService LandUpGradeService {  get; private set; }
-
+    public BuildService BuildService { get; private set; }
 
     [SerializeField] private GameObject WJPrefab;
     [SerializeField] private GameObject DHPrefab;
@@ -40,6 +40,7 @@ public class GameManager : BaseManager<GameManager>
         EconomyService_DH = new EconomyService_DH();
         EconomyService_DH.InitEconomyService();
         LandUpGradeService = new LandUpGradeService(EconomyService_DH, MapManager);
+        BuildService = new BuildService(MapManager, EconomyService_DH);
     }
 
 

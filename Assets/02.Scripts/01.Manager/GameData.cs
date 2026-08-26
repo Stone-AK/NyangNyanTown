@@ -13,9 +13,6 @@ public class BuildingData : BaseData
     public string Name;
     public int Cost;
    
-    public int ScaleX;
-    public int ScaleY;
-
     public float Width;
     public float Height;
 

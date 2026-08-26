@@ -1,35 +1,30 @@
-﻿using UnityEditor.Build.Pipeline.Utilities;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 public class BuildService
 {
     private MapManager _mapManager;
-    private GameDataManager _dataManager;
     private EconomyService_DH _economyService;
     private EconomyViewModel_DH _economyViewModel;
 
-    public BuildService(MapManager mapManager, EconomyService_DH economyService, GameDataManager dataManager)
+    public BuildService(MapManager mapManager, EconomyService_DH economyService)
     {
         _mapManager = mapManager;
-        _dataManager = dataManager;
         _economyService = economyService;
         _economyViewModel = _economyService.GetEconomyViewModel();
     }
-    public bool CanBuildAndPlace(Building building, float rootX) 
+    public bool CanPlaceOnMove(float rootX, BuildingData data, string ignoreInstanceId = null) 
     {
-        return _mapManager.CanBuildOnThisPlace(rootX, building._buildingData.Width, building.InstanceId) 
-            && IsGoldEnough(building._buildingData.Cost);
+        return _mapManager.CanBuildingPlace(rootX, data.Width, ignoreInstanceId);
     }
-    public bool CanBuildOnThisPlace(Building building, float rootX) 
+    public bool CanBuildOnThisPlace(BuildingData data, float rootX) 
     {
-        return _mapManager.CanBuildOnThisPlace(rootX, building._buildingData.Width, building.InstanceId) 
-            && CanBuildBuildingType(building._buildingData) 
-            && IsGoldEnough(building._buildingData.Cost);
+        return _mapManager.CanBuildingPlace(rootX, data.Width) 
+            && CanBuildThisBuildingType(data) 
+            && IsGoldEnough(data.Cost);
     }
-    public bool CanBuildOnUI(Building building) 
+    public bool CanBuildOnUI(BuildingData data) 
     {
-        return IsGoldEnough(building._buildingData.Cost) && CanBuildBuildingType(building._buildingData);
+        return IsGoldEnough(data.Cost) && CanBuildThisBuildingType(data);
     }
     private bool IsGoldEnough(int cost) 
     {
@@ -37,11 +32,11 @@ public class BuildService
 
         return isGoldEnough;
     }
-    private bool CanBuildBuildingType(BuildingData data) 
+    private bool CanBuildThisBuildingType(BuildingData data) 
     {
         switch ((BuildingType)data.BuildingType) 
         {
-            case BuildingType.TownHall: return IsBuildingBuilt(data.Id);
+            case BuildingType.TownHall: return !IsBuildingBuilt(data.Id);
             case BuildingType.LandMark: return IsSpCatAllCollected();
             default: return true;
         }
@@ -52,7 +47,16 @@ public class BuildService
     }
     private bool IsSpCatAllCollected() 
     {
-        _dataManager.TryGetDataTable<CatInfoData>(out var dataTable);
-        return _economyService.CatEncyclopediaList.Count == dataTable.Count;
+        int spCount = 0;
+
+        foreach (CatEncyclopediaViewModel vm in _economyService.CatEncyclopediaList.Values) 
+        {
+            if (vm.IsCollected) 
+            {
+                spCount++;
+            }
+        }
+       // return _economyService.CatEncyclopediaList.Count == spCount;
+       return  spCount>=1;
     }
 }

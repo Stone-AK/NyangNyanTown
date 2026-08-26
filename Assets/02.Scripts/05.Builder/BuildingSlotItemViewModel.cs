@@ -47,22 +47,7 @@ public class BuildingSlotItemViewModel : ViewModelBase
     }
     public bool GetCanBuild(int currentGold) 
     {
-        bool hasEnoughGold = Cost <= currentGold;
-
-        if (!hasEnoughGold)
-        {
-            return false;
-        }
-        if (BuildingType == BuildingType.TownHall)
-        {
-            bool isAlreadyBuilt =  GameManager.Instance.MapManager.IsBuildingBuilt(_buildingData.Id);
-
-            if (isAlreadyBuilt)
-            {
-                return false;
-            }
-        }
-        return true;
+        return GameManager.Instance.BuildService.CanBuildOnUI(_buildingData);
     }
     
     private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

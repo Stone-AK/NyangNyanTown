@@ -30,8 +30,6 @@ public class Building : MonoBehaviour
 
     private readonly Queue<Transform> _availableCatPoints = new();
 
-    private const float CELL_SIZE = 1f;
-
     public void InitaizeData(float rootX, BuildingData data, string modelAddress)
     {
         _buildingData = data;
@@ -43,7 +41,7 @@ public class Building : MonoBehaviour
     }
     private void OnBuildBuilding(float rootX)
     {
-        Vector3 scale = new Vector3(_buildingData.ScaleX, _buildingData.ScaleY, 1f);
+        Vector3 scale = new Vector3(_buildingData.Width, _buildingData.Height, 1f);
         CreatePoints(scale);
         _boxCollider.size = scale;
 
@@ -89,41 +87,13 @@ public class Building : MonoBehaviour
             case BuildingType.Spawner:
                 this.gameObject.AddComponent<CatSpawner>();
                 break;
+            case BuildingType.LandMark:
+                LandMarkBuilding landMarkBuilding = GetComponentInChildren<LandMarkBuilding>();
+                landMarkBuilding.OnBuild();
+                break;
             default:
                 Debug.LogError("매칭되는 건물 타입이 존재하지 않습니다.");
                 break;
-        }
-    }
-
-    private void CreateCatPoints(Vector3 scale)
-    {
-        ClearCatPoints();
-
-        int width = Mathf.RoundToInt(scale.x);
-        int height = Mathf.RoundToInt(scale.y);
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                GameObject pointObject = new GameObject(
-                    $"CatPoint_{x}_{y}"
-                );
-
-                Transform point = pointObject.transform;
-
-                point.SetParent(transform);
-
-                // 건물 중앙을 기준으로 배치
-                point.localPosition = new Vector3(
-                    (x + 0.5f) * CELL_SIZE - (width * CELL_SIZE / 2f),
-                    (y + 0.5f) * CELL_SIZE - (height * CELL_SIZE / 2f),
-                    0f
-                );
-
-                _allCatPoints.Add(point);
-                _availableCatPoints.Enqueue(point);
-            }
         }
     }
 

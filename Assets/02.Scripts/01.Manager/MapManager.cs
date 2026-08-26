@@ -28,7 +28,7 @@ public class MapManager : BaseManager<MapManager>
         _lvm.OnLandLevelUp += OnLandLevelUp;
         return UniTask.CompletedTask;
     }
-    public bool CanBuildOnThisPlace(float rootX, float width, string ignoreInstanceId = null) //좌표를 주면 해당위치에 설치할 수 있는지 반환
+    public bool CanBuildingPlace(float rootX, float width, string ignoreInstanceId = null) //좌표를 주면 해당위치에 설치할 수 있는지 반환
     {
         float leftX = rootX - (width / 2f);
         float rightX = rootX + (width / 2f);
