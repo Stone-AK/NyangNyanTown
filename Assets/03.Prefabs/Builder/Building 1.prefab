@@ -45,18 +45,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f8f0811cb9a9d4a8875a8801b25f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Building
+  _boxCollider: {fileID: 6575009526884634111}
+  _mesh: {fileID: 0}
+  _showGizmo: 1
+  _gizmoBoxColor: {r: 1, g: 0, b: 0, a: 0.3}
+  _gizmoWireColor: {r: 1, g: 0, b: 0, a: 1}
+  _gizmocentor: {x: 0, y: 0, z: 0}
   _buildingData:
     Name: 
     Cost: 0
     ScaleX: 0
     ScaleY: 0
     Width: 0
+    Height: 0
+    GroundOffset: 0
     CatCapacity: 0
     BuildingType: 0
     ModelAddresses: []
-  _meshFilter: {fileID: 593518001413332408}
-  _visual: {fileID: 2876410636439510645}
-  _boxCollider: {fileID: 6575009526884634111}
+    SpCatId: 
+    SpCatValue: 0
 --- !u!1001 &6002018529166443937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -119,11 +126,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfa18106f87f0ad4b9945e8e7597c596, type: 3}
---- !u!33 &593518001413332408 stripped
-MeshFilter:
-  m_CorrespondingSourceObject: {fileID: 6590997675377547289, guid: bfa18106f87f0ad4b9945e8e7597c596, type: 3}
-  m_PrefabInstance: {fileID: 6002018529166443937}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2876410636439510645 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8403827090908421076, guid: bfa18106f87f0ad4b9945e8e7597c596, type: 3}

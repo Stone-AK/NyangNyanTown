@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 737913139564963307}
+  - component: {fileID: 3662144925708911191}
   m_Layer: 0
   m_Name: BuildingInside_Slot
   m_TagString: Untagged
@@ -31,3 +32,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3662144925708911191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3029011417283034007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec8adb8084ad62b4cad472f5c99aee79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CatSlotRoot
+  _slots: []

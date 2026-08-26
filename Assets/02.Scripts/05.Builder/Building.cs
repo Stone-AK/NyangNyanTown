@@ -22,13 +22,13 @@ public class Building : MonoBehaviour
     public string InstanceId { get; private set; }
     public string ModelAddress { get; private set; }
     // 현재 비어 있는 입주 자리
-    private Queue<Transform> _availableCatPoints = new Queue<Transform>();
+    //private Queue<Transform> _availableCatPoints = new Queue<Transform>();
     // 생성된 모든 입주 자리
     private List<Transform> _allCatPoints = new List<Transform>();
 
     private List<CatView> _movedInCatList = new();
 
-    private Queue<Transform> _catSlotQueue = new();
+    private readonly Queue<Transform> _availableCatPoints = new();
 
     private const float CELL_SIZE = 1f;
 
@@ -37,17 +37,7 @@ public class Building : MonoBehaviour
         _buildingData = data;
         InstanceId = Guid.NewGuid().ToString();
         ModelAddress = modelAddress;
-
-        OnBuildBuilding(rootX);
-        SetBuildType(_buildingData.BuildingType);
-    }
-    public void InitaizeData(float rootX, BuildingData data, string modelAddress, GameObject model)
-    {
-        _buildingData = data;
-        InstanceId = Guid.NewGuid().ToString();
-        ModelAddress = modelAddress;
-
-        InitializeCatSlots(model);
+        
         OnBuildBuilding(rootX);
         SetBuildType(_buildingData.BuildingType);
     }
@@ -67,8 +57,9 @@ public class Building : MonoBehaviour
     }
     private void CreatePoints(Vector3 scale)
     {
-        CreateCatPoints(scale);
+        //CreateCatPoints(scale);
         CreateEntrancePoint(scale);
+        InitializeCatSlots(this.gameObject);
     }
     public void OnRemoveBuilding()
     {
@@ -304,19 +295,15 @@ public class Building : MonoBehaviour
     }
     private void InitializeCatSlots(GameObject model)
     {
-        CatSlotRoot slotRoot = model.GetComponentInChildren<CatSlotRoot>();
+        _availableCatPoints.Clear();
 
-        if (slotRoot == null)
+        CatSlotRoot[] slots = model.GetComponentsInChildren<CatSlotRoot>(true);
+
+        foreach (CatSlotRoot slot in slots)
         {
-            Debug.LogWarning($"[{name}] CatSlotRoot를 찾을 수 없습니다.");
-            return;
-        }
-
-        _catSlotQueue.Clear();
-
-        foreach (Transform slot in slotRoot.GetSlots())
-        {
-            _catSlotQueue.Enqueue(slot);
+            _availableCatPoints.Enqueue(slot.transform);
+            _allCatPoints.Add(slot.transform);
+            Debug.Log($"{slot.name}");
         }
     }
 }
