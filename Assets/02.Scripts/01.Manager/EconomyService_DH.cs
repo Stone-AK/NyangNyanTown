@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 
 public class EconomyService_DH
@@ -56,6 +57,41 @@ public class EconomyService_DH
             }
     }
 
+    public void UpdateSpecialCatEffects()
+    {
+        if (_economyViewModel == null)
+        {
+            Debug.LogError("[EconomyService_DH] ViewModel이 null입니다.");
+            return;
+        }
+        int totalAdd = 0;
+        float totalMulti = 0.0f;
+        // 1. 도감 리스트 순회
+        foreach (var pair in _catEncyclopediaList)
+        {
+            var catVm = pair.Value;
+
+            // 수집되지 않은 고양이는 제외
+            if (catVm == null || !catVm.IsCollected) continue;
+            // 2. DataManager에서 해당 고양이의 CatInfoData 조회
+            if (GameManager.Instance.DataManager.TryGetData<CatInfoData>(catVm.CatInfoDataId, out var catData))
+            {
+                // 3. CatEffect 타입에 따라 Add / Multi 누적
+                if (catData.CatEffect == "Add")
+                {
+                    totalAdd += (int)catData.EffectValue;
+                }
+                else if (catData.CatEffect == "Multiplies")
+                {
+                    totalMulti += catData.EffectValue;
+                }
+            }
+        }
+        // 4. ViewModel 프로퍼티에 합산 결과 반영
+        _economyViewModel.SpecialCatAdd = totalAdd;
+        _economyViewModel.SpecialCatMultiply = totalMulti;
+    }
+
 
     public EconomyViewModel_DH GetEconomyViewModel()
     {
@@ -71,7 +107,8 @@ public class EconomyService_DH
         var economyViewModel = new EconomyViewModel_DH();
         economyViewModel.CurrentGold = 10;
         economyViewModel.CatCurrentCount = 0;
-        economyViewModel.SpecialCatCount = 0;
+        economyViewModel.SpecialCatAdd = 0;
+        economyViewModel.SpecialCatMultiply = 0.0f;
         economyViewModel.BuildingCount = 0;
 
         return economyViewModel;
@@ -161,6 +198,9 @@ public class EconomyService_DH
             return false;
 
         catViewModel.IsCollected = true;
+
+        UpdateSpecialCatEffects();
+
         return true;
     }
 

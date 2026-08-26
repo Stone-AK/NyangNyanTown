@@ -4,7 +4,7 @@ public class IncomeGoldCalcView : MonoBehaviour
 {
     [Header("Economy Calculation Settings")]
     private int _incomeGoldBase = 10;
-    private int _specialCatCount = 0;
+    private int _specialCatsAdd = 1;
     private float _specialCatsMultiply = 0.1f;
     private float _goldInterval = 2.0f;
 
@@ -51,7 +51,7 @@ public class IncomeGoldCalcView : MonoBehaviour
 
     public int GetIncomeCurrentGold(int incomeGoldBase)
     {
-        int IncomeGold = GameUtil.CalcEconomyGold(_viewModel.CatCurrentCount, incomeGoldBase, _viewModel.SpecialCatCount, _specialCatsMultiply);
+        int IncomeGold = GameUtil.CalcEconomyGold(_viewModel.CatCurrentCount, incomeGoldBase, _viewModel.SpecialCatAdd, _viewModel.SpecialCatMultiply);
 
         return IncomeGold;
     }

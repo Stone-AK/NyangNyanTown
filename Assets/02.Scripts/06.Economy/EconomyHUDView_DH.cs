@@ -40,8 +40,11 @@ public class EconomyHUDView_DH : MonoBehaviour
             case nameof(EconomyViewModel_DH.CurrentGold):
                 if (Text_goldCount != null) Text_goldCount.text = _viewModel.CurrentGold.ToString();
                 break;
-            case nameof(EconomyViewModel_DH.SpecialCatCount):
-                if (Text_specialCatCount != null) Text_specialCatCount.text = _viewModel.SpecialCatCount.ToString();
+            case nameof(EconomyViewModel_DH.SpecialCatAdd):
+                if (Text_specialCatCount != null) Text_specialCatCount.text = _viewModel.SpecialCatAdd.ToString();
+                break;
+            case nameof(EconomyViewModel_DH.SpecialCatMultiply):
+                if (Text_specialCatCount != null) Text_specialCatCount.text = _viewModel.SpecialCatMultiply.ToString();
                 break;
         }
     }

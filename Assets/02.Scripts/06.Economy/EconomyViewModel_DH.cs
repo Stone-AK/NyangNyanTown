@@ -7,7 +7,8 @@ public class EconomyViewModel_DH : ViewModelBase
         OnPropertyChanged(nameof(CatCurrentCount));
         OnPropertyChanged(nameof(CurrentGold));
         OnPropertyChanged(nameof(CurrentFish));
-        OnPropertyChanged(nameof(SpecialCatCount));
+        OnPropertyChanged(nameof(SpecialCatAdd));
+        OnPropertyChanged(nameof(SpecialCatMultiply));
         OnPropertyChanged(nameof(BuildingCount));
     }
 
@@ -42,30 +43,44 @@ public class EconomyViewModel_DH : ViewModelBase
         }
     }
 
-    private int _currentfish;
+    private int _currentFish;
     public int CurrentFish
     {
-        get => _currentfish;
+        get => _currentFish;
         set
         {
-            if (_currentfish != value)
+            if (_currentFish != value)
             {
-                _currentfish = value;
+                _currentFish = value;
                 OnPropertyChanged(nameof(CurrentFish));
             }
         }
     }
 
-    private int _specialCatCount;
-    public int SpecialCatCount
+    private int _specialCatAdd;
+    public int SpecialCatAdd
     {
-        get => _specialCatCount;
+        get => _specialCatAdd;
         set
         {
-            if (_specialCatCount != value)
+            if (_specialCatAdd != value)
             {
-                _specialCatCount = value;
-                OnPropertyChanged(nameof(SpecialCatCount));
+                _specialCatAdd = value;
+                OnPropertyChanged(nameof(SpecialCatAdd));
+            }
+        }
+    }
+
+    private float _specialCatsMultiply;
+    public float SpecialCatMultiply
+    {
+        get => _specialCatsMultiply;
+        set
+        {
+            if (_specialCatsMultiply != value)
+            {
+                _specialCatsMultiply = value;
+                OnPropertyChanged(nameof(SpecialCatMultiply));
             }
         }
     }
