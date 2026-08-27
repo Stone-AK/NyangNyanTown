@@ -32,6 +32,7 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
 
         File.WriteAllText(savePath, json);
 
+        GameManager.Instance.UIManager.OpenSaveLoadCompletePopupAsync(SaveLoadPopupType.Save, true).Forget();
         Debug.Log($"저장 완료: {savePath}");
     }
 
@@ -39,7 +40,7 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
     {
         if (ReadGameData() == false)
         {
-            // TODO : 로드할 데이터가 없습니다. 팝업 띄워줘야함
+            await GameManager.Instance.UIManager.OpenSaveLoadCompletePopupAsync(SaveLoadPopupType.Read, false);
             return;
         }
 
@@ -49,14 +50,14 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
         LoadLandInfo();
         await LoadPlaceBuilding();
 
-        // TODO : 로드 완료 팝업
+        await GameManager.Instance.UIManager.OpenSaveLoadCompletePopupAsync(SaveLoadPopupType.Load, true);
     }
 
     private bool ReadGameData()
     {
         string savePath = Path.Combine(Application.persistentDataPath, "SaveData.json");
 
-        if (!File.Exists(savePath))
+        if (File.Exists(savePath) == false)
         {
             Debug.Log("저장 파일이 존재하지 않습니다.");
             return false;
