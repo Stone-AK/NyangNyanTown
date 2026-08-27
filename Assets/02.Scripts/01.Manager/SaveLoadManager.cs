@@ -12,6 +12,12 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
         return UniTask.CompletedTask;
     }
 
+    public bool HasSaveData()
+    {
+        string savePath = Path.Combine(Application.persistentDataPath, "SaveData.json");
+        return File.Exists(savePath);
+    }
+
     public void SaveGameData()
     {
         _saveData.Gold = GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CurrentGold;
@@ -36,10 +42,6 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
             // TODO : 로드할 데이터가 없습니다. 팝업 띄워줘야함
             return;
         }
-
-        GameManager.Instance.CatManager.DespawnAllCats();
-        await GameManager.Instance.BuildManager.ClearAllBuildings();
-        GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CatCurrentCount = 0;
 
         LoadCollectedCatData();
         LoadGold();
