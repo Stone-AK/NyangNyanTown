@@ -174,23 +174,6 @@ public class BuildManager : BaseManager<BuildManager>
         Destroy(building.gameObject);
     }
 
-    public async UniTask ClearAllBuildings()
-    {
-        if (IsBuilding)
-        {
-            EndBuild();
-        }
-
-        Building[] buildings = FindObjectsByType<Building>(FindObjectsSortMode.None);
-
-        foreach (Building building in buildings)
-        {
-            DestroyBuilding(building);
-        }
-
-        await UniTask.NextFrame(destroyCancellationToken);
-    }
-
     public void MoveBuilding(Building building) 
     {
         _currentBuildingInstaceId = building.InstanceId;

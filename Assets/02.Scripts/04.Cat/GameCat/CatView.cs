@@ -343,32 +343,6 @@ public class CatView : MonoBehaviour
         GameManager.Instance.CatManager.DespawnCat(this.gameObject);
     }
 
-    public void DespawnImmediately()
-    {
-        if (_pointInBuilding != null && _targetBuilding != null)
-        {
-            _targetBuilding.ReturnCatPoint(_pointInBuilding, this);
-        }
-
-        _pointInBuilding = null;
-        _targetBuilding = null;
-
-        if (_catViewModel != null)
-        {
-            _catViewModel.PropertyChanged -= OnPropChagned_View;
-
-            if (GameManager.Instance.EconomyService_DH.CatEncyclopediaList.TryGetValue(
-                    _catViewModel.CatId,
-                    out CatEncyclopediaViewModel encyclopediaViewModel))
-            {
-                encyclopediaViewModel.PropertyChanged -= OnPropChagned_View;
-            }
-        }
-
-        _catViewModel = null;
-        GameManager.Instance.CatManager.DespawnCat(gameObject);
-    }
-
     private void UnBindViewMdoel<T>(T unBindVM) where T : ViewModelBase
     {
         if (unBindVM == null)

@@ -201,14 +201,34 @@ public class UIManager : BaseManager<UIManager>
 
     public async UniTask OpenCatInfoPopupAsync(CatView chooseCat, CancellationToken cancellationToken = default)
     {
-        BaseUI baseUI = await OpenPopupRootAsync(
-        UIType.OnClickCatInfoPopUp,
-        cancellationToken);
+        BaseUI baseUI = await OpenPopupRootAsync(UIType.OnClickCatInfoPopUp, cancellationToken);
 
         if (baseUI is OnClickCatInfoPopUp popup)
         {
             popup.SettingPopUp(chooseCat);
         }
+    }
 
+    public async UniTask OpenSaveLoadCompletePopupAsync(SaveLoadPopupType popupType, bool isSuccess, CancellationToken cancellationToken = default)
+    {
+        BaseUI baseUI = await OpenVeryFrontRootAsync(UIType.SaveLoadCompletePopup, cancellationToken);
+
+        if (baseUI is not SaveLoadCompletePopup popup)
+            return;
+
+        switch (popupType)
+        {
+            case SaveLoadPopupType.Save:
+                popup.SettingSaveText(isSuccess);
+                break;
+
+            case SaveLoadPopupType.Read:
+                popup.SettingReadText(isSuccess);
+                break;
+
+            case SaveLoadPopupType.Load:
+                popup.SettingLoadText(isSuccess);
+                break;
+        }
     }
 }

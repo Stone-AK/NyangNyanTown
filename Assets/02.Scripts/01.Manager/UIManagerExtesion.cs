@@ -21,7 +21,8 @@ public enum UIType
     LandUpGradeUI,
     OnClickCatInfoPopUp,
     MainMenuUI,
-    BuildUI
+    BuildUI,
+    SaveLoadCompletePopup
 }
 
 public class BaseUI : MonoBehaviour
