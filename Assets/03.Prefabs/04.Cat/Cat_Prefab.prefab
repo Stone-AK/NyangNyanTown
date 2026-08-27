@@ -2965,6 +2965,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cat_low-Poly_Mesh
       objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 3805a467cce5643f5b4c26e4d447db8c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0ba5a67c7aed3432b86756d5c8b21cfc, type: 2}
     - target: {fileID: 2945298957642648572, guid: 3805a467cce5643f5b4c26e4d447db8c, type: 3}
       propertyPath: m_IsActive
       value: 1

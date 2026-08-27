@@ -173,6 +173,7 @@ public class BuildManager : BaseManager<BuildManager>
         GameManager.Instance.ResourceManager.ReleaseAsset(_modelAddress);
         Destroy(building.gameObject);
     }
+
     public void MoveBuilding(Building building) 
     {
         _currentBuildingInstaceId = building.InstanceId;
@@ -180,6 +181,57 @@ public class BuildManager : BaseManager<BuildManager>
         _modelAddress = building.ModelAddress;
         StartBuild(building._buildingData,BuildMode.Move).Forget();
     }
+
+    public async UniTask OnLoadBuild(PlacedBuildingSaveData buildingSaveData)
+    {
+        if (buildingSaveData == null ||
+            string.IsNullOrWhiteSpace(buildingSaveData.BuildingId) ||
+            string.IsNullOrWhiteSpace(buildingSaveData.ModelAddress))
+        {
+            Debug.LogWarning("복원할 건물의 저장 데이터가 올바르지 않습니다.");
+            return;
+        }
+
+        if (_realBuildingPrefab == null)
+        {
+            Debug.LogError("실제 건물 프리팹이 할당되어 있지 않습니다.");
+            return;
+        }
+
+        if (!GameManager.Instance.DataManager.TryGetData(buildingSaveData.BuildingId, out BuildingData buildingData))
+        {
+            Debug.LogWarning($"저장된 건물 데이터를 찾을 수 없습니다: {buildingSaveData.BuildingId}");
+            return;
+        }
+
+        GameObject modelPrefab = await GameManager.Instance.ResourceManager.LoadAssetAsync<GameObject>(
+            buildingSaveData.ModelAddress,
+            destroyCancellationToken);
+
+        if (modelPrefab == null)
+        {
+            Debug.LogError($"저장된 건물 외형을 불러오지 못했습니다: {buildingSaveData.ModelAddress}");
+            return;
+        }
+
+        Vector3 buildingPosition = new Vector3(buildingSaveData.RootX, (buildingData.Height / 2f) - GRUOND_Y, BUILDING_Z);
+
+        GameObject buildingObject = Instantiate(_realBuildingPrefab, buildingPosition, Quaternion.identity);
+
+        if (!buildingObject.TryGetComponent(out Building building))
+        {
+            Debug.LogError("실제 건물 프리팹에서 Building 컴포넌트를 찾을 수 없습니다.");
+            GameManager.Instance.ResourceManager.ReleaseAsset(buildingSaveData.ModelAddress);
+            Destroy(buildingObject);
+            return;
+        }
+
+        GameObject model = Instantiate(modelPrefab, building.transform);
+        model.transform.localPosition = new Vector3(0f, -(buildingData.Height / 2f), 0f);
+
+        building.InitaizeData(buildingSaveData.RootX, buildingData, buildingSaveData.ModelAddress);
+    }
+
     private void UpdateMouseWorldPosition() {
         Vector2 mouseScreen = Mouse.current.position.ReadValue();
 
