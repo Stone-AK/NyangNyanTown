@@ -12,12 +12,6 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
         return UniTask.CompletedTask;
     }
 
-    public bool HasSaveData()
-    {
-        string savePath = Path.Combine(Application.persistentDataPath, "SaveData.json");
-        return File.Exists(savePath);
-    }
-
     public void SaveGameData()
     {
         _saveData.Gold = GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CurrentGold;
@@ -38,12 +32,6 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
 
     public async UniTask LoadGameData()
     {
-        if (ReadGameData() == false)
-        {
-            await GameManager.Instance.UIManager.OpenSaveLoadCompletePopupAsync(SaveLoadPopupType.Read, false);
-            return;
-        }
-
         LoadCollectedCatData();
         LoadGold();
         LoadFish();
@@ -53,12 +41,13 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
         await GameManager.Instance.UIManager.OpenSaveLoadCompletePopupAsync(SaveLoadPopupType.Load, true);
     }
 
-    private bool ReadGameData()
+    public bool TryReadGameData()
     {
         string savePath = Path.Combine(Application.persistentDataPath, "SaveData.json");
 
         if (File.Exists(savePath) == false)
         {
+            GameManager.Instance.UIManager.OpenSaveLoadCompletePopupAsync(SaveLoadPopupType.Read, false).Forget();
             Debug.Log("저장 파일이 존재하지 않습니다.");
             return false;
         }

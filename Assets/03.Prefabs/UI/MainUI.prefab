@@ -2423,7 +2423,7 @@ MonoBehaviour:
   Button_FishCheat: {fileID: 7215081514717666725}
   Button_Gacha: {fileID: 7624750985326773107}
   Button_LayoutOpen: {fileID: 376226554417338117}
-  Button_GameSave: {fileID: 0}
+  Button_GameSave: {fileID: 5497077352897392520}
   GoldText: {fileID: 3509380509076223599}
   FishText: {fileID: 6994106398258515547}
   CatCountText: {fileID: 6368242686514881632}

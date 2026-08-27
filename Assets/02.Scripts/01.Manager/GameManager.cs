@@ -20,7 +20,6 @@ public class GameManager : BaseManager<GameManager>
     public LandUpGradeService LandUpGradeService {  get; private set; }
 
 
-    [SerializeField] private GameObject WJPrefab;
     [SerializeField] private GameObject DHPrefab;
     [SerializeField] private GameObject JDPrefab;
     [SerializeField] private GameObject GHPrefab;
@@ -57,9 +56,8 @@ public class GameManager : BaseManager<GameManager>
 
         await GameManager.Instance.UIManager.OpenMainUIAsync();
 
-        if (WJPrefab != null)
+        if (DHPrefab != null)
         {
-            WJPrefab.SetActive(true);
             DHPrefab.SetActive(true);
             JDPrefab.SetActive(true);
             GHPrefab.SetActive(true);
