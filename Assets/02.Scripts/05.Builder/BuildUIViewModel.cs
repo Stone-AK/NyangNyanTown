@@ -20,7 +20,6 @@ public class BuildUIViewModel : ViewModelBase
     }
     public void OpenBuildConfirmPopUp(BuildingData data) 
     {
-        
         GameManager.Instance.UIManager.OpenBuildConfirmPopUpUIAsync(data).Forget();
     }
 }

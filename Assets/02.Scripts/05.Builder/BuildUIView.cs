@@ -13,10 +13,7 @@ public class BuildUIView : BaseUI
     {
         _viewModel = new BuildUIViewModel();//TODO : 매니저에서 생성하도록 변경
         CreateSlots();
-
     }
-   
-   
    
     private void CreateSlots() 
     {

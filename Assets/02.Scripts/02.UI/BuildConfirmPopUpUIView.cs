@@ -85,7 +85,7 @@ public class BuildConfirmPopUpUIView : BaseUI
         else 
         {
             Slot_Cat.gameObject.SetActive(true);
-            Text_Cat.text = _vm.Cat.ToString();
+            Text_Cat.text = "+ "+_vm.Cat.ToString();
         }
     }
     private void OnClickExitButton() 
