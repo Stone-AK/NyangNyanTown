@@ -22,6 +22,7 @@ public enum UIType
     OnClickCatInfoPopUp,
     MainMenuUI,
     BuildUI,
+    BuildConfirmPopUpUI,  
     SaveLoadCompletePopup
 }
 

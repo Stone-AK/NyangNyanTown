@@ -198,6 +198,16 @@ public class UIManager : BaseManager<UIManager>
             popup.Initialize(building);
         }
     }
+    public async UniTask OpenBuildConfirmPopUpUIAsync(BuildingData data, CancellationToken cancellationToken = default)
+    {
+        BaseUI baseUI = await OpenPopupRootAsync(UIType.BuildConfirmPopUpUI, cancellationToken);
+
+        if (baseUI is BuildConfirmPopUpUIView popup)
+        {
+            BuildConfirmPopUpUIViewModel vm = new BuildConfirmPopUpUIViewModel(data);
+            popup.Init(vm);
+        }
+    }
 
     public async UniTask OpenCatInfoPopupAsync(CatView chooseCat, CancellationToken cancellationToken = default)
     {

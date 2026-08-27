@@ -1,3 +1,4 @@
+ï»¿using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +40,7 @@ public class MainMenuUIView : BaseUI
 
         if (Button_Exit != null)
         {
-            Button_Exit.onClick.RemoveListener(OnClickStartButtonAsync);
+            Button_Exit.onClick.RemoveListener(OnClickExitButton);
         }
 
 
@@ -58,12 +59,19 @@ public class MainMenuUIView : BaseUI
 
     private void OnClickExitButton()
     {
-        Debug.Log("°ÔÀÓ Á¾·á!");
+        Debug.Log("ê²Œìž„ ì¢…ë£Œ!");
     }
 
-    private void OnClickLoadButton()
+    private async void OnClickLoadButton()
     {
-        Debug.Log("°ÔÀÓ ºÒ·¯¿ÍÀÕ!");
+        Debug.Log("ê²Œìž„ ë¶ˆëŸ¬ì™€ìž‡!");
 
+        if (!GameManager.Instance.SaveManager.TryReadGameData())
+            return;
+
+        await GameManager.Instance.GameStartAsync();
+        await GameManager.Instance.SaveManager.LoadGameData();
+
+        GameManager.Instance.UIManager.CloseMainMenuUI();
     }
 }

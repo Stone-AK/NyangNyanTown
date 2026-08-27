@@ -114,52 +114,53 @@ public class BuildManager : BaseManager<BuildManager>
     }
     private async UniTask ConfirmBuilding(Vector3 buildPositon) //건물설치
     {
-        if (!HasEnoughGold())
-        {
-            return;
-        }
-        if (IsBuildingBuilt()) 
-        {
-            return;
-        }
         if (_currentBuildMode == BuildMode.Build)
         {
-            GameManager.Instance.EconomyService_DH.RemoveCurrentGold((_currentPreviewBuildingData.Cost)); 
-            //AddGold(-(_currentPreviewBuildingData.Cost));
-            EndBuild();
-            _currentBuildingObject = Instantiate(_realBuildingPrefab, buildPositon, Quaternion.identity);
-            _currentBuilding = _currentBuildingObject.GetComponent<Building>();
-            await LoadBuildingModel();
-            CreateRealModel();
-            _currentBuilding.InitaizeData(buildPositon.x, _currentPreviewBuildingData,_modelAddress);
+            if (GameManager.Instance.BuildService.CanBuildOnThisPlace(_currentPreviewBuildingData, _currentGridX))
+            {
+                GameManager.Instance.EconomyService_DH.RemoveCurrentGold((_currentPreviewBuildingData.Cost));
+
+                EndBuild();
+                _currentBuildingObject = Instantiate(_realBuildingPrefab, buildPositon, Quaternion.identity);
+                _currentBuilding = _currentBuildingObject.GetComponent<Building>();
+                await LoadBuildingModel();
+                CreateRealModel();
+                _currentBuilding.InitaizeData(buildPositon.x, _currentPreviewBuildingData, _modelAddress);
+            }
         }
-        else if (_currentBuildMode == BuildMode.Move) 
+        else if (_currentBuildMode == BuildMode.Move)
         {
-            EndBuild();
-            _currentBuilding.MoveBuilding(buildPositon);
+            if (GameManager.Instance.BuildService.CanPlaceOnMove(_currentGridX, _currentPreviewBuildingData, _currentBuildingInstaceId))
+            {
+                EndBuild();
+                _currentBuilding.MoveBuilding(buildPositon);
+            }
         }
         _currentBuildingObject = null;
         _currentBuilding = null;
+
     }
-    
+
     private void OnGridChanged() //프리뷰 건물을 옮길때 마다
     {
         if (_currentPreviewBuilding != null)
         {
           _currentPreviewBuilding.transform.position = new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, BUILDING_Z);
         }
-        bool canBuild = GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId);
-        _previewBuilding.SetBuildable(canBuild&& HasEnoughGold() && !IsBuildingBuilt());
-    }
-    private bool HasEnoughGold() 
-    {
-        if (_currentBuildMode == BuildMode.Move)
-            return true;
-        
-        var vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
 
-        return _currentPreviewBuildingData.Cost <= vm.CurrentGold; 
+        bool canBuild;
+        if (_currentBuildMode == BuildMode.Move)
+        {
+            canBuild = GameManager.Instance.BuildService.CanPlaceOnMove(_currentGridX, _currentPreviewBuildingData, _currentBuildingInstaceId);
+        }
+        else
+        {
+            canBuild = GameManager.Instance.BuildService.CanBuildOnThisPlace(_currentPreviewBuildingData, _currentGridX);
+        }
+        _previewBuilding.SetBuildable(canBuild);
+
     }
+  
     public void DestroyBuilding(Building building)
     {
         if (building == null) { 
@@ -255,7 +256,7 @@ public class BuildManager : BaseManager<BuildManager>
     }
     public void PressLeftMouseButtonToConfirmBuild() 
     {
-        if (GameManager.Instance.MapManager.CanBuildOnThisPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
+        if (GameManager.Instance.MapManager.CanBuildingPlace(_currentGridX, _currentPreviewBuildingData.Width, _currentBuildingInstaceId))
         {
             ConfirmBuilding(new Vector3(_currentGridX, (_currentPreviewBuildingData.Height / 2f) - GRUOND_Y, BUILDING_Z)).Forget();
         }
@@ -267,22 +268,5 @@ public class BuildManager : BaseManager<BuildManager>
     public void PressRightMouseButtonCancelBuild() 
     {
         EndBuild();
-    }
-    private bool IsBuildingBuilt() 
-    {
-        if (_currentBuildMode == BuildMode.Move) 
-        {
-            return false;
-        }
-        if ((BuildingType)_currentPreviewBuildingData.BuildingType == BuildingType.TownHall)
-        {
-            bool isAlreadyBuilt = GameManager.Instance.MapManager.IsBuildingBuilt(_currentPreviewBuildingData.Id);
-
-            if (isAlreadyBuilt)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -44,7 +44,7 @@ public class LandUpGradeUIViewModel : ViewModelBase
     {
         return _landUpGradeService.IsBuildingEnough();
     }
-    public bool IsSpecialCatEnough() { return _landUpGradeService.IsCatEnough(); }
+    public bool IsSpecialCatEnough() { return _landUpGradeService.IsSpecialCatEnough(); }
 
     public bool CheckUpGradeAvailable()
     {

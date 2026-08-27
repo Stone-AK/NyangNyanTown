@@ -18,9 +18,8 @@ public class GameManager : BaseManager<GameManager>
 
     public EconomyService_DH EconomyService_DH { get; private set; }
     public LandUpGradeService LandUpGradeService {  get; private set; }
+    public BuildService BuildService { get; private set; }
 
-
-    [SerializeField] private GameObject WJPrefab;
     [SerializeField] private GameObject DHPrefab;
     [SerializeField] private GameObject JDPrefab;
     [SerializeField] private GameObject GHPrefab;
@@ -40,6 +39,7 @@ public class GameManager : BaseManager<GameManager>
         EconomyService_DH = new EconomyService_DH();
         EconomyService_DH.InitEconomyService();
         LandUpGradeService = new LandUpGradeService(EconomyService_DH, MapManager);
+        BuildService = new BuildService(MapManager, EconomyService_DH);
     }
 
 
@@ -57,9 +57,8 @@ public class GameManager : BaseManager<GameManager>
 
         await GameManager.Instance.UIManager.OpenMainUIAsync();
 
-        if (WJPrefab != null)
+        if (DHPrefab != null)
         {
-            WJPrefab.SetActive(true);
             DHPrefab.SetActive(true);
             JDPrefab.SetActive(true);
             GHPrefab.SetActive(true);

@@ -14,12 +14,12 @@ public class BuildUIViewModel : ViewModelBase
 
                 newSlot.Initialize(data.Value);
                 _itemSlots.Add(newSlot);
-                newSlot.OnBuildingSlotButtonClicked += StartBuild;
+                newSlot.OnBuildingSlotButtonClicked += OpenBuildConfirmPopUp;
             }
         }
     }
-    public void StartBuild(BuildingData data) 
+    public void OpenBuildConfirmPopUp(BuildingData data) 
     {
-        GameManager.Instance.BuildManager.StartBuild(data, BuildMode.Build).Forget();
+        GameManager.Instance.UIManager.OpenBuildConfirmPopUpUIAsync(data).Forget();
     }
 }
