@@ -22,7 +22,8 @@ public enum UIType
     OnClickCatInfoPopUp,
     MainMenuUI,
     BuildUI,
-    BuildConfirmPopUpUI
+    BuildConfirmPopUpUI,  
+    SaveLoadCompletePopup
 }
 
 public class BaseUI : MonoBehaviour

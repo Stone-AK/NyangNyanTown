@@ -315,7 +315,14 @@ public class CatView : MonoBehaviour
         if(building == null)
             return;
 
-        if(building.GetAvailableCatPointCount() == 0)
+        if (building.GetAvailableCatPointCount() == 0)
+        {
+            Debug.Log("해당 건물은 빈 자리가 없습니다.");
+            _catViewModel.CatState = CatState.TargetMissing;
+            return;
+        }
+
+        if (building.GetAvailableCatPointCount() == 0)
         {
             Debug.Log("해당 건물은 빈 자리가 없습니다.");
             _catViewModel.CatState = CatState.TargetMissing;
@@ -348,27 +355,37 @@ public class CatView : MonoBehaviour
     {
         try
         {
-            if (_catViewModel == null)
+            CatViewModel actionViewModel = _catViewModel;
+
+            if (actionViewModel == null)
                 return;
 
-            if (_catViewModel.CatState == CatState.InBuildingAction)
+            if (actionViewModel.CatState == CatState.InBuildingAction)
             {
                 ChangeLayer(0);
                 _catAnimationControl.PlayAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(4f), cancellationToken: this.GetCancellationTokenOnDestroy());
-                _catViewModel.CatState = CatState.SearchTarget;
+
+                if (!gameObject.activeInHierarchy || _catViewModel != actionViewModel)
+                    return;
+
+                actionViewModel.CatState = CatState.SearchTarget;
             }
-            else if (_catViewModel.CatState == CatState.TargetMissing)
+            else if (actionViewModel.CatState == CatState.TargetMissing)
             {
                 _catAnimationControl.PlayTargetMissingAction();
                 await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: this.GetCancellationTokenOnDestroy());
-                _catViewModel.CatState = CatState.SearchTarget;
+
+                if (!gameObject.activeInHierarchy || _catViewModel != actionViewModel)
+                    return;
+
+                actionViewModel.CatState = CatState.SearchTarget;
             }
-            else if (_catViewModel.CatState == CatState.SearchTarget)
+            else if (actionViewModel.CatState == CatState.SearchTarget)
             {
                 SearchDespawnPoint();
             }
-            else if (_catViewModel.CatState == CatState.MoveToTarget)
+            else if (actionViewModel.CatState == CatState.MoveToTarget)
             {
                 ChangeLayer(6);
             }
