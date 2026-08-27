@@ -13,6 +13,7 @@ public class MainUIView : BaseUI
     [SerializeField] private Button Button_FishCheat;
     [SerializeField] private Button Button_Gacha;
     [SerializeField] private Button Button_LayoutOpen;
+    [SerializeField] private Button Button_GameSave;
 
     [SerializeField] private TMP_Text GoldText;
     [SerializeField] private TMP_Text FishText;
@@ -71,8 +72,12 @@ public class MainUIView : BaseUI
         {
             Button_LayoutOpen.onClick.AddListener(OnclickLayoutOpenButton);
         }
+        if (Button_GameSave != null)
+        {
+            Button_GameSave.onClick.AddListener(OnClickGameSaveButton);
+        }
 
-
+        
     }
 
 
@@ -85,6 +90,7 @@ public class MainUIView : BaseUI
         Button_FishCheat.onClick.RemoveListener(OnClickFishCheatButton);
         Button_Gacha.onClick.RemoveListener(OnClickGachaButton);
         Button_LayoutOpen.onClick.RemoveListener(OnclickLayoutOpenButton);
+        Button_GameSave.onClick.RemoveListener(OnClickGameSaveButton);
 
 
     }
@@ -146,6 +152,13 @@ public class MainUIView : BaseUI
             _isButtonLayoutSet = !_isButtonLayoutSet;
         }
     }
+
+    private void OnClickGameSaveButton()
+    {
+
+    }
+
+
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
