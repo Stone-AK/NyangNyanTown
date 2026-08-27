@@ -99,7 +99,7 @@ public class GachaPopupUIView : BaseUI
         if (_economyVM.CurrentFish >= 1)
         {
             GameManager.Instance.EconomyService_DH.RemoveCurrentFish(OneTime);
-
+            GameManager.Instance.GachaManager.TryGachaByCount(OneTime);
         }
         else
         {
@@ -113,6 +113,7 @@ public class GachaPopupUIView : BaseUI
         if (_economyVM.CurrentFish >= 10)
         {
             GameManager.Instance.EconomyService_DH.RemoveCurrentFish(TenTime);
+            GameManager.Instance.GachaManager.TryGachaByCount(TenTime);
 
         }
         else

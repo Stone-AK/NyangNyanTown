@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using UnityEditor.Animations;
@@ -48,6 +49,50 @@ public static class GameUtil
 
         int finalIncomeGold = Mathf.RoundToInt(bonusIncomeGold);
         return finalIncomeGold;
+    }
+
+
+    private static readonly string[] Suffixes =
+    {
+        "", "k", "m", "b", "t", "q"
+    };
+
+    public static string ToCompact(int value)
+    {
+        if (value < 1000)
+            return value.ToString();
+
+        double number = value;
+        int suffixIndex = 0;
+
+        while (number >= 1000 && suffixIndex < Suffixes.Length - 1)
+        {
+            number /= 1000.0;
+            suffixIndex++;
+        }
+
+        // 10.7k / 999.9k 처럼 필요할 때만 소수 표시
+        string format = number < 100 ? "0.#" : "0";
+
+        return number.ToString(format, CultureInfo.InvariantCulture)
+            + Suffixes[suffixIndex];
+    }
+
+    public static T PickByProbability<T>(
+      IReadOnlyDictionary<T, float> probabilities)
+    {
+        int roll = UnityEngine.Random.Range(0, 100); // 0 ~ 99
+        float cumulative = 0;
+
+        foreach (var pair in probabilities)
+        {
+            cumulative += pair.Value;
+
+            if (roll < cumulative)
+                return pair.Key;
+        }
+        throw new InvalidOperationException(
+       "확률의 총합은 반드시 100이어야 합니다.");
     }
 
     //public static async UniTask<Sprite> LoadAndSetSpriteImage(Image targetImage, string spritePath)
