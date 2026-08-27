@@ -11,6 +11,17 @@ public class BuildingSlotItemView : MonoBehaviour
     [SerializeField] TextMeshProUGUI CostText;
     [SerializeField] Image CantBuildImage;
     [SerializeField] Button Button_Slot;
+    private void OnEnable()
+    {
+        if (Button_Slot != null)
+        {
+            Button_Slot.onClick.AddListener(OnClickSlotButton);
+        }    
+    }
+    private void OnDisable()
+    {
+        Button_Slot.onClick.RemoveListener(OnClickSlotButton);
+    }
     public void Initalize(BuildingSlotItemViewModel viewModel)
     {
         _viewModel = viewModel;
@@ -20,22 +31,8 @@ public class BuildingSlotItemView : MonoBehaviour
         NameText.text = _viewModel.Name.ToString();
 
         CantBuildImage.gameObject.SetActive(!_viewModel.CanBuild);
-
-        BindOnClickButtonEvent(OnClickSlotButton);
     }
-    public void BindOnClickButtonEvent(Action onClickCallback)
-    {
-        if (Button_Slot == null) return;
 
-        Button_Slot.onClick.AddListener(new UnityEngine.Events.UnityAction(onClickCallback));
-
-    }
-    public void UnBindOnClickButtonEvent(Action onClickCallback)
-    {
-        if (Button_Slot == null) return;
-
-        Button_Slot.onClick.RemoveListener(new UnityEngine.Events.UnityAction(onClickCallback));
-    }
     private void OnClickSlotButton()
     {
         _viewModel.OnClickSlotViewButton();
@@ -53,6 +50,5 @@ public class BuildingSlotItemView : MonoBehaviour
         {
             _viewModel.PropertyChanged -= OnPropertyChanged;
         }
-        UnBindOnClickButtonEvent(OnClickSlotButton);
     }
 }
