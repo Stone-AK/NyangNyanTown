@@ -184,6 +184,7 @@ public class CatManager : BaseManager<CatManager>
     {
         Building candidateTargetBuilding = null;
         float highestAvailableSpaceRate = 0f;
+        int sameRateBuildingCount = 0;
 
         foreach (var placeBuildingData in GameManager.Instance.MapManager._currentBuildingLDic)
         {
@@ -204,12 +205,24 @@ public class CatManager : BaseManager<CatManager>
                 if (building.GetComponent<CatSpawner>() != null)
                     continue;
 
+                if (building.GetAvailableCatPointCount() == 0)
+                    continue;
+
                 float availableSpaceRate = building.GetAvailableSpaceRate();
 
                 if (highestAvailableSpaceRate < availableSpaceRate)
                 {
                     highestAvailableSpaceRate = availableSpaceRate;
                     candidateTargetBuilding = building;
+                    sameRateBuildingCount = 1;
+                }
+                else if (Mathf.Approximately(highestAvailableSpaceRate, availableSpaceRate))
+                {
+                    sameRateBuildingCount++;
+                    if (GameUtil.Random.Next(sameRateBuildingCount) == 0)
+                    {
+                        candidateTargetBuilding = building;
+                    }
                 }
             }
         }
@@ -224,6 +237,21 @@ public class CatManager : BaseManager<CatManager>
 
         _activeCatCount--;
         GameManager.Instance.ObjectManager.Despawn(targetDspawnObject);
+    }
+
+    public void DespawnAllCats()
+    {
+        CatView[] activeCats = FindObjectsByType<CatView>(FindObjectsSortMode.None);
+
+        foreach (CatView catView in activeCats)
+        {
+            if (catView != null)
+            {
+                catView.DespawnImmediately();
+            }
+        }
+
+        _activeCatCount = 0;
     }
 
     public bool IsCatSpawnAvailable()
