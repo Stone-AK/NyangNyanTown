@@ -5,6 +5,8 @@ public class MainMenuUIView : BaseUI
 {
     [SerializeField] private Button Button_Start;
     [SerializeField] private Button Button_Exit;
+    [SerializeField] private Button Button_Load;
+
     [SerializeField] private string BGMAudioId;
 
 
@@ -19,6 +21,12 @@ public class MainMenuUIView : BaseUI
         {
             Button_Exit.onClick.AddListener(OnClickExitButton);
         }
+        if (Button_Load != null)
+        {
+            Button_Load.onClick.AddListener(OnClickLoadButton);
+        }
+
+
         GameManager.Instance.AudioManager.PlayBGM(BGMAudioId);
     }
 
@@ -33,6 +41,12 @@ public class MainMenuUIView : BaseUI
         {
             Button_Exit.onClick.RemoveListener(OnClickStartButtonAsync);
         }
+
+
+        if (Button_Load != null)
+        {
+            Button_Load.onClick.RemoveListener(OnClickLoadButton);
+        }
     }
 
 
@@ -45,5 +59,11 @@ public class MainMenuUIView : BaseUI
     private void OnClickExitButton()
     {
         Debug.Log("게임 종료!");
+    }
+
+    private void OnClickLoadButton()
+    {
+        Debug.Log("게임 불러와잇!");
+
     }
 }

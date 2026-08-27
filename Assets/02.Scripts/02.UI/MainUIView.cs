@@ -1,8 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Buffers.Text;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +12,8 @@ public class MainUIView : BaseUI
     [SerializeField] private Button Button_CatCheat;
     [SerializeField] private Button Button_FishCheat;
     [SerializeField] private Button Button_Gacha;
+    [SerializeField] private Button Button_LayoutOpen;
+    [SerializeField] private Button Button_GameSave;
 
     [SerializeField] private TMP_Text GoldText;
     [SerializeField] private TMP_Text FishText;
@@ -23,10 +23,17 @@ public class MainUIView : BaseUI
     [SerializeField] private TMP_Text FishChangeText;
     [SerializeField] private TMP_Text CatCountChangeText;
 
+    [SerializeField] private GameObject ButtonLayout;
+
     private EconomyViewModel_DH _vm;
     private bool _isBuildUISet = false;
+    private bool _isButtonLayoutSet = false;
 
     private float _onChangePropTime = 1.5f;
+
+    private int _previousGold;
+    private int _previousFish;
+    private int _previousCatCount;
     public void BindViewModel(EconomyViewModel_DH vm)
     {
         _vm = vm;
@@ -37,7 +44,7 @@ public class MainUIView : BaseUI
         var _vm = GameManager.Instance.EconomyService_DH.GetEconomyViewModel();
         BindViewModel(_vm);
 
-        if (Button_Building != null) 
+        if (Button_Building != null)
         {
             Button_Building.onClick.AddListener(OnClickBuildingButton);
         }
@@ -60,11 +67,21 @@ public class MainUIView : BaseUI
         {
             Button_Gacha.onClick.AddListener(OnClickGachaButton);
         }
+
+        if (Button_LayoutOpen != null)
+        {
+            Button_LayoutOpen.onClick.AddListener(OnclickLayoutOpenButton);
+        }
+        if (Button_GameSave != null)
+        {
+            Button_GameSave.onClick.AddListener(OnClickGameSaveButton);
+        }
+
         
     }
 
 
-   
+
     private void OnDisable()
     {
         Button_Building.onClick.RemoveListener(OnClickBuildingButton);
@@ -72,6 +89,8 @@ public class MainUIView : BaseUI
         Button_CatCheat.onClick.RemoveListener(OnClickCatCheatButton);
         Button_FishCheat.onClick.RemoveListener(OnClickFishCheatButton);
         Button_Gacha.onClick.RemoveListener(OnClickGachaButton);
+        Button_LayoutOpen.onClick.RemoveListener(OnclickLayoutOpenButton);
+        Button_GameSave.onClick.RemoveListener(OnClickGameSaveButton);
 
 
     }
@@ -84,7 +103,7 @@ public class MainUIView : BaseUI
         }
     }
 
-    
+
 
     private async void OnClickBuildingButton()
     {
@@ -110,73 +129,101 @@ public class MainUIView : BaseUI
     }
     private void OnClickCatCheatButton()
     {
-        GameManager.Instance.EconomyService_DH.AddCatCurrentCount(1);
+        GameManager.Instance.EconomyService_DH.AddCatCurrentCount(10);
     }
     private void OnClickFishCheatButton()
     {
-        GameManager.Instance.EconomyService_DH.AddCurrentFish(1);
+        GameManager.Instance.EconomyService_DH.AddCurrentFish(10);
     }
     private async void OnClickGachaButton()
     {
         await GameManager.Instance.UIManager.OpenGachaUIAsync();
     }
+    private void OnclickLayoutOpenButton()
+    {
+        if (_isButtonLayoutSet == false)
+        {
+            ButtonLayout.SetActive(true);
+            _isButtonLayoutSet = !_isButtonLayoutSet;
+        }
+        else
+        {
+            ButtonLayout.SetActive(false);
+            _isButtonLayoutSet = !_isButtonLayoutSet;
+        }
+    }
+
+    private void OnClickGameSaveButton()
+    {
+
+    }
+
+
     private void OnPropChagned_View(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
             case nameof(EconomyViewModel_DH.CurrentGold):
                 {
-                    OnChange(GoldChangeText, GoldText, _vm.CurrentGold).Forget();
+                    int current = _vm.CurrentGold;
 
-                    GoldText.text = _vm.CurrentGold.ToString();
+                    OnChange(GoldChangeText, _previousGold, _vm.CurrentGold).Forget();
+                    _previousGold = current;
+
+                    GoldText.text = GameUtil.ToCompact(current);
                     break;
                 }
             case nameof(EconomyViewModel_DH.CurrentFish):
                 {
-                    OnChange(FishChangeText, FishText, _vm.CurrentFish).Forget();
+                    int current = _vm.CurrentFish;
 
-                    FishText.text = _vm.CurrentFish.ToString();
+                    OnChange(FishChangeText, _previousFish, current).Forget();
+                    _previousFish = current;
+
+                    FishText.text = GameUtil.ToCompact(current);
 
                     break;
                 }
             case nameof(EconomyViewModel_DH.CatCurrentCount):
                 {
-                    OnChange(CatCountChangeText, CatCountText, _vm.CatCurrentCount).Forget();
+                    int current = _vm.CatCurrentCount;
 
-                    CatCountText.text = $"{_vm.CatCurrentCount.ToString()}";
+                    OnChange(CatCountChangeText, _previousCatCount, current).Forget();
+                    _previousCatCount = current;
+
+                    CatCountText.text = GameUtil.ToCompact(current);
 
                     break;
                 }
-           
+
 
 
         }
     }
 
-    private async UniTaskVoid OnChange(TMP_Text changedText, TMP_Text beforeText, int Value)
+    private async UniTaskVoid OnChange(TMP_Text changedText, int beforeVelue, int Value)
     {
 
-        if (int.TryParse(beforeText.text, out int beforeTextValue))
-        {
-            int result = Value - beforeTextValue;
-            if(result > 0)
-            {
-                changedText.text = ("+")+result.ToString();
-            }
-            else
-            {
-                changedText.text = result.ToString();
-            }
 
+        int result = Value - beforeVelue;
+        string resultString = GameUtil.ToCompact(result);
+
+        if (result > 0)
+        {
+            changedText.text = ("+") + resultString;
+        }
+        else
+        {
+            changedText.text = resultString;
         }
 
-        if (!changedText.gameObject.activeInHierarchy) 
+        if (!changedText.gameObject.activeInHierarchy)
         {
             changedText.gameObject.SetActive(true);
             await UniTask.Delay(TimeSpan.FromSeconds(_onChangePropTime));
             changedText.gameObject.SetActive(false);
         }
-        
+
 
     }
 }
