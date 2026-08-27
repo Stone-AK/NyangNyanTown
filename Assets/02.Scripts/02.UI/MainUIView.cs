@@ -155,7 +155,7 @@ public class MainUIView : BaseUI
 
     private void OnClickGameSaveButton()
     {
-
+        GameManager.Instance.SaveManager.SaveGameData();
     }
 
 

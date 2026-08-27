@@ -395,4 +395,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce40a735c9280d642914b2fc23fddb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveCompletePopup
-  _saveCompleteText: {fileID: 610678520486418892}
+  _saveLoadText: {fileID: 610678520486418892}
