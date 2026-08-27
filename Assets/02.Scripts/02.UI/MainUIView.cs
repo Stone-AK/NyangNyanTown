@@ -14,6 +14,7 @@ public class MainUIView : BaseUI
     [SerializeField] private Button Button_Gacha;
     [SerializeField] private Button Button_LayoutOpen;
     [SerializeField] private Button Button_GameSave;
+    [SerializeField] private Button Button_GameEnd;
 
     [SerializeField] private TMP_Text GoldText;
     [SerializeField] private TMP_Text FishText;
@@ -76,8 +77,10 @@ public class MainUIView : BaseUI
         {
             Button_GameSave.onClick.AddListener(OnClickGameSaveButton);
         }
-
-        
+        if (Button_GameEnd != null)
+        {
+            Button_GameEnd.onClick.AddListener(OnClickGameEndButton);
+        }
     }
 
 
@@ -91,6 +94,10 @@ public class MainUIView : BaseUI
         Button_Gacha.onClick.RemoveListener(OnClickGachaButton);
         Button_LayoutOpen.onClick.RemoveListener(OnclickLayoutOpenButton);
         Button_GameSave.onClick.RemoveListener(OnClickGameSaveButton);
+        if (Button_GameEnd != null)
+        {
+            Button_GameEnd.onClick.RemoveListener(OnClickGameEndButton);
+        }
 
 
     }
@@ -156,6 +163,11 @@ public class MainUIView : BaseUI
     private void OnClickGameSaveButton()
     {
         GameManager.Instance.SaveManager.SaveGameData();
+    }
+
+    private async void OnClickGameEndButton()
+    {
+        await GameManager.Instance.UIManager.OpenVeryFrontRootAsync(UIType.GameEndPopUp);
     }
 
 
