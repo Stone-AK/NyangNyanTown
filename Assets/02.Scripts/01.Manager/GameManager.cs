@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : BaseManager<GameManager>
@@ -13,7 +13,7 @@ public class GameManager : BaseManager<GameManager>
     public CatManager CatManager { get; private set; }
     public AudioManager AudioManager { get; private set; }
     public GachaManager GachaManager { get; private set; }
-
+    public SaveLoadManager SaveManager {  get; private set; }
 
 
     public EconomyService_DH EconomyService_DH { get; private set; }
@@ -79,6 +79,7 @@ public class GameManager : BaseManager<GameManager>
         await CatManager.InitializeAsync();
         await AudioManager.InitializeAsync();
         await GachaManager.InitializeAsync();
+        await SaveManager.InitializeAsync();
     }
     public override UniTask InitializeAsync()
     {
@@ -107,5 +108,6 @@ public class GameManager : BaseManager<GameManager>
         CatManager = this.GetComponent<CatManager>();
         AudioManager = this.GetComponent<AudioManager>();
         GachaManager = this.GetComponent<GachaManager>();
+        SaveManager = this.GetComponent<SaveLoadManager>();
     }
 }

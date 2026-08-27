@@ -83,6 +83,7 @@ public class CameraController : MonoBehaviour
             if (landVM != null)
             {
                 landVM.OnLandLevelUp += AddCameraRange;
+                AddCameraRange(landVM.LandLevel);
                 _isLandViewModelConnected = true;
             }
         }
