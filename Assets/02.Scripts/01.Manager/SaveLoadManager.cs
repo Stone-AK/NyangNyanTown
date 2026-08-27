@@ -12,12 +12,6 @@ public class SaveLoadManager : BaseManager<SaveLoadManager>
         return UniTask.CompletedTask;
     }
 
-    public bool HasSaveData()
-    {
-        string savePath = Path.Combine(Application.persistentDataPath, "SaveData.json");
-        return File.Exists(savePath);
-    }
-
     public void SaveGameData()
     {
         _saveData.Gold = GameManager.Instance.EconomyService_DH.GetEconomyViewModel().CurrentGold;
