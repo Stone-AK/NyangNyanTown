@@ -1,12 +1,7 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Threading;
-using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.UI;
 
 public static class GameUtil
 {
