@@ -23,7 +23,8 @@ public enum UIType
     MainMenuUI,
     BuildUI,
     BuildConfirmPopUpUI,  
-    SaveLoadCompletePopup
+    SaveLoadCompletePopup,
+    GameEndPopUp
 }
 
 public class BaseUI : MonoBehaviour
