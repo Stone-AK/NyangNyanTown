@@ -56,7 +56,7 @@ public class BuildService
                 spCount++;
             }
         }
-       // return _economyService.CatEncyclopediaList.Count == spCount;
-       return  spCount>=1;
+       return _economyService.CatEncyclopediaList.Count == spCount;
+      // return  spCount>=1;
     }
 }
