@@ -37,6 +37,7 @@ public enum PrefabType
     UILayer,
     AudioView,
     ObjectPoolRoot,
+    GoldSprite
 }
 public enum BuildingType
 {
@@ -44,6 +45,11 @@ public enum BuildingType
     TownHall,
     Spawner,
     LandMark
+}
+public enum RewardType
+{
+    Gold,
+    Cat
 }
 
 

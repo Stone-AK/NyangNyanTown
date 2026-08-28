@@ -23,7 +23,10 @@ public enum UIType
     MainMenuUI,
     BuildUI,
     BuildConfirmPopUpUI,  
-    SaveLoadCompletePopup
+    SaveLoadCompletePopup,
+    RewardPopupUI,
+    RewardSlotUI,
+
 }
 
 public class BaseUI : MonoBehaviour
@@ -105,6 +108,18 @@ public static class UIManagerExtension
     {
         uiManager.Close(UIType.BuildUI);
     }
+
+    public static async UniTask<RewardPopupUIView> OpenRewardPopupUIAsync(this UIManager uiManager, CancellationToken cancellationToken = default)
+    {
+        BaseUI baseUI = await uiManager.OpenPopupRootAsync(UIType.RewardPopupUI, cancellationToken);
+        return GetView<RewardPopupUIView>(baseUI,UIType.RewardPopupUI);
+    }
+
+    public static void CloseRewardPopupUI(this UIManager uiManager)
+    {
+        uiManager.Close(UIType.RewardPopupUI);
+    }
+
 
 
     //UI를 생성하고 View를 가져오고 싶을 때 사용

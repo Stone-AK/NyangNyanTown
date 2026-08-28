@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class GachaManager : BaseManager<GachaManager>
@@ -10,13 +11,21 @@ public class GachaManager : BaseManager<GachaManager>
     { "Cat", 20.0f },
 };
 
+    private List<RewardData> rewardList = new();
+
+    private int _goldValue = 100;
+    private int _ifCatGoldValue = 20;
+
+
     public override UniTask InitializeAsync()
     {
         return UniTask.CompletedTask;
     }
 
-    public void TryGachaByCount(int count)
+    public async UniTask TryGachaByCount(int count)
     {
+
+        rewardList.Clear();
         for (int i = 0; i < count; i++)
         {
 
@@ -38,22 +47,40 @@ public class GachaManager : BaseManager<GachaManager>
             }
         }
 
+        var view = await GameManager.Instance.UIManager.OpenRewardPopupUIAsync();
+        view.Bind(rewardList);
     }
 
 
 
     private void WinGold()
     {
-        GameManager.Instance.EconomyService_DH.AddCurrentGold(100);
+        var rewredData = SetReward(nameof(RewardType.Gold), RewardType.Gold, _goldValue);
+        rewardList.Add(rewredData);
+
+        GameManager.Instance.EconomyService_DH.AddCurrentGold(_goldValue);
     }
 
     private void WinCat()
     {
-        //string catId = GameManager.Instance.CatManager.SelectRandomCatIdByWeight();
+        string catId = GameManager.Instance.CatManager.SelectRandomCatIdByWeight();
 
-        //if (GameManager.Instance.DataManager.TryGetData(catId, out CatInfoData catInfoData)) { }
+       
 
-        SetCatGachaByWeight();
+
+        if (GameManager.Instance.EconomyService_DH.CheckClickCatIsNew(catId))
+        {
+            Debug.Log("새로운 고양이 습득");
+            var rewredData = SetReward(catId, RewardType.Cat, 1);
+            rewardList.Add(rewredData);
+        }
+        else
+        {
+            Debug.Log("이미 습득한 고양이");
+            var rewredData = SetReward(nameof(RewardType.Gold), RewardType.Gold, _ifCatGoldValue);
+            rewardList.Add(rewredData);
+            GameManager.Instance.EconomyService_DH.AddCurrentGold(_ifCatGoldValue);
+        }
     }
 
     public void SetCatGachaByWeight()
@@ -61,13 +88,18 @@ public class GachaManager : BaseManager<GachaManager>
         string catId = GameManager.Instance.CatManager.SelectRandomCatIdByWeight();
 
 
-        if (GameManager.Instance.EconomyService_DH.CheckClickCatIsNew(catId))
-        {
-            Debug.Log("새로운 고양이 습득");
-        }
-        else
-        {
-            Debug.Log("이미 습득한 고양이");
-        }
+       
+    }
+
+
+    private RewardData SetReward(string id, RewardType rewardType, int amout)
+    {
+        var rewredData = new RewardData();
+        rewredData.Id = id;
+        rewredData.Type = rewardType;
+        rewredData.Amount = amout;
+
+        return rewredData;
+
     }
 }
