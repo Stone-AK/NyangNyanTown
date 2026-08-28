@@ -24,6 +24,7 @@ public enum UIType
     BuildUI,
     BuildConfirmPopUpUI,  
     SaveLoadCompletePopup,
+    GameEndPopUp,
     RewardPopupUI,
     RewardSlotUI,
 

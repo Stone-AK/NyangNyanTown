@@ -57,9 +57,9 @@ public class MainMenuUIView : BaseUI
         GameManager.Instance.UIManager.CloseMainMenuUI();
     }
 
-    private void OnClickExitButton()
+    private async void OnClickExitButton()
     {
-        Debug.Log("게임 종료!");
+        await GameManager.Instance.UIManager.OpenVeryFrontRootAsync(UIType.GameEndPopUp);
     }
 
     private async void OnClickLoadButton()

@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -226,8 +226,18 @@ public class CameraController : MonoBehaviour
 
         float halfWidth = GetHalfCameraWidth(); 
         float halfHeight = GetHalfCameraHeight();
-        
-        position.x = Mathf.Clamp(position.x, MoveMinX + halfWidth,  MoveMaxX - halfWidth );
+
+        float minX = MoveMinX + halfWidth;
+        float maxX = MoveMaxX - halfWidth;
+
+        if (minX > maxX) // 카메라가 이동할 수 있는 범위가 화면보다 좁을 때, 카메라를 중앙에 위치시킴
+        {
+            position.x = (MoveMinX + MoveMaxX) * 0.5f;
+        }
+        else
+        {
+            position.x = Mathf.Clamp(position.x, MoveMinX + halfWidth, MoveMaxX - halfWidth);
+        }
 
         position.y = Mathf.Clamp( position.y,MoveMinY, MoveMaxY );
 
