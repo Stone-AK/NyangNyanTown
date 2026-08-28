@@ -228,9 +228,9 @@ public class CameraController : MonoBehaviour
         float halfHeight = GetHalfCameraHeight();
 
         float minX = MoveMinX + halfWidth;
-        float minY = MoveMinY - halfHeight;
+        float maxX = MoveMaxX - halfWidth;
 
-        if (minX > minY) // 카메라가 이동할 수 있는 범위가 화면보다 좁을 때, 카메라를 중앙에 위치시킴
+        if (minX > maxX) // 카메라가 이동할 수 있는 범위가 화면보다 좁을 때, 카메라를 중앙에 위치시킴
         {
             position.x = (MoveMinX + MoveMaxX) * 0.5f;
         }
